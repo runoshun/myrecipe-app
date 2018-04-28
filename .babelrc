@@ -2,9 +2,9 @@
   "presets": ["react-native"],
   "plugins": [
     ["module-resolver", {
-      "root": ["./build/"],
+      "root": ["./dist/"],
       "alias": {
-        "@root": "./build/src",
+        "@root": "./dist/src",
         "@images": "./images"
       }
     }]
