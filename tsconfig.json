@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2015",
+    "jsx": "react-native",
+    "sourceMap": true,
+    "outDir": "./dist/",
+    "rootDir": "./",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "@root/*": ["./src/*"]
+    },
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types"],
+    "types": [
+      "expo",
+      "jest",
+      "prop-types",
+      "react",
+      "react-native",
+      "react-native-vector-icons",
+      "react-navigation",
+      "react-redux"
+    ]
+  },
+  "include": ["./src/**/*"]
+}

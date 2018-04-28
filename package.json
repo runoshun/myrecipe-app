@@ -1,0 +1,47 @@
+{
+  "name": "tsukurioki",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "clean-underlying-babelrc": "(find node_modules -type f -name .babelrc | grep -v /react-native/ | xargs rm) || true",
+    "postinstall": "rndebugger-open; npm run clean-underlying-babelrc"
+  },
+  "dependencies": {
+    "babel-plugin-module-resolver": "^3.1.1",
+    "react": "16.3.1",
+    "react-native": "0.55.3",
+    "react-native-keyboard-spacer": "^0.4.1",
+    "react-native-vector-icons": "4.6.0",
+    "react-navigation": "1.5.11",
+    "react-navigation-redux-helpers": "^1.0.5",
+    "react-redux": "5.0.7",
+    "redux": "3.7.2",
+    "redux-thunk": "2.2.0",
+    "redux-undo": "^0.6.1",
+    "reselect": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/expo": "^25.0.9",
+    "@types/jest": "22.0.1",
+    "@types/prop-types": "15.5.2",
+    "@types/react": "16.3.13",
+    "@types/react-native": "0.55.8",
+    "@types/react-native-vector-icons": "4.6.1",
+    "@types/react-navigation": "1.5.9",
+    "@types/react-redux": "5.0.19",
+    "babel-jest": "22.4.3",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "22.4.3",
+    "react-test-renderer": "16.3.2",
+    "react-native-debugger-open": "^0.3.17",
+    "react-native-scripts": "1.14.0",
+    "redux-devtools-extension": "2.13.2",
+    "redux-logger": "^3.0.6",
+    "typescript": "2.7.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
