@@ -7,34 +7,41 @@ import { PopupMenuProperties } from "./common/PopupMenu";
 import { PopupMenu, Dialog, HBox, Popup, Stylable, Typography, Button, bindDefaultProps, ScreenHeader, ScreenHeaderButton, TextField } from "./common";
 
 import * as colors from "@root/resources/colors";
+import { Platform } from "react-native";
+import { PixelRatio } from "react-native";
+
+const pxRatio = PixelRatio.get();
+export const nrPixel = (size: number) => {
+    return PixelRatio.roundToNearestPixel(size * 2 / pxRatio);
+}
 
 export const Texts = Typography.createText({
     H1: {
         color: colors.accent,
-        fontSize: 28,
+        fontSize: nrPixel(28),
         fontWeight: "bold",
     },
     H2: {
         color: colors.text,
-        fontSize: 24,
+        fontSize: nrPixel(24),
         fontWeight: "bold",
     },
     H3: {
         color: colors.text,
-        fontSize: 20,
+        fontSize: nrPixel(20),
         fontWeight: "bold",
     },
     Body: {
         color: colors.text,
-        fontSize: 16
+        fontSize: nrPixel(16),
     },
     AccentBody: {
         color: colors.accent,
-        fontSize: 16,
+        fontSize: nrPixel(16),
     },
     InputLabel: {
         color: colors.text,
-        fontSize: 12,
+        fontSize: nrPixel(12),
         fontWeight: "bold",
         marginTop: 4,
     }
@@ -46,8 +53,8 @@ export const FormField = bindDefaultProps(TextField, ({
     }).override({
         TUI_VInput_Input: {
             color: colors.text,
-            fontSize: 18,
-            paddingVertical: 8,
+            fontSize: nrPixel(18),
+            paddingVertical: Platform.select({ ios: 8, android: 2}),
             paddingHorizontal: 8,
             borderRadius: 8,
             borderWidth: 1,
@@ -56,12 +63,14 @@ export const FormField = bindDefaultProps(TextField, ({
         }
     }),
     placeholderTextColor: res.colors.accentThin,
+    underlineColorAndroid: "transparent"
 }));
 
 export const NormalButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
         colorBackground: colors.lightGray,
         colorForeground: colors.darkGray,
+        labelSize: nrPixel(16)
     })
 });
 
@@ -69,6 +78,7 @@ export const TransparentButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
         colorBackground: "transparent",
         colorForeground: colors.text,
+        labelSize: nrPixel(16)
     })
 });
 
@@ -76,6 +86,7 @@ export const AccentButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
         colorBackground: colors.accent,
         colorForeground: colors.white,
+        labelSize: nrPixel(16)
     })
 });
 
@@ -83,6 +94,7 @@ export const TransparentAccentButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
         colorBackground: "transparent",
         colorForeground: colors.accent,
+        labelSize: nrPixel(16)
     })
 });
 
@@ -90,24 +102,42 @@ export const TransparentOnAccentButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
         colorBackground: "transparent",
         colorForeground: colors.white,
+        labelSize: nrPixel(16)
     })
 })
 
+export const FullAccentButton = bindDefaultProps(Button, {
+    styles: Button.defaultStyles.applyVars({
+        colorBackground: res.colors.accentThin,
+        colorForeground: res.colors.white,
+        labelSize: nrPixel(16),
+        growInnerContainer: true,
+    }).override({
+        TUI_ButtonContainer: {
+            alignSelf: "stretch",
+        }
+    })
+});
+
 export const AppScreenHeader = bindDefaultProps(ScreenHeader, {
     styles: ScreenHeader.defaultStyles.applyVars({
+        textSizeTitle: nrPixel(18)
     })
 })
 
 export const AppScreenHeaderButton = bindDefaultProps(ScreenHeaderButton, {
     tintColor: colors.accent,
+    styles: ScreenHeaderButton.defaultStyles.applyVars({
+        iconSize: nrPixel(32)
+    })
 })
 
 export const MenuItem = bindDefaultProps(Button, {
     styles: PopupMenu.defaultItemStyles.applyVars({
         colorBackground: "transparent",
-        labelSize: 20,
-        iconSize: 24,
-        marginUnit: 8,
+        labelSize: nrPixel(20),
+        iconSize: nrPixel(24),
+        marginUnit: nrPixel(8),
         colorForeground: colors.accent,
     })
 })
@@ -117,7 +147,7 @@ export const PopupMenuTop = bindDefaultProps(PopupMenu, {
         contentPosition: "top",
     }).override({
         TUI_PopupContent: {
-            paddingTop: 20,
+            paddingTop: nrPixel(20),
         }
     }),
     itemComponent: MenuItem
@@ -213,6 +243,7 @@ export const styles = new Stylable({
         bottom: 0,
         left: 0,
         right: 0,
+        padding: 8,
     },
     actionButton: {
         margin: 8,

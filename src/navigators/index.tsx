@@ -5,6 +5,7 @@ import { createTabNavigator, Router as _Router, createStackNavigator, bindCreate
 
 import res from "@root/resources";
 import { Icon } from "@root/views/components/common";
+import { nrPixel } from "@root/views/components/Themed";
 
 export interface NavigatorsState {
     mainTabState: NavigationState,
@@ -28,21 +29,21 @@ export const MainTab = createTabNavigator({
     routes: {
         Recipes: {
             navigationOptions: {
-                tabBarIcon: (param: { tintColor: string }) => <Icon size={24} color={param.tintColor} name="book" />,
+                tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="book" />,
                 tabBarLabel: res.strings.tabbarLabelRecipes(),
             },
             screen: RecipesScreen
         },
         MeelPreps: { 
             navigationOptions: {
-                tabBarIcon: (param: { tintColor: string }) => <Icon size={24} color={param.tintColor} name="restaurant" />,
+                tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="restaurant" />,
                 tabBarLabel: res.strings.tabbarLabelStocks(),
             },
             screen: MeelPrepsScreen,
         },
         ShoppingList: {
             navigationOptions: {
-                tabBarIcon: (param: { tintColor: string }) => <Icon size={24} color={param.tintColor} name="cart" />,
+                tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="cart" />,
                 tabBarLabel: res.strings.tabbarLabelShoppingList(),
             },
             screen: ShoppingListScreen
@@ -54,9 +55,25 @@ export const MainTab = createTabNavigator({
         animationEnabled: true,
         tabBarOptions: {
             activeTintColor: res.colors.accent,
+            inactiveTintColor: res.colors.gray,
+            indicatorStyle: {
+                backgroundColor: "transparent",
+                borderWidth: 0,
+            },
+            showIcon: true,
+            showLabel: true,
             labelStyle: {
-                fontSize: 14,
-            }
+                margin: 0,
+                padding: 0,
+                fontSize: nrPixel(14),
+            },
+            iconStyle: {
+                margin: 0,
+                padding: 0,
+            },
+            style: {
+                backgroundColor: res.colors.white,
+            },
         }
     },
 });
@@ -80,7 +97,8 @@ export const RootStack = createStackNavigator({
     },
     config: {
         headerMode: "none"
-    }
+    },
+    withBackHandler: true
 });
 
 export const reducers = {

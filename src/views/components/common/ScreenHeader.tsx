@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, Platform } from "react-native";
 
+import rn from "@root/utils/rn";
 import Button, { ButtonProperties } from "./Button";
 import Stylable from "./stylable";
 
@@ -13,7 +14,9 @@ const defaultVars = {
 
 type Vars = typeof defaultVars;
 
-const statusBarPadding = (Platform.OS == "ios") ? 20 : 0;
+const statusBarPadding = 
+    (Platform.OS == "ios") ? 20 :
+    rn.isRunningOnExpo() ? 28 : 0;
 
 const defaultStyles = new Stylable({
     TUI_Header: {
@@ -35,7 +38,7 @@ const defaultStyles = new Stylable({
     TUI_HeaderButtons: {
         position: "absolute",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         top: statusBarPadding,
         left: 0,
@@ -84,6 +87,7 @@ export default class ScreenHeader extends React.Component<ScreenHeaderProperties
                     <View style={s.values.TUI_HeaderLeft}>
                         {props.renderLeft && props.renderLeft(tint)}
                     </View>
+                    <View style={{flex: 1}} />
                     <View style={s.values.TUI_HeaderRight}>
                         {props.renderRight && props.renderRight(tint)}
                     </View>
@@ -95,7 +99,7 @@ export default class ScreenHeader extends React.Component<ScreenHeaderProperties
 
 const screenHeaderButtonStyles = Button.defaultStyles.override({
     TUI_ButtonContainer: {
-        padding: 4,
+        padding: 8,
     },
 }).applyVars({
     colorBackground: "transparent",
@@ -107,13 +111,16 @@ export interface ScreenHeaderButtonProperties extends ButtonProperties {
     tintColor?: string
 }
 
-export const ScreenHeaderButton = (props: ScreenHeaderButtonProperties) => {
-    let { tintColor, styles, ...rest } = props;
+export class ScreenHeaderButton extends React.Component<ScreenHeaderButtonProperties> {
+    public static defaultStyles = screenHeaderButtonStyles;
+    render() {
+        let { tintColor, styles, ...rest } = this.props;
 
-    let ss = styles || screenHeaderButtonStyles;
-    if (tintColor) {
-        let vars = { colorForeground: tintColor };
-        ss = ss.applyVars(vars)
-    } 
-    return <Button {...rest} styles={ss} />
+        let ss = styles || screenHeaderButtonStyles;
+        if (tintColor) {
+            let vars = { colorForeground: tintColor };
+            ss = ss.applyVars(vars)
+        }
+        return <Button {...rest} styles={ss} />
+    }
 }

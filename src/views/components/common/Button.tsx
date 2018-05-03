@@ -14,6 +14,7 @@ const defaultVars = {
     borderRadius: 0,
     borderWidth: 0,
     borderColor: "#00000000",
+    growInnerContainer: false,
 };
 
 type Vars = typeof defaultVars;
@@ -23,10 +24,10 @@ const defaultStyles = new Stylable({
         backgroundColor: (vars: Vars) => vars.colorBackground,
         alignItems: "center",
         justifyContent: "center",
-        flex:1,
         borderRadius: (vars: Vars) => vars.borderRadius,
         borderWidth: (vars: Vars) => vars.borderWidth,
         borderColor: (vars: Vars) => vars.borderColor,
+        flex: (vars: Vars) => vars.growInnerContainer ? 1 : undefined,
     },
     TUI_ButtonText: {
         margin: (vars: Vars) => vars.marginUnit * 2,

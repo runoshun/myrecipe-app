@@ -155,6 +155,5 @@ const styles = new V.Stylable({
         ...res.styles.padding(4, 16)
     },
     actionButton: {
-        ...res.styles.margin(8)
     }
 });

@@ -9,7 +9,7 @@ import * as Types from "@root/EntityTypes";
 import ImageField from "./ImageField";
 import IngredientsField from "./IngredientsField";
 
-import * as image from "@root/api/image";
+import api from "@root/api";
 
 export type InputNames = "name" | "photo" | "url";
 
@@ -46,8 +46,8 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
         return (
             <V.VBox style={styles.values.container}>
                 <ImageField 
-                    onPickImage={image.pickImage}
-                    onTakeImage={image.takePhoto}
+                    onPickImage={api.image.pickImage}
+                    onTakeImage={api.image.takePhoto}
                     onChangeImage={(source) => this.props.onUpdateData({ photo: source.uri })}
                     initialImage={photo !== undefined ? { uri: photo } : undefined}
                     noImage={{ uri: res.images.noImage }}

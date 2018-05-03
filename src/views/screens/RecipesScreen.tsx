@@ -51,7 +51,9 @@ export class RecipesScreen extends React.Component<RecipesScreenProperties, Stat
                                 style={styles.values.card} />
                         } else {
                             return (
-                                <V.TransparentAccentButton icon="add" style={styles.values.card} onPress={this.onPressAdd} />
+                                <V.Card style={styles.values.card}>
+                                    <V.FullAccentButton icon="add" style={styles.values.addButton} onPress={this.onPressAdd} />
+                                </V.Card>
                             );
                         }
                     }}
@@ -68,10 +70,13 @@ export default createContainer(RecipesScreen)((state, dispatch) => ({
 
 const styles = new V.Stylable({
     card: {
-        width: "45%",
+        width: "46%",
         height: 120,
-        margin: 8
+        marginHorizontal: "2%",
+        marginVertical: 8,
     },
     addButton: {
+        flex: 1,
+        flexDirection: "row",
     }
 })

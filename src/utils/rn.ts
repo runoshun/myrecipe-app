@@ -1,4 +1,4 @@
-import { NativeModules } from "react-native";
+import { NativeModules, Platform, PlatformOSType } from "react-native";
 
 export function getRNPackagerHostname(): string {
     const scriptURL = NativeModules.SourceCode.scriptURL;
@@ -8,6 +8,16 @@ export function getRNPackagerHostname(): string {
     return hostname;
 }
 
+export const isRunningOnExpo = (): boolean => {
+    return !!NativeModules.ExponentConstants;
+}
+
+export const os = (): PlatformOSType => {
+    return Platform.OS;
+}
+
 export default {
+    os,
     getRNPackagerHostname,
+    isRunningOnExpo,
 }

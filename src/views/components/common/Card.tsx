@@ -27,11 +27,11 @@ const defaultStyles = new Stylable({
         alignItems: "flex-start",
         backgroundColor: "#ffffff",
         borderRadius: (vars: Vars) => vars.borderRadius,
-        elevation: 3,
+        elevation: 2,
         shadowColor: "#000000",
-        shadowOpacity: 0.6,
-        shadowRadius: 3,
-        shadowOffset: { width: 0, height: 0 }
+        shadowOpacity: 0.4,
+        shadowRadius: 2,
+        shadowOffset: { width: 0, height: 0 },
     },
     TUI_Card_ImageWrapper: {
         borderTopLeftRadius: (vars: Vars) => vars.borderRadius,
@@ -40,7 +40,8 @@ const defaultStyles = new Stylable({
         width: (vars: Vars) => vars.imageWidth,
     },
     TUI_Card_ImageWrapperFull: {
-        borderRadius: (vars: Vars) => vars.borderRadius,
+        borderBottomLeftRadius: (vars: Vars) => vars.borderRadius,
+        borderBottomRightRadius: (vars: Vars) => vars.borderRadius,
     },
     TUI_Card_Image: {
         width: (vars: Vars) => vars.imageWidth,

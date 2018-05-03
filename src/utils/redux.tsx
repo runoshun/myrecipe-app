@@ -1,6 +1,6 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
-import { AnyAction, combineReducers as _combineReducers } from "redux";
+import { connect } from "react-redux";
+import { AnyAction, combineReducers as _combineReducers, Dispatch } from "redux";
 import { Omit, PartialExcept } from "./types";
 import obj from "./obj";
 
@@ -70,11 +70,24 @@ export interface FormState<FormData> {
 
 export type SimpleFormErrors<FormData> = Partial<{ [P in keyof FormData]: string }>;
 
+export interface UndoableState<BaseState> {
+    past: BaseState[],
+    present: BaseState,
+    future: BaseState[],
+}
+
+export interface UndoableActionCreator {
+    UNDO: ActionCreator<{}, never>,
+    REDO: ActionCreator<{}, never>,
+    CLEAR: ActionCreator<{}, never>
+}
+
 export type AnyActionCreator = ActionCreator<any, any>;
 export type AnyAsyncActionCreator = AsyncActionCreator<any, any, any>;
 
 
 export type ReduceHandler<State, Payload, Meta> = (state: State, payload: Payload, type: string, meta?: Meta) => State;
+export type DefaultReduceHandler<State> = (state: State, action: AnyAction) => State;
 
 export const actionWithMeta = function<Payload, Meta>(type: string): ActionCreator<Payload, Meta> {
     return Object.assign((payload: Payload, meta?: Meta) => ({ type, payload, meta }), { type })
@@ -135,10 +148,19 @@ export const formAction = function<FormData>(type: string): FormActionCreator<Fo
     }
 }
 
+export const undoableAction = function(type: string): UndoableActionCreator {
+    return {
+        CLEAR: action(type + "/clear"),
+        REDO: action(type + "/redo"),
+        UNDO: action(type + "/undo")
+    }
+}
+
 export class ReducerBuilder<State> {
 
     private _initialState: State;
     private _handlers: Map<string, ReduceHandler<State, any, any>> = new Map();
+    private _defaultHandler: DefaultReduceHandler<State> | undefined = undefined;
 
     constructor(initialState: State) {
         this._initialState = initialState;
@@ -152,11 +174,18 @@ export class ReducerBuilder<State> {
         return this;
     }
 
-    public build(): (state: State, action: AnyAction) => State {
+    public default(handler: DefaultReduceHandler<State>): ReducerBuilder<State> {
+        this._defaultHandler = handler;
+        return this;
+    }
+
+    public build(): (state: State | undefined, action: AnyAction) => State {
         return (state = this._initialState, action) => {
             let handler = this._handlers.get(action.type)
             if (handler) {
                 return handler(state, action.payload, action.type, action.meta);
+            } else if (this._defaultHandler) {
+                return this._defaultHandler(state, action);
             } else {
                 return state;
             }
@@ -318,11 +347,11 @@ export class FormReducerBuilder<FormData> {
 }
 
 export type ReducerMap<State> = {
-    [P in keyof State]: (state: State[P], action: AnyAction) => State[P]
+    [P in keyof State]: (state: State[P] | undefined, action: AnyAction) => State[P]
 }
 
 export const combineReducers = function <State>(map: ReducerMap<State>) {
-    return _combineReducers<State>(map)
+    return (_combineReducers<State>(map) as (state: State | undefined, action: AnyAction) => State);
 }
 
 export abstract class DispatcherBase<State> {
@@ -391,7 +420,7 @@ export interface FromProps<
 export const createFormProps = function<
     FormData,
     SubmitArg = any,
-    FormErrors extends Partial<{ [P in keyof FormData]: any }> = SimpleFormErrors<FormData>,
+    FormErrors extends Partial<{ [P in keyof FormData]: any }> = SimpleFormErrors<FormData>
 >(
     formState: FormState<FormData>,
     dispatch: Dispatch<any>,
@@ -426,6 +455,72 @@ export const createFormProps = function<
         onFocusField: (name) => dispatch(actions.FOCUS(name)),
         onTouchField: (name) => dispatch(actions.TOUCH(name))
     }
+}
+
+export interface UndoableConfig {
+    limit: number,
+    initAction: string,
+    filter: (action: AnyAction) => boolean,
+}
+
+const defaultUndoableConfig: UndoableConfig = {
+    limit: 10,
+    initAction: "@@UNDOABLE/INIT",
+    filter: (_) => true
+}
+
+export const undoable = function<State>(reducer: (state: State | undefined, action: AnyAction) => State, actions: UndoableActionCreator, config?: Partial<UndoableConfig>) {
+    const mergedConfig = Object.assign({}, defaultUndoableConfig, config);
+
+    const initialPresent = reducer(undefined, { type: mergedConfig.initAction });
+    const initialState = {
+        past: [],
+        present: initialPresent,
+        future: []
+    }
+    let builder = new ReducerBuilder<UndoableState<State>>(initialState);
+    builder
+        .case(actions.CLEAR, (_state, _payload) => initialState)
+        .case(actions.UNDO, (state) => {
+            if (state.past.length > 0) {
+                let present = state.past[0];
+                return {
+                    past: state.past.slice(1),
+                    present,
+                    future: [state.present, ...state.future]
+                }
+            } else {
+                return state;
+            }
+        })
+        .case(actions.REDO, (state) => {
+            if (state.future.length > 0) {
+                let present = state.future[0];
+                return {
+                    past: [state.present, ...state.past],
+                    present,
+                    future: state.future.slice(1)
+                }
+            } else {
+                return state;
+            }
+        })
+        .default((state, action) => {
+            if (mergedConfig.filter(action)) {
+                let newState = reducer(state.present, action);
+                if (newState === state.present) {
+                    return state;
+                } else {
+                    return {
+                        past: [state.present, ...state.past.slice(0, mergedConfig.limit - 1)],
+                        present: newState,
+                        future: []
+                    }
+                }
+            }
+            return state;
+        })
+    return builder.build();
 }
 
 export interface MapToProps<RootState, Props, OwnProps> {
@@ -470,11 +565,13 @@ export default {
     asyncAction,
     entityAction,
     formAction,
+    undoableAction,
 
     ReducerBuilder,
     LoadingReducerBuilder,
     EntityReducerBuilder,
     FormReducerBuilder,
+    undoable,
 
     DispatcherBase,
 }

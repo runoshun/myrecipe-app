@@ -7,7 +7,7 @@ import { FromProps } from "@root/utils/redux";
 
 import ImageField from "./ImageField";
 
-import * as image from "@root/api/image";
+import api from "@root/api";
 
 export type InputNames = keyof MeelPrepFormData;
 
@@ -49,8 +49,8 @@ export default class MeelPrepForm extends React.Component<MeelPrepFormProperties
         return (
             <V.VBox style={styles.values.container}>
                 <ImageField 
-                    onPickImage={image.pickImage}
-                    onTakeImage={image.takePhoto}
+                    onPickImage={api.image.pickImage}
+                    onTakeImage={api.image.takePhoto}
                     onChangeImage={(source) => this.props.onUpdateData({photo: source.uri})}
                     initialImage={photo !== undefined ? { uri: photo } : undefined}
                     noImage={{ uri: res.images.noImage }}

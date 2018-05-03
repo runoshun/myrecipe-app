@@ -1,11 +1,6 @@
-export interface Tag {
-    id: string,
-    name: string,
-    color?: string,
-}
-
-export interface Tags {
-    [id: string]: Tag | undefined;
+export interface EntityCommon<Version> {
+    _version: Version,
+    _lastModified: number,
 }
 
 export interface Ingredient {
@@ -14,16 +9,15 @@ export interface Ingredient {
     unit: string,
 }
 
-export interface RecipeEntity {
+export interface RecipeEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
     photo: string,
     ingredients: Ingredient[],
-    tagIds: string[],
     url?: string,
 }
 
-export interface MeelPrepEntity {
+export interface MeelPrepEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
     amount: number,
@@ -32,7 +26,7 @@ export interface MeelPrepEntity {
     expiredAt?: number,
 }
 
-export interface MeelEntity {
+export interface MeelEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
     amount: number,
@@ -40,7 +34,7 @@ export interface MeelEntity {
     meelPrepId?: string,
 }
 
-export interface ShoppingListItemEntity {
+export interface ShoppingListItemEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
     amount: number,

@@ -1,7 +1,7 @@
 import app from "./app";
 import entities from "./entities";
 export { AppState } from "./app";
-export { EntitiesState } from "./entities";
+export { UndoableEntitiesState, EntitiesState } from "./entities";
 
 export { default as app } from "./app";
 export { default as entities } from "./entities";

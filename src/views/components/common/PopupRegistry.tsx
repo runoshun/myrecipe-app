@@ -82,12 +82,11 @@ export default class PopupRegistry extends React.Component<PopupRegistryProperti
     constructor(props: any) {
         super(props);
         if (PopupRegistry.instance) {
-            throw new TypeError("already exists PopupRegistry instance.")
+            this.state = Object.assign({}, PopupRegistry.instance.state);
+        } else {
+            this.state = {};
         }
-        else {
-            PopupRegistry.instance = this;
-        }
-        this.state = {};
+        PopupRegistry.instance = this;
     }
 
     render() {
