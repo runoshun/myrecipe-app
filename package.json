@@ -20,8 +20,9 @@
     "react-navigation-redux-helpers": "^1.0.5",
     "react-redux": "5.0.7",
     "redux": "3.7.2",
-    "redux-thunk": "2.2.0",
+    "redux-form": "^7.3.0",
     "redux-persist": "^5.9.1",
+    "redux-thunk": "2.2.0",
     "reselect": "^3.0.1"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/react-native-vector-icons": "4.6.1",
     "@types/react-navigation": "1.5.9",
     "@types/react-redux": "5.0.19",
+    "@types/redux-form": "^7.2.4",
     "@types/redux-persist": "^4.3.1",
     "babel-jest": "22.4.3",
     "babel-preset-react-native": "4.0.0",

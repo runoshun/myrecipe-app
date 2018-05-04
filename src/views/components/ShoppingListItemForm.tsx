@@ -2,62 +2,38 @@ import * as React from "react";
 
 import * as V from "./Themed";
 import res from "@root/resources";
-import { ShoppingListFormData } from "@root/reducers/app";
-import { FormProps } from "@root/utils/redux";
+import { Field, WrappedFieldProps } from "redux-form";
+import { TextFieldProperties } from "@root/views/components/common/TextField";
 
-export type InputNames = keyof ShoppingListFormData;
-
-export interface ShoppingListItemFormProperties extends FormProps<ShoppingListFormData, string | string[] | undefined> {
+export interface ShoppingListItemFormProperties {
 }
 
 interface State { }
 
-export default class ShoppingListItemForm extends React.Component<ShoppingListItemFormProperties, State> {
+const ReduxFormField = (style?: TextFieldProperties["style"]) => (props: WrappedFieldProps) => {
+    return (
+        <V.FormField
+            name={props.input.name}
+            onChange={props.input.onChange}
+            onBlur={props.input.onBlur as any}
+            onFocus={props.input.onFocus as any}
+            error={props.meta.error}
+            label={props.label}
+            style={style}
+        />
+    )
+}
 
-    private propsFor(name: InputNames) {
-        let val = this.props.initialData !== undefined ? this.props.initialData[name] : undefined;
-        let form = this.props.form;
-        return {
-            name: name,
-            onUpdate: this.props.onUpdateData,
-            onFocus: () => this.props.onFocusField(name),
-            onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
-            error: form.touched[name] ? this.props.errors[name] : undefined,
-            focus: form.focus === name,
-            initialValue: (val === undefined || Object.is(val, NaN)) ? "" : val.toString(),
-        }
-    }
+export default class ShoppingListItemForm extends React.Component<ShoppingListItemFormProperties, State> {
 
     render() {
         return (
             <V.VBox style={styles.values.container}>
-                <V.FormField
-                    {...this.propsFor("name")}
-                    returnKeyType={"next"}
-                    nextField={"amount"}
-                    keyboardType={"default"}
-                    label={res.strings.shoppingListFormNameLabel()}
-                    placeholder={res.strings.shoppingListFormNamePlaceholder()} />
-                <V.FormField
-                    {...this.propsFor("amount")}
-                    returnKeyType={"next"}
-                    nextField={"unit"}
-                    keyboardType={"numbers-and-punctuation"}
-                    label={res.strings.shoppingListFormAmountLabel()}
-                    placeholder={res.strings.shoppingListFormAmountPlaceholder()} />
-                <V.FormField
-                    {...this.propsFor("unit")}
-                    returnKeyType={"next"}
-                    nextField={"name0"}
-                    keyboardType={"default"}
-                    label={res.strings.shoppingListFormUnitLabel()}
-                    placeholder={res.strings.shoppingListFormUnitPlaceholder()} />
+                <Field name="name" component={ReduxFormField()} label={res.strings.shoppingListFormNameLabel()} />
+                <Field name="amount" component={ReduxFormField()} label={res.strings.shoppingListFormAmountLabel()} />
+                <Field name="unit" component={ReduxFormField()} label={res.strings.shoppingListFormUnitLabel()} />
             </V.VBox>
-        );
-    }
-
-    componentWillUnmount() {
-        this.props.onCancel();
+        )
     }
 }
 

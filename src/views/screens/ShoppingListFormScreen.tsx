@@ -2,35 +2,32 @@ import * as React from "react";
 
 import { ShoppingListFormData } from "@root/reducers/app";
 
-import ShoppingListItemForm, { ShoppingListItemFormProperties } from "@root/views/components/ShoppingListItemForm";
+import ShoppingListItemForm  from "@root/views/components/ShoppingListItemForm";
 import { 
     createContainer,
     createAnchor,
-    createDispacherProps,
-    createFormProps,
-    FormProps,
     ThemedViews as V,
-    actions,
-    selectors,
     res,
 } from "./Imports";
+import { reduxForm, InjectedFormProps } from "redux-form";
 
 export interface ShoppingListFormScreenProperties {
-    id?: string | string[],
-    formProps: FormProps<ShoppingListFormData>
+    id: string | string[] | undefined,
 }
+
+type Props = ShoppingListFormScreenProperties & InjectedFormProps<{}, ShoppingListFormScreenProperties>;
 
 interface State {
 }
 
 interface Params {
     id: string | string[] | undefined,
-    data?: ShoppingListItemFormProperties["initialData"];
+    data?: ShoppingListFormData,
 }
 
 const anchor = createAnchor<Params>("ShoppingListItemForm");
 
-export class ShoppingListFormScreen extends React.Component<ShoppingListFormScreenProperties, State> {
+export class ShoppingListFormScreen extends React.Component<Props, State> {
 
     public static anchor = anchor;
 
@@ -38,36 +35,21 @@ export class ShoppingListFormScreen extends React.Component<ShoppingListFormScre
         return (
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.meelPrepsTitle()}
-                    renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={this.props.formProps.onCancel} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(this.props.id)} />}
+                    renderLeft={() => <V.AppScreenHeaderButton icon="close" />}
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit(data => console.log(data))} />}
                 />
-                <ShoppingListItemForm {...this.props.formProps} />
+                <ShoppingListItemForm />
             </V.Screen>
         );
     }
 }
 
-export default createContainer(ShoppingListFormScreen)((state, dispatch, ownProps) => {
-    let dispatchers = createDispacherProps(dispatch);
-    let initialData = ShoppingListFormScreen.anchor.getParam(ownProps, "data");
+const _ShoppingListFormScreen = reduxForm<{}, ShoppingListFormScreenProperties>({
+    form: "shoppingListItem",
+})(ShoppingListFormScreen);
+
+export default createContainer(_ShoppingListFormScreen)((_state, _dispatch, ownProps) => {
+    let initialValues = ShoppingListFormScreen.anchor.getParam(ownProps, "data");
     let id = ShoppingListFormScreen.anchor.getParam(ownProps, "id");
-    return {
-        id,
-        formProps: createFormProps({
-            formState: state.app.shoppingListForm,
-            dispatch,
-            actions: actions.app.SHOPPING_LIST_FORM,
-            initialData,
-            errorsSelector: selectors.app.shoppingListItemFormErrorsSelector,
-            performCancel: () => dispatchers.router.back("ShoppingListItemForm"),
-            performSubmit: (data, id) => {
-                if (id === undefined) {
-                    dispatchers.entities.addShoppingListItem(data);
-                } else {
-                    dispatchers.entities.updateShoppingListItem(id, data);
-                }
-                dispatchers.router.back("ShoppingListItemForm");
-            },
-        })
-    }
+    return { initialValues, id };
 })

@@ -1,26 +1,29 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { reducer as formReducer, FormStateMap } from "redux-form";
 
 import { combineReducers } from "@root/utils/redux";
 import { reducers, AppState, UndoableEntitiesState } from "@root/reducers";
 import navigators, { NavigatorsState } from "@root/navigators";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 
 export interface StoreState extends NavigatorsState {
     app: AppState,
     entities: UndoableEntitiesState,
+    form: FormStateMap,
 }
 
 const rootReducer = combineReducers<StoreState>({
     ...navigators.reducers,
     app: reducers.app,
     entities: reducers.entities,
+    form: formReducer,
 });
 const persistedRootReducer = persistReducer({
     key: "root",
     storage,
-    blacklist: Object.keys(navigators.reducers),
+    blacklist: ["form", ...Object.keys(navigators.reducers)],
 }, rootReducer as any);
 
 export const configureStore = () => {

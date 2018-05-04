@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { AnyAction, combineReducers as _combineReducers, Dispatch } from "redux";
+import { AnyAction, combineReducers as _combineReducers, Dispatch, Reducer } from "redux";
 import { Omit, PartialExcept } from "./types";
 import obj from "./obj";
 
@@ -359,7 +359,7 @@ export class FormReducerBuilder<FormData> {
 }
 
 export type ReducerMap<State> = {
-    [P in keyof State]: (state: State[P] | undefined, action: AnyAction) => State[P]
+    [P in keyof State]: Reducer<State[P]>
 }
 
 export const combineReducers = function <State>(map: ReducerMap<State>) {

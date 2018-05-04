@@ -9,6 +9,7 @@ export const recipes: EntitiesState["recipes"] = {
         ],
         name: "西京焼き",
         photo: "https://c-chefgohan.gnst.jp/imgdata/recipe/71/40/4071/rc732x546_1612211250_ed012fb4950cad6099c95ef9124cfc82.jpg",
+        url: undefined,
         _version: "1",
         _lastModified: Date.now()
     }, 
