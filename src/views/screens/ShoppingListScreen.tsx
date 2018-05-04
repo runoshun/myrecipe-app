@@ -42,15 +42,15 @@ export class ShoppingListScreen extends React.Component<ShoppingListScreenProper
     }
 
     private handleAddItem = () => {
-        this.props.router.navigate(ShoppingListFormScreen.anchor, {})
+        this.props.router.navigate(ShoppingListFormScreen.anchor, { id: undefined })
     }
 
     private handleEdit = (item: Types.ShoppingListItemEntity) => {
-        this.props.router.navigate(ShoppingListFormScreen.anchor, {data: item})
+        this.props.router.navigate(ShoppingListFormScreen.anchor, {data: item, id: item.id})
     }
 
     private handleEditMerged = (item: Types.MergedShoppingListItem) => {
-        this.props.router.navigate(ShoppingListFormScreen.anchor, {data: item})
+        this.props.router.navigate(ShoppingListFormScreen.anchor, {data: item, id: item.id})
     }
 
     private handleDeleteMerged = (item: Types.MergedShoppingListItem) => {

@@ -61,7 +61,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     private shoppingListFormDataToEntity = (data: ShoppingListFormData): Omit<Types.ShoppingListItemEntity, "id" | "checked"> => {
         return {
             name: data.name,
-            amount: parseInt(data.amount),
+            amount: data.amount,
             unit: data.unit,
             recipeId: undefined,
             _version: "1",
@@ -83,7 +83,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
                  ...this.shoppingListFormDataToEntity(data)
                 }));
         } else {
-            let amount = parseInt(data.amount) / id.length;
+            let amount = data.amount / id.length;
             id.forEach(id => {
                 this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
                     ...this.shoppingListFormDataToEntity(data),
@@ -101,10 +101,10 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     private meelPrepFormDataToEntity = (data: MeelPrepFormData): Omit<Types.MeelPrepEntity, "id"> => {
         return {
             name: data.name,
-            amount: parseInt(data.amount),
+            amount: data.amount,
             photo: data.photo || res.images.noImage,
-            createdAt: Date.parse(data.createdAt),
-            expiredAt: Date.parse(data.expiredAt),
+            createdAt: data.createdAt,
+            expiredAt: data.expiredAt,
             _version: "1",
             _lastModified: Date.now()
         }
@@ -133,7 +133,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     }
 
     private filterIngredients = (data: RecipeFormData["ingredients"]): Types.Ingredient[] => {
-        return data.map(item => (item.name && item.unit && item.amount) ? { ...item } as Types.Ingredient : undefined)
+        return data.map(item => (item.name) ? { name: item.name, amount: item.amount, unit: item.unit } : undefined)
                    .filter(item => item !== undefined) as Types.Ingredient[];
     }
 

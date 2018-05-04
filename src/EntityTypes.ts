@@ -14,16 +14,16 @@ export interface RecipeEntity extends EntityCommon<"1"> {
     name: string,
     photo: string,
     ingredients: Ingredient[],
-    url?: string,
+    url: string | undefined,
 }
 
 export interface MeelPrepEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
     amount: number,
-    photo?: string,
-    createdAt?: number,
-    expiredAt?: number,
+    photo: string | undefined,
+    createdAt: number | undefined,
+    expiredAt: number | undefined,
 }
 
 export interface MeelEntity extends EntityCommon<"1"> {
@@ -31,7 +31,7 @@ export interface MeelEntity extends EntityCommon<"1"> {
     name: string,
     amount: number,
     photo: string,
-    meelPrepId?: string,
+    meelPrepId: string | undefined,
 }
 
 export interface ShoppingListItemEntity extends EntityCommon<"1"> {

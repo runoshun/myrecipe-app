@@ -7,7 +7,7 @@ import {
     createAnchor,
     createDispacherProps,
     createFormProps,
-    FromProps,
+    FormProps,
     ThemedViews as V,
     actions,
     selectors,
@@ -15,14 +15,16 @@ import {
 } from "./Imports";
 
 export interface MeelPrepFormScreenProperties{
-    formProps: FromProps<MeelPrepFormData>
+    formProps: FormProps<MeelPrepFormData>
+    id?: string,
 }
 
 interface State {
 }
 
 interface Params {
-    data?: MeelPrepFormProperties["data"];
+    id: string | undefined,
+    data?: MeelPrepFormProperties["initialData"];
 }
 
 const anchor = createAnchor<Params>("MeelPrepForm");
@@ -32,38 +34,39 @@ export class MeelPrepFormScreen extends React.Component<MeelPrepFormScreenProper
     public static anchor = anchor;
 
     render() {
-        let data = anchor.getParam(this.props, "data");
         return (
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.meelPrepsTitle()}
                     renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={this.props.formProps.onCancel} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(data && data.id)} />}
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(this.props.id)} />}
                 />
-                <MeelPrepForm data={anchor.getParam(this.props, "data")} {...this.props.formProps} />
+                <MeelPrepForm {...this.props.formProps} />
             </V.Screen>
         );
     }
 }
 
-export default createContainer(MeelPrepFormScreen)((state, dispatch) => {
+export default createContainer(MeelPrepFormScreen)((state, dispatch, ownProps) => {
     let dispatchers = createDispacherProps(dispatch);
+    let initialData = MeelPrepFormScreen.anchor.getParam(ownProps, "data");
+    let id = MeelPrepFormScreen.anchor.getParam(ownProps, "id");
     return {
-        formProps: createFormProps(
-            state.app.meelPrepForm,
+        id,
+        formProps: createFormProps({
+            formState: state.app.meelPrepForm,
             dispatch,
-            actions.app.MEEL_PREP_FORM,
-            {
-                errorsSelector: selectors.app.meelPrepFormErrorsSelector,
-                performCancel: () => dispatchers.router.back("MeelPrepForm"),
-                performSubmit: (data, id) => {
-                    if (id === undefined) {
-                        dispatchers.entities.addMeelPrep(data);
-                    } else {
-                        dispatchers.entities.updateMeelPrep(id, data);
-                    }
-                    dispatchers.router.back("MeelPrepForm");
+            actions: actions.app.MEEL_PREP_FORM,
+            initialData: initialData,
+            errorsSelector: selectors.app.meelPrepFormErrorsSelector,
+            performCancel: () => dispatchers.router.back("MeelPrepForm"),
+            performSubmit: (data, id) => {
+                if (id === undefined) {
+                    dispatchers.entities.addMeelPrep(data);
+                } else {
+                    dispatchers.entities.updateMeelPrep(id, data);
                 }
-            },
-        )
+                dispatchers.router.back("MeelPrepForm");
+            }
+        })
     }
-})
+});

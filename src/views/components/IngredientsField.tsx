@@ -1,40 +1,36 @@
 import * as React from "react";
 
 import res from "@root/resources";
-import { FromProps } from "@root/utils/redux";
+import { FormProps } from "@root/utils/redux";
 import { RecipeFormData, RecipeFormErrors } from "@root/reducers/app";
 import * as Types from "@root/EntityTypes";
 import * as V from "./Themed";
 
 export interface IngredientsFieldProperties {
-    data?: Partial<Types.Ingredient>[],
-    onFocusField: FromProps<RecipeFormData>["onFocusField"],
-    onUpdateData: FromProps<RecipeFormData>["onUpdateData"],
+    data?: Types.Ingredient[],
+    onFocusField: FormProps<RecipeFormData>["onFocusField"],
+    onUpdateData: FormProps<RecipeFormData>["onUpdateData"],
     errors: RecipeFormErrors,
-    form: FromProps<RecipeFormData>["form"],
+    form: FormProps<RecipeFormData>["form"],
 }
 
 interface State {
-    ingredients: Partial<Types.Ingredient>[],
-    numOfFields: number;
+    ingredients: Types.Ingredient[],
 }
 
 export default class IngredientsField extends React.Component<IngredientsFieldProperties, State> {
 
     constructor(props: any) {
         super(props);
-        let numOfFields = this.props.data ? this.props.data.length : 1;
-        let ingredients = this.props.data ? this.props.data : [{}];
+        let ingredients = this.props.data ? this.props.data : [{ name: "", amount: NaN, unit: "" }];
         this.state = {
             ingredients,
-            numOfFields,
         }
     }
 
     private onPressAdd = () => {
         this.setState({
-            numOfFields: this.state.numOfFields + 1,
-            ingredients: [...this.state.ingredients, {}],
+            ingredients: [...this.state.ingredients, {name: "", amount: NaN, unit: ""}],
         })
     }
 
@@ -42,11 +38,11 @@ export default class IngredientsField extends React.Component<IngredientsFieldPr
         let ingredients = [...this.state.ingredients];
         ingredients[index][prefix] = data[prefix + index];
         this.setState({ ingredients })
-        this.props.onUpdateData({ ingredients })
+        this.props.onUpdateData({ ingredients: JSON.stringify(ingredients) })
     }
 
     private propsFor(prefix: keyof Types.Ingredient, index: number, next?: keyof Types.Ingredient) {
-        let val = this.props.data !== undefined ? this.props.data[index][prefix] : undefined;
+        let val = this.state.ingredients[index][prefix];
         let name = prefix + index;
         let errors = this.props.errors.ingredients && this.props.errors.ingredients[index]
         let error = errors && errors[prefix];
@@ -59,14 +55,14 @@ export default class IngredientsField extends React.Component<IngredientsFieldPr
             onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
             error: error,
             focus: this.props.form.focus === name,
-            value: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
+            initialValue: (val == undefined || Object.is(val, NaN)) ? undefined : val.toString(),
         }
     }
 
     render() {
         return (
             <V.VBox>
-                {Array.from(Array(this.state.numOfFields).keys()).map(index => {
+                {Array.from(Array(this.state.ingredients.length).keys()).map(index => {
                     let isFirst = index === 0;
                     return (
                     <V.HBox key={index.toString()} style={styles.values.container}>

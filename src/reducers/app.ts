@@ -2,13 +2,10 @@ import * as reduxUtils from "@root/utils/redux";
 import { createSelector } from "reselect";
 import res from "@root/resources";
 import * as Types from "@root/EntityTypes";
+import { Omit } from "@root/utils/types";
 
-export type RecipeFormData = {
-    name: string,
-    photo: string,
-    url: string,
-    ingredients: Partial<Types.Ingredient>[],
-}
+type EntityExluceCommon = "id" | "_version" | "_lastModified";
+export type RecipeFormData = Omit<Types.RecipeEntity, EntityExluceCommon>;
 export type RecipeFormErrors = {
     name?: string,
     photo?: string,
@@ -19,23 +16,13 @@ export interface RecipesState {
     filter: string,
 }
 
-export type MeelPrepFormData = {
-    name: string,
-    amount: string,
-    createdAt: string,
-    expiredAt: string,
-    photo: string,
-}
+export type MeelPrepFormData = Omit<Types.MeelPrepEntity, EntityExluceCommon>;
 export interface MeelPrepsState {
     filter: string,
 }
 
 export type ShoppingListType = "merged" | "withRecipe";
-export type ShoppingListFormData = { 
-    name: string,
-    amount: string,
-    unit: string,
-}
+export type ShoppingListFormData = Omit<Types.ShoppingListItemEntity, EntityExluceCommon | "checked" | "recipeId">;
 export interface ShoppingListState {
     filter: string,
     listType: ShoppingListType,
@@ -71,25 +58,44 @@ export const recipesReducer = new reduxUtils.ReducerBuilder<RecipesState>({
 })
     .build();
 
-export const recipeFormReducer = new reduxUtils.FormReducerBuilder<RecipeFormData>({
-    ingredients: [],
-    name: "",
-    photo: "",
-    url: ""
-}, actions.RECIPE_FORM).build()
+export const recipeFormReducer = new reduxUtils.FormReducerBuilder<RecipeFormData>(
+    {
+        ingredients: [],
+        name: "",
+        photo: "",
+        url: ""
+    },
+    actions.RECIPE_FORM,
+    {
+        name: x => x,
+        photo: x => x,
+        url: x => x,
+        ingredients: x => JSON.parse(x) 
+    }
+).build()
 
 export const meelPrepsReducer = new reduxUtils.ReducerBuilder<MeelPrepsState>({
     filter: "",
 })
     .build();
 
-export const meelPrepFormReducer = new reduxUtils.FormReducerBuilder<MeelPrepFormData>({
-    name: "",
-    amount: "",
-    createdAt: "",
-    expiredAt: "",
-    photo: ""
-}, actions.MEEL_PREP_FORM).build();
+export const meelPrepFormReducer = new reduxUtils.FormReducerBuilder<MeelPrepFormData>(
+    {
+        name: "",
+        amount: NaN,
+        createdAt: undefined,
+        expiredAt: undefined,
+        photo: ""
+    },
+    actions.MEEL_PREP_FORM,
+    {
+        name: x => x,
+        amount: parseInt,
+        createdAt: Date.parse,
+        expiredAt: Date.parse,
+        photo: x => x,
+    }
+).build();
 
 export const shoppingListReducer = new reduxUtils.ReducerBuilder<ShoppingListState>({
     filter: "",
@@ -101,12 +107,19 @@ export const shoppingListReducer = new reduxUtils.ReducerBuilder<ShoppingListSta
     }))
     .build();
 
-export const shoppingListFormReducer = new reduxUtils.FormReducerBuilder<ShoppingListFormData>({
-    name: "",
-    amount: "",
-    unit: "" 
-}, actions.SHOPPING_LIST_FORM)
-    .build();
+export const shoppingListFormReducer = new reduxUtils.FormReducerBuilder<ShoppingListFormData>(
+    {
+        name: "",
+        amount: NaN,
+        unit: ""
+    },
+    actions.SHOPPING_LIST_FORM,
+    {
+        name: x => x,
+        amount: parseInt,
+        unit: x => x,
+    }
+).build();
 
 export const reducer = reduxUtils.combineReducers<AppState>({
     recipeForm: recipeFormReducer,
@@ -132,17 +145,15 @@ const notEmpty = (error: string) => (data: string) => {
     }
 }
 
-const numberOrEmpty = (error: string) => (data: string) => {
-    if (!data || data === "") { return; }
+const numberOrEmpty = (error: string) => (data: number) => {
     if (isNaN(data as any)) {
         return error;
     }
     return;
 }
 
-const dateOrEmpty = (error: string) => (data: string) => {
-    if (!data || data === "") { return; }
-    if (isNaN(Date.parse(data))) {
+const dateOrEmpty = (error: string) => (data: number | undefined) => {
+    if (data !== undefined && isNaN(data)) {
         return error;
     }
     return;

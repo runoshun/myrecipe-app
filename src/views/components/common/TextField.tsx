@@ -13,7 +13,7 @@ export interface TextFieldProperties extends TextInputProperties {
     onUpdate?: (data: { [key: string]: string }) => void,
     onFocusNext?: (next?: string) => void,
     submitOnBlur?: boolean,
-    mask?: (text: string, prev?: string) => string,
+    initialValue?: string,
 }
 
 interface State {
@@ -61,49 +61,11 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
 
     public static defaultStyles = defaultStyles;
 
-    public static maskByDigits = (format: string) => {
-        let formatDigits = format.split("").map(d => parseInt(d));
-        return (next: string, prev?: string) => {
-            let isDelete = prev && next.length < prev.length;
-            let result = "";
-            for (let i = 0; i < format.length; ++i) {
-                let f = format[i];
-                let fd = formatDigits[i];
-                let n = next[i];
-                let nd = parseInt(n);
-                let isLast = next[i + 1] === undefined && n !== undefined;
-
-                if (n === undefined) {
-                    break;
-                }
-
-                if (isNaN(fd) && isLast) {
-                    if (!isDelete && formatDigits[i + 1] >= nd) {
-                        result += f + n;
-                    } else if (!isDelete) {
-                        result += f;
-                    } else if (isDelete && f === n) {
-                        result += f;
-                    }
-                } else if (isNaN(fd) && !isLast) {
-                    result += f;
-                } else if (!isNaN(fd) && fd >= nd) {
-                    result += n;
-                }
-
-                if (!isNaN(nd) && isLast && isNaN(formatDigits[i + 1]) && !isDelete && i + 1 < format.length) {
-                    result += format[i + 1];
-                }
-            }
-            return result;
-        }
-    }
-
     private input?: TextInput;
 
     constructor(props: TextFieldProperties) {
         super(props);
-        let value = props.value || "";
+        let value = props.initialValue || "";
         this.state = { text: value, cursor: value.length }
     }
 
@@ -117,8 +79,7 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
         this.props.onBlur && this.props.onBlur();
     }
 
-    private onChangeText = (raw: string) => { 
-        let text = this.props.mask ? this.props.mask(raw, this.state.text) : raw;
+    private onChangeText = (text: string) => { 
         this.setState({text: text});
         this.props.onUpdate && this.props.onUpdate({ [this.props.name]: text });
         this.props.onChangeText && this.props.onChangeText(text);
@@ -126,7 +87,7 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
 
     render() {
         let { label, error, style, focus, submitOnBlur, styles: _styles,
-              onSubmitEditing, onBlur, onChangeText, value, ...inputProps } = this.props
+              onSubmitEditing, onBlur, onChangeText, initialValue, ...inputProps } = this.props
         let styles = _styles || defaultStyles;
 
         let inputStyle: any[] = [styles.values.TUI_VInput_Input];
@@ -152,7 +113,10 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
     }
 
     componentWillMount() {
-        // initialize by 'value' prop
+        // initialize by 'value' or 'initialValue' prop
+        if (this.props.initialValue) {
+            this.onChangeText(this.props.initialValue)
+        }
         if (this.props.value !== undefined) {
             this.onChangeText(this.props.value);
         }

@@ -15,6 +15,7 @@ export { default as Dialog } from "./Dialog";
 export { default as PopupMenu } from "./PopupMenu";
 export { default as PopupRegistry } from "./PopupRegistry";
 export { default as TextField } from "./TextField";
+export { default as DatePicker } from "./DatePicker";
 
 export { default as Stylable } from "./stylable";
 export { default as Animation } from "./anim/Animation";

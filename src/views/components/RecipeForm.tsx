@@ -3,8 +3,7 @@ import * as React from "react";
 import * as V from "./Themed";
 import res from "@root/resources";
 import { RecipeFormData, RecipeFormErrors } from "@root/reducers/app";
-import { FromProps } from "@root/utils/redux";
-import * as Types from "@root/EntityTypes";
+import { FormProps } from "@root/utils/redux";
 
 import ImageField from "./ImageField";
 import IngredientsField from "./IngredientsField";
@@ -13,15 +12,7 @@ import api from "@root/api";
 
 export type InputNames = "name" | "photo" | "url";
 
-type RecipeFormInitial = {
-    id?: string,
-    photo?: string,
-    name?: string,
-    url?: string,
-    ingredients?: Partial<Types.Ingredient>[],
-} | undefined;
-export interface RecipeFormProperties extends FromProps<RecipeFormData, any, RecipeFormErrors> {
-    data: RecipeFormInitial,
+export interface RecipeFormProperties extends FormProps<RecipeFormData, any, RecipeFormErrors> {
 }
 
 interface State { }
@@ -29,7 +20,7 @@ interface State { }
 export default class RecipeForm extends React.Component<RecipeFormProperties, State> {
 
     private propsFor(name: InputNames) {
-        let val = this.props.data !== undefined ? this.props.data[name] : undefined;
+        let val = this.props.initialData !== undefined ? this.props.initialData[name] : undefined;
         return {
             name: name,
             onUpdate: this.props.onUpdateData,
@@ -37,12 +28,12 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
             onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
             error: this.props.form.touched[name] ? this.props.errors[name] : undefined,
             focus: this.props.form.focus === name,
-            value: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
+            initialValue: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
         }
     }
 
     render() {
-        let photo = (this.props.data && this.props.data.photo);
+        let photo = (this.props.initialData && this.props.initialData.photo);
         return (
             <V.VBox style={styles.values.container}>
                 <ImageField 
@@ -68,7 +59,7 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
                         label={res.strings.recipeFormUrlLabel()}
                         placeholder={res.strings.recipeFormUrlPlaceholder()} />
                     <IngredientsField
-                        data={this.props.data && this.props.data.ingredients}
+                        data={this.props.initialData && this.props.initialData.ingredients}
                         onFocusField={this.props.onFocusField}
                         onUpdateData={this.props.onUpdateData}
                         errors={this.props.errors}

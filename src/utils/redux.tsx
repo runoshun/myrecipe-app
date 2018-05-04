@@ -56,7 +56,7 @@ export interface EntityState<Entity extends EntityBase> {
 }
 
 export interface FormActionCreator<FormData> {
-    UPDATE: ActionCreator<Partial<FormData>, never>,
+    UPDATE: ActionCreator<Partial<{[P in keyof FormData]: string}>, never>,
     TOUCH: ActionCreator<string, never>,
     CLEAR: ActionCreator<{}, never>,
     FOCUS: ActionCreator<string, never>,
@@ -301,11 +301,15 @@ export class EntityReducerBuilder<Entity extends EntityBase> {
 
 }
 
+type FormDataConvert<FormData> = {
+    [P in keyof FormData]: (data: string) => FormData[P]
+}
+
 export class FormReducerBuilder<FormData> {
 
     private builder: ReducerBuilder<FormState<FormData>>;
 
-    constructor(initialData: FormData, creator: FormActionCreator<FormData>) {
+    constructor(initialData: FormData, creator: FormActionCreator<FormData>, toFormData: FormDataConvert<FormData>) {
         this.builder = new ReducerBuilder<FormState<FormData>>({
             data: initialData,
             touched: {},
@@ -314,10 +318,18 @@ export class FormReducerBuilder<FormData> {
 
         this.builder
             .case(creator.UPDATE, (state, payload) => {
+                let updateData = {} as Partial<FormData>;
+                Object.keys(payload).forEach((k) => {
+                    let key = k as keyof FormData;
+                    let value = payload[key];
+                    if (value !== undefined) {
+                        updateData[key] = toFormData[key](value as string)
+                    }
+                });
                 return {
                     ...state,
                     touched: Object.assign({}, state.touched, obj.map(payload, (_: any) => true)),
-                    data: Object.assign({}, state.data, payload)
+                    data: Object.assign({}, state.data, updateData)
                 }
             })
             .case(creator.TOUCH, (state, payload) => {
@@ -401,17 +413,19 @@ export const createFormValidationSelector = function<
     }
 }
 
-export interface FromProps<
+type FormErrorsBase<T> = Partial<{ [P in keyof T]: any }>;
+export interface FormProps<
     FormData,
     SubmitArg = any,
-    FormErrors extends Partial<{ [P in keyof FormData]: any }> = SimpleFormErrors<FormData>,
+    FormErrors extends FormErrorsBase<FormData> = SimpleFormErrors<FormData>,
 > {
     form: FormState<FormData>,
     errors: FormErrors,
     canSubmit: boolean,
+    initialData?: FormData,
     onCancel: () => void,
     onSubmit: (arg: SubmitArg) => void,
-    onUpdateData: (data: Partial<FormData>) => void,
+    onUpdateData: (data: Partial<{ [P in keyof FormData]: string }>) => void,
     onClearData: () => void,
     onFocusField: (name: string) => void,
     onTouchField: (name: string) => void,
@@ -420,34 +434,37 @@ export interface FromProps<
 export const createFormProps = function<
     FormData,
     SubmitArg = any,
-    FormErrors extends Partial<{ [P in keyof FormData]: any }> = SimpleFormErrors<FormData>
->(
+    FormErrors extends FormErrorsBase<FormData> = SimpleFormErrors<FormData>
+>(options: {
     formState: FormState<FormData>,
     dispatch: Dispatch<any>,
     actions: FormActionCreator<FormData>,
-    options?: {
-        errorsSelector?: (state: FormState<FormData>) => FormErrors,
-        performSubmit?: (data: FormData, arg: SubmitArg) => void,
-        performCancel?: () => void,
-    }
-): FromProps<FormData, SubmitArg, FormErrors> {
-    let options_ = options || {};
-    let errors = options_.errorsSelector && options_.errorsSelector(formState) || {} as any;
+    initialData?: FormData,
+    errorsSelector?: (state: FormState<FormData>) => FormErrors,
+    performSubmit?: (data: FormData, arg: SubmitArg) => void,
+    performCancel?: () => void,
+}): FormProps<FormData, SubmitArg, FormErrors> {
+    let errors = options.errorsSelector && options.errorsSelector(options.formState) || {} as any;
     let errorCount = Object.values(errors).reduce((count: number, value) => value !== undefined ? count + 1 : count, 0);
+    let dispatch = options.dispatch;
+    let actions = options.actions;
     return {
-        form: formState,
+        form: options.formState,
         errors: errors,
         canSubmit: errorCount === 0,
+        initialData: options.initialData,
         onCancel: () => {
             dispatch(actions.CLEAR({}));
-            options_.performCancel && options_.performCancel()
+            options.performCancel && options.performCancel()
         },
         onSubmit: (arg: SubmitArg) => {
             if (errorCount === 0) {
-                options_.performSubmit && options_.performSubmit(formState.data, arg);
+                options.performSubmit && options.performSubmit(options.formState.data, arg);
             } else {
                 // force touched all fields
-                dispatch(actions.UPDATE(formState.data));
+                Object.keys(options.formState.data).forEach(key => {
+                    dispatch(actions.TOUCH(key))
+                })
             }
         },
         onUpdateData: (data) => dispatch(actions.UPDATE(data)),

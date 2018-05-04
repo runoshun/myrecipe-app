@@ -3,7 +3,7 @@ import * as React from "react";
 import * as V from "./Themed";
 import res from "@root/resources";
 import { MeelPrepFormData } from "@root/reducers/app";
-import { FromProps } from "@root/utils/redux";
+import { FormProps } from "@root/utils/redux";
 
 import ImageField from "./ImageField";
 
@@ -11,27 +11,26 @@ import api from "@root/api";
 
 export type InputNames = keyof MeelPrepFormData;
 
-type MeelPrepFormInitial = {
-    id?: string,
-    photo?: string,
-    name?: string,
-    amount?: number,
-    expiredAt?: number,
-    createdAt?: number,
-} | undefined;
-export interface MeelPrepFormProperties extends FromProps<MeelPrepFormData, string | undefined> {
-    data: MeelPrepFormInitial,
+export interface MeelPrepFormProperties extends FormProps<MeelPrepFormData, string | undefined> {
 }
 
 interface State { }
 
 export default class MeelPrepForm extends React.Component<MeelPrepFormProperties, State> {
 
+    private formatDate = (time?: number) => {
+        if (time) {
+            let date = new Date(time);
+            return `${date.getFullYear()}/${('0' + (date.getMonth() + 1)).slice(-2)}/${('0' + date.getDate()).slice(-2)}`;
+        } else {
+            return undefined;
+        }
+    }
+
     private propsFor(name: InputNames) {
-        let val = this.props.data !== undefined ? this.props.data[name] : undefined;
-        if (val && (name === "createdAt" || name === "expiredAt")) {
-            let date = new Date(val as number);
-            val = `${date.getFullYear()}/${('0' + (date.getMonth() + 1)).slice(-2)}/${('0' + date.getDate()).slice(-2)}`;
+        let val = this.props.initialData ? this.props.initialData[name] : undefined;
+        if ((name === "createdAt" || name === "expiredAt")) {
+            val = this.formatDate(val as number);
         }
         return {
             name: name,
@@ -40,12 +39,35 @@ export default class MeelPrepForm extends React.Component<MeelPrepFormProperties
             onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
             error: this.props.form.touched[name] ? this.props.errors[name] : undefined,
             focus: this.props.form.focus === name,
-            value: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
+            initialValue: (val == undefined || Object.is(val, NaN)) ? undefined : val.toString(),
+        }
+    }
+
+    private openCreateDatePicker = async () => {
+        let time = this.props.form.data.createdAt;
+        let date = time ? new Date(time) : new Date();
+        let result = await V.DatePicker.open({
+            date,
+            maxDate: new Date(Date.now())
+        });
+        if (result.type === "selected") {
+            let date = new Date(result.year, result.month, result.day);
+            this.props.onUpdateData({ createdAt: this.formatDate(date.getTime()) })
+        }
+    }
+
+    private openExpiredDatePicker = async () => {
+        let time = this.props.form.data.expiredAt;
+        let date = time ? new Date(time) : new Date();
+        let result = await V.DatePicker.open({ date });
+        if (result.type === "selected") {
+            let date = new Date(result.year, result.month, result.day);
+            this.props.onUpdateData({ expiredAt: this.formatDate(date.getTime()) })
         }
     }
 
     render() {
-        let photo = (this.props.data && this.props.data.photo);
+        let photo = (this.props.initialData && this.props.initialData.photo);
         return (
             <V.VBox style={styles.values.container}>
                 <ImageField 
@@ -73,22 +95,24 @@ export default class MeelPrepForm extends React.Component<MeelPrepFormProperties
                         placeholder={res.strings.meelPrepFormAmountPlaceholder()}
                         style={styles.values.amountInput} />
                 </V.HBox>
-                    <V.FormField
-                        {...this.propsFor("createdAt")}
-                        returnKeyType={"next"}
-                        nextField={"expiredAt"}
-                        keyboardType={"numbers-and-punctuation"}
-                        mask={V.TextField.maskByDigits("9999/99/99")}
-                        label={res.strings.meelPrepFormCreateAtLabel()}
-                        placeholder={res.strings.meelPrepFormCreateAtPlaceholder()} />
-                    <V.FormField
-                        {...this.propsFor("expiredAt")}
-                        returnKeyType={"done"}
-                        nextField={"none"}
-                        keyboardType={"numbers-and-punctuation"}
-                        mask={V.TextField.maskByDigits("9999/99/99")}
-                        label={res.strings.meelPrepFormExpiredAtLabel()}
-                        placeholder={res.strings.meelPrepFormExpiredAtPlaceholder()} />
+                <V.FormField
+                    {...this.propsFor("createdAt")}
+                    returnKeyType={"next"}
+                    nextField={"expiredAt"}
+                    value={this.formatDate(this.props.form.data.createdAt)}
+                    onTouchStart={this.openCreateDatePicker}
+                    keyboardType={"numbers-and-punctuation"}
+                    label={res.strings.meelPrepFormCreateAtLabel()}
+                    placeholder={res.strings.meelPrepFormCreateAtPlaceholder()} />
+                <V.FormField
+                    {...this.propsFor("expiredAt")}
+                    returnKeyType={"done"}
+                    nextField={"none"}
+                    value={this.formatDate(this.props.form.data.expiredAt)}
+                    onTouchStart={this.openExpiredDatePicker}
+                    keyboardType={"numbers-and-punctuation"}
+                    label={res.strings.meelPrepFormExpiredAtLabel()}
+                    placeholder={res.strings.meelPrepFormExpiredAtPlaceholder()} />
             </V.VBox>
         );
     }

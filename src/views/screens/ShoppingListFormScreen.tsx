@@ -8,7 +8,7 @@ import {
     createAnchor,
     createDispacherProps,
     createFormProps,
-    FromProps,
+    FormProps,
     ThemedViews as V,
     actions,
     selectors,
@@ -16,14 +16,16 @@ import {
 } from "./Imports";
 
 export interface ShoppingListFormScreenProperties {
-    formProps: FromProps<ShoppingListFormData>
+    id?: string | string[],
+    formProps: FormProps<ShoppingListFormData>
 }
 
 interface State {
 }
 
 interface Params {
-    data?: ShoppingListItemFormProperties["data"];
+    id: string | string[] | undefined,
+    data?: ShoppingListItemFormProperties["initialData"];
 }
 
 const anchor = createAnchor<Params>("ShoppingListItemForm");
@@ -33,38 +35,39 @@ export class ShoppingListFormScreen extends React.Component<ShoppingListFormScre
     public static anchor = anchor;
 
     render() {
-        let data = anchor.getParam(this.props, "data");
         return (
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.meelPrepsTitle()}
                     renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={this.props.formProps.onCancel} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(data && data.id)} />}
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(this.props.id)} />}
                 />
-                <ShoppingListItemForm data={anchor.getParam(this.props, "data")} {...this.props.formProps} />
+                <ShoppingListItemForm {...this.props.formProps} />
             </V.Screen>
         );
     }
 }
 
-export default createContainer(ShoppingListFormScreen)((state, dispatch) => {
+export default createContainer(ShoppingListFormScreen)((state, dispatch, ownProps) => {
     let dispatchers = createDispacherProps(dispatch);
+    let initialData = ShoppingListFormScreen.anchor.getParam(ownProps, "data");
+    let id = ShoppingListFormScreen.anchor.getParam(ownProps, "id");
     return {
-        formProps: createFormProps(
-            state.app.shoppingListForm,
+        id,
+        formProps: createFormProps({
+            formState: state.app.shoppingListForm,
             dispatch,
-            actions.app.SHOPPING_LIST_FORM,
-            {
-                errorsSelector: selectors.app.shoppingListItemFormErrorsSelector,
-                performCancel: () => dispatchers.router.back("ShoppingListItemForm"),
-                performSubmit: (data, id) => {
-                    if (id === undefined) {
-                        dispatchers.entities.addShoppingListItem(data);
-                    } else {
-                        dispatchers.entities.updateShoppingListItem(id, data);
-                    }
-                    dispatchers.router.back("ShoppingListItemForm");
-                },
+            actions: actions.app.SHOPPING_LIST_FORM,
+            initialData,
+            errorsSelector: selectors.app.shoppingListItemFormErrorsSelector,
+            performCancel: () => dispatchers.router.back("ShoppingListItemForm"),
+            performSubmit: (data, id) => {
+                if (id === undefined) {
+                    dispatchers.entities.addShoppingListItem(data);
+                } else {
+                    dispatchers.entities.updateShoppingListItem(id, data);
+                }
+                dispatchers.router.back("ShoppingListItemForm");
             },
-        )
+        })
     }
 })

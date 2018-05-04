@@ -36,7 +36,7 @@ export class MeelPrepsScreen extends React.Component<StocksScreenProperties, Sta
     }
 
     private handleAddItem = () => {
-        this.props.router.navigate(MeelPrepFormScreen.anchor, {});
+        this.props.router.navigate(MeelPrepFormScreen.anchor, { id: undefined });
     }
 
     private handleDeleteItem = (item: Types.MeelPrepEntity) => {
@@ -48,7 +48,7 @@ export class MeelPrepsScreen extends React.Component<StocksScreenProperties, Sta
     }
 
     private handleEditItem = (item: Types.MeelPrepEntity) => {
-        this.props.router.navigate(MeelPrepFormScreen.anchor, { data: item })
+        this.props.router.navigate(MeelPrepFormScreen.anchor, { data: item, id: item.id })
     }
 
     private renderEmptyView = () => 

@@ -56,7 +56,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
     private handleEditRecipe = (recipe?: Types.RecipeEntity) => {
         V.AppActionSheet.hide();
         if (recipe) {
-            this.props.router.navigate(RecipeFormScreen.anchor, { data: recipe })
+            this.props.router.navigate(RecipeFormScreen.anchor, { data: recipe, id: recipe.id })
         }
     }
 

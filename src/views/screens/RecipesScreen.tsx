@@ -31,7 +31,7 @@ export class RecipesScreen extends React.Component<RecipesScreenProperties, Stat
     }
 
     onPressAdd = () => {
-        this.props.router.navigate(RecipeFormScreen.anchor, {})
+        this.props.router.navigate(RecipeFormScreen.anchor, { id: undefined })
     }
 
     render() {

@@ -3,18 +3,11 @@ import * as React from "react";
 import * as V from "./Themed";
 import res from "@root/resources";
 import { ShoppingListFormData } from "@root/reducers/app";
-import { FromProps } from "@root/utils/redux";
+import { FormProps } from "@root/utils/redux";
 
 export type InputNames = keyof ShoppingListFormData;
 
-type ShoppingListFormInitial = {
-    id?: string | string[],
-    name?: string,
-    amount?: number,
-    unit?: string,
-} | undefined;
-export interface ShoppingListItemFormProperties extends FromProps<ShoppingListFormData, string | string[] | undefined> {
-    data: ShoppingListFormInitial,
+export interface ShoppingListItemFormProperties extends FormProps<ShoppingListFormData, string | string[] | undefined> {
 }
 
 interface State { }
@@ -22,15 +15,16 @@ interface State { }
 export default class ShoppingListItemForm extends React.Component<ShoppingListItemFormProperties, State> {
 
     private propsFor(name: InputNames) {
-        let val = this.props.data !== undefined ? this.props.data[name] : undefined;
+        let val = this.props.initialData !== undefined ? this.props.initialData[name] : undefined;
+        let form = this.props.form;
         return {
             name: name,
             onUpdate: this.props.onUpdateData,
             onFocus: () => this.props.onFocusField(name),
             onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
-            error: this.props.form.touched[name] ? this.props.errors[name] : undefined,
-            focus: this.props.form.focus === name,
-            value: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
+            error: form.touched[name] ? this.props.errors[name] : undefined,
+            focus: form.focus === name,
+            initialValue: (val === undefined || Object.is(val, NaN)) ? "" : val.toString(),
         }
     }
 
