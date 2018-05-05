@@ -1,17 +1,20 @@
 import * as React from "react";
 
-import { RecipeFormData, RecipeFormErrors } from "@root/reducers/app";
-import RecipeForm, { RecipeFormProperties } from "@root/views/components/RecipeForm";
+import { RecipeFormData } from "@root/reducers/app";
+import RecipeForm from "@root/views/components/RecipeForm";
 import {
-    createContainer, createAnchor, createDispacherProps,
-    createFormProps, FormProps, ThemedViews as V,
-    actions, selectors, res,
+    createContainer, createAnchor,
+    ThemedViews as V,
+    res,
 } from "./Imports";
 import { ScrollView } from "react-native";
+import { InjectedFormProps, reduxForm } from "redux-form";
+import logger from "@root/utils/logger";
+
+const log = logger.create("form");
 
 export interface RecipeFormScreenProperties{
     id?: string,
-    formProps: FormProps<RecipeFormData, any, RecipeFormErrors>
 }
 
 interface State {
@@ -19,12 +22,14 @@ interface State {
 
 interface Params {
     id: string | undefined,
-    data?: RecipeFormProperties["initialData"];
+    data?: RecipeFormData,
 }
 
 const anchor = createAnchor<Params>("RecipeForm");
 
-export class RecipeFormScreen extends React.Component<RecipeFormScreenProperties, State> {
+type Props = InjectedFormProps<RecipeFormData, RecipeFormScreenProperties> & RecipeFormScreenProperties;
+
+export class RecipeFormScreen extends React.Component<Props, State> {
 
     public static anchor = anchor;
 
@@ -32,38 +37,26 @@ export class RecipeFormScreen extends React.Component<RecipeFormScreenProperties
         return (
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.meelPrepsTitle()}
-                    renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={this.props.formProps.onCancel} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(this.props.id)} />}
+                    renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => undefined} />}
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit((data) => log(data))} />}
                 />
                 <ScrollView>
-                    <RecipeForm {...this.props.formProps} />
+                    <RecipeForm />
                 </ScrollView>
             </V.Screen>
         );
     }
 }
 
-export default createContainer(RecipeFormScreen)((state, dispatch, ownProps) => {
-    let dispatchers = createDispacherProps(dispatch);
-    let initialData = RecipeFormScreen.anchor.getParam(ownProps, "data");
+const _RecipeFormScreen = reduxForm<RecipeFormData, RecipeFormScreenProperties>({
+    form: "recipe",
+})(RecipeFormScreen);
+
+export default createContainer(_RecipeFormScreen)((_state, _dispatch, ownProps) => {
+    let initialValues = RecipeFormScreen.anchor.getParam(ownProps, "data");
     let id = RecipeFormScreen.anchor.getParam(ownProps, "id");
     return {
+        initialValues,
         id,
-        formProps: createFormProps({
-            formState: state.app.recipeForm,
-            dispatch,
-            actions: actions.app.RECIPE_FORM,
-            initialData,
-            errorsSelector: selectors.app.recipeFormErrorsSelector,
-            performCancel: () => dispatchers.router.back("RecipeForm"),
-            performSubmit: (data, id) => {
-                if (id === undefined) {
-                    dispatchers.entities.addRecipe(data);
-                } else {
-                    dispatchers.entities.updateRecipe(id, data);
-                }
-                dispatchers.router.back("RecipeForm");
-            }
-        })
     }
 })

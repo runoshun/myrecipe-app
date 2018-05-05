@@ -102,7 +102,7 @@ export default class PopupRegistry extends React.Component<PopupRegistryProperti
                         popupProps: {
                             visible: visible,
                             onRequestClose: () => PopupRegistry.hide(key as any, undefined),
-                            onDissmiss: () => popup.onDissmiss && popup.onDissmiss(state && state.onDissmissArg),
+                            onDissmiss: () => { popup.onDissmiss && popup.onDissmiss(state && state.onDissmissArg); console.log("onDissmiss: reg") },
                         },
                         key: key,
                         ...extendProps,

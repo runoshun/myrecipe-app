@@ -1,78 +1,108 @@
 import * as React from "react";
-
-import * as V from "./Themed";
-import res from "@root/resources";
-import { RecipeFormData, RecipeFormErrors } from "@root/reducers/app";
-import { FormProps } from "@root/utils/redux";
-
-import ImageField from "./ImageField";
-import IngredientsField from "./IngredientsField";
+import { Field, WrappedFieldProps, FieldArray, WrappedFieldArrayProps } from "redux-form";
 
 import api from "@root/api";
+import res from "@root/resources";
+import * as V from "./Themed";
+import ImageField from "./ImageField";
+import ReduxFormField from "./ReduxFormField";
 
-export type InputNames = "name" | "photo" | "url";
-
-export interface RecipeFormProperties extends FormProps<RecipeFormData, any, RecipeFormErrors> {
+export interface RecipeFormProperties {
 }
 
 interface State { }
 
 export default class RecipeForm extends React.Component<RecipeFormProperties, State> {
 
-    private propsFor(name: InputNames) {
-        let val = this.props.initialData !== undefined ? this.props.initialData[name] : undefined;
-        return {
-            name: name,
-            onUpdate: this.props.onUpdateData,
-            onFocus: () => this.props.onFocusField(name),
-            onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
-            error: this.props.form.touched[name] ? this.props.errors[name] : undefined,
-            focus: this.props.form.focus === name,
-            initialValue: (val === undefined || Object.is(val, NaN)) ? undefined : val.toString(),
-        }
-    }
-
     render() {
-        let photo = (this.props.initialData && this.props.initialData.photo);
         return (
             <V.VBox style={styles.values.container}>
-                <ImageField 
-                    onPickImage={api.image.pickImage}
-                    onTakeImage={api.image.takePhoto}
-                    onChangeImage={(source) => this.props.onUpdateData({ photo: source.uri })}
-                    initialImage={photo !== undefined ? { uri: photo } : undefined}
-                    noImage={{ uri: res.images.noImage }}
-                    imageStyle={styles.values.image} />
+                <Field name="photo" component={this.renderPhotoField} />
                 <V.VBox style={styles.values.inputsContainer}>
-                    <V.FormField
-                        {...this.propsFor("name") }
-                        returnKeyType={"next"}
-                        nextField={"url"}
-                        keyboardType={"default"}
-                        label={res.strings.recipeFormNameLabel()}
-                        placeholder={res.strings.recipeFormNamePlaceholder()} />
-                    <V.FormField
-                        {...this.propsFor("url") }
-                        returnKeyType={"next"}
-                        nextField={"amount"}
-                        keyboardType={"default"}
-                        label={res.strings.recipeFormUrlLabel()}
-                        placeholder={res.strings.recipeFormUrlPlaceholder()} />
-                    <IngredientsField
-                        data={this.props.initialData && this.props.initialData.ingredients}
-                        onFocusField={this.props.onFocusField}
-                        onUpdateData={this.props.onUpdateData}
-                        errors={this.props.errors}
-                        form={this.props.form}
-                    />
+                    <Field name="name" component={this.renderNameField} />
+                    <Field name="url" component={this.renderUrlField} />
+                    <FieldArray name="ingredients" component={this.renderIngredientFieldArray as any} />
                 </V.VBox>
             </V.VBox>
         );
     }
 
-    componentWillUnmount() {
-        this.props.onCancel();
+    renderPhotoField = (props: WrappedFieldProps) => {
+        return <ImageField
+            onPickImage={api.image.pickImage}
+            onTakeImage={api.image.takePhoto}
+            onChangeImage={(source) => props.input.onChange(source.uri)}
+            initialImage={props.input.value !== "" ? { uri: props.input.value } : undefined}
+            noImage={{ uri: res.images.noImage }}
+            imageStyle={styles.values.image} />
     }
+
+    renderNameField = (props: WrappedFieldProps) => (
+        <ReduxFormField fieldProps={props}
+            returnKeyType="next"
+            nextField="url"
+            keyboardType="default"
+            label={res.strings.recipeFormNameLabel()}
+            placeholder={res.strings.recipeFormNamePlaceholder()} />
+    )
+
+    renderUrlField = (props: WrappedFieldProps) => (
+        <ReduxFormField fieldProps={props}
+            returnKeyType="next"
+            nextField="amount"
+            keyboardType="default"
+            label={res.strings.recipeFormUrlLabel()}
+            placeholder={res.strings.recipeFormUrlPlaceholder()} />
+    )
+
+    renderIngredientFieldArray = (props: WrappedFieldArrayProps<any>) => (
+        <V.VBox>
+            {props.fields.map((name, index) => (
+                <V.HBox key={index.toString()} style={styles.values.ingContainer}>
+                    <Field
+                        name={`${name}.name`}
+                        component={this.renderIngredientNameField}
+                        label={index === 0 ? res.strings.recipeFormIngredientNameLabel() : undefined} />
+                    <Field
+                        name={`${name}.amount`} 
+                        component={this.renderIngredientAmountField}
+                        label={index === 0 ? res.strings.recipeFormIngredientAmountLabel() : undefined} />
+                    <Field
+                        name={`${name}.unit`}
+                        component={this.renderIngredientUnitField}
+                        label={index === 0 ? res.strings.recipeFormIngredientUnitLabel() : undefined} />
+                </V.HBox>
+            ))}
+            <V.TransparentAccentButton icon="add" style={styles.values.ingAddButton} onPress={() => props.fields.push({})} />
+        </V.VBox>
+    );
+
+    renderIngredientNameField = (props: WrappedFieldProps) => (
+        <ReduxFormField
+            fieldProps={props}
+            keyboardType={"default"}
+            label={props.label}
+            placeholder={res.strings.recipeFormIngredientNamePlaceholder()}
+            style={styles.values.ingName} />
+    );
+
+    renderIngredientAmountField = (props: WrappedFieldProps) => (
+        <ReduxFormField
+            fieldProps={props}
+            keyboardType={"numbers-and-punctuation"}
+            label={props.label}
+            placeholder={res.strings.recipeFormIngredientAmountPlaceholder()}
+            style={styles.values.ingAmountUnit} />
+    );
+
+    renderIngredientUnitField = (props: WrappedFieldProps) => (
+        <ReduxFormField
+            fieldProps={props}
+            keyboardType={"default"}
+            label={props.label}
+            placeholder={res.strings.recipeFormIngredientUnitPlaceholder()}
+            style={styles.values.ingAmountUnit} />
+    )
 }
 
 const styles = new V.Stylable({
@@ -85,4 +115,17 @@ const styles = new V.Stylable({
     inputsContainer: {
         margin: 12
     },
+    ingContainer: {
+        justifyContent: "space-between",
+    },
+    ingName: {
+        width: "55%",
+    },
+    ingAmountUnit: {
+        width: "18%",
+    },
+    ingAddButton: {
+        width: "100%",
+        alignSelf: "center",
+    }
 })

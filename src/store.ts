@@ -23,7 +23,7 @@ const rootReducer = combineReducers<StoreState>({
 const persistedRootReducer = persistReducer({
     key: "root",
     storage,
-    blacklist: ["form", ...Object.keys(navigators.reducers)],
+    blacklist: ["form", "app", ...Object.keys(navigators.reducers)],
 }, rootReducer as any);
 
 export const configureStore = () => {

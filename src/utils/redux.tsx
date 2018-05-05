@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { AnyAction, combineReducers as _combineReducers, Dispatch, Reducer } from "redux";
 import { Omit, PartialExcept } from "./types";
-import obj from "./obj";
 
 export interface BaseAction<T, P={}, M={}> extends AnyAction {
     type: T,
@@ -54,21 +53,6 @@ export interface EntityActionCreator<Entity extends EntityBase> {
 export interface EntityState<Entity extends EntityBase> {
     [id: string]: Entity | undefined
 }
-
-export interface FormActionCreator<FormData> {
-    UPDATE: ActionCreator<Partial<{[P in keyof FormData]: string}>, never>,
-    TOUCH: ActionCreator<string, never>,
-    CLEAR: ActionCreator<{}, never>,
-    FOCUS: ActionCreator<string, never>,
-}
-
-export interface FormState<FormData> {
-    data: FormData;
-    touched: { [key: string]: boolean };
-    focus: string,
-} 
-
-export type SimpleFormErrors<FormData> = Partial<{ [P in keyof FormData]: string }>;
 
 export interface UndoableState<BaseState> {
     past: BaseState[],
@@ -137,15 +121,6 @@ export const entityAction = function<Entity extends EntityBase>(type: string): E
         creator.UPDATE.type,
     );
     return creator;
-}
-
-export const formAction = function<FormData>(type: string): FormActionCreator<FormData> {
-    return {
-        UPDATE: action(type + "/update"),
-        TOUCH: action(type + "/touch"),
-        CLEAR: action(type + "/clear"),
-        FOCUS: action(type + "/focus"),
-    }
 }
 
 export const undoableAction = function(type: string): UndoableActionCreator {
@@ -301,63 +276,6 @@ export class EntityReducerBuilder<Entity extends EntityBase> {
 
 }
 
-type FormDataConvert<FormData> = {
-    [P in keyof FormData]: (data: string) => FormData[P]
-}
-
-export class FormReducerBuilder<FormData> {
-
-    private builder: ReducerBuilder<FormState<FormData>>;
-
-    constructor(initialData: FormData, creator: FormActionCreator<FormData>, toFormData: FormDataConvert<FormData>) {
-        this.builder = new ReducerBuilder<FormState<FormData>>({
-            data: initialData,
-            touched: {},
-            focus: "none",
-        });
-
-        this.builder
-            .case(creator.UPDATE, (state, payload) => {
-                let updateData = {} as Partial<FormData>;
-                Object.keys(payload).forEach((k) => {
-                    let key = k as keyof FormData;
-                    let value = payload[key];
-                    if (value !== undefined) {
-                        updateData[key] = toFormData[key](value as string)
-                    }
-                });
-                return {
-                    ...state,
-                    touched: Object.assign({}, state.touched, obj.map(payload, (_: any) => true)),
-                    data: Object.assign({}, state.data, updateData)
-                }
-            })
-            .case(creator.TOUCH, (state, payload) => {
-                return {
-                    ...state,
-                    touched: Object.assign({}, state.touched, { [payload]: true })
-                }
-            })
-            .case(creator.CLEAR, (_, __) => {
-                return {
-                    data: initialData,
-                    touched: {},
-                    focus: "none"
-                }
-            })
-            .case(creator.FOCUS, (state, payload) => {
-                return {
-                    ...state,
-                    focus: payload,
-                }
-            })
-    }
-
-    public build() {
-        return this.builder.build()
-    }
-}
-
 export type ReducerMap<State> = {
     [P in keyof State]: Reducer<State[P]>
 }
@@ -392,85 +310,6 @@ export abstract class DispatcherBase<State> {
                 }
             })
         });
-    }
-}
-
-export type FormValidator<FormData, FormError extends Partial<{ [P in keyof FormData]: any }>> = Partial<{
-    [P in keyof FormData]: (data: FormData[P], wholeData: Partial<FormData>) => FormError[P] | undefined
-}>
-
-export const createFormValidationSelector = function<
-    FormData,
-    FormErrors extends Partial<{ [P in keyof FormData]: any }> = SimpleFormErrors<FormData>
->(validator: FormValidator<FormData, FormErrors>) {
-    return (formState: FormState<FormData>): FormErrors => {
-        return Object.keys(validator).reduce((errors, field) => {
-            let key = field as keyof FormData;
-            let validate = validator[key];
-            errors[key] = validate && validate(formState.data[key], formState.data);;
-            return errors;
-        }, { } as FormErrors)
-    }
-}
-
-type FormErrorsBase<T> = Partial<{ [P in keyof T]: any }>;
-export interface FormProps<
-    FormData,
-    SubmitArg = any,
-    FormErrors extends FormErrorsBase<FormData> = SimpleFormErrors<FormData>,
-> {
-    form: FormState<FormData>,
-    errors: FormErrors,
-    canSubmit: boolean,
-    initialData?: FormData,
-    onCancel: () => void,
-    onSubmit: (arg: SubmitArg) => void,
-    onUpdateData: (data: Partial<{ [P in keyof FormData]: string }>) => void,
-    onClearData: () => void,
-    onFocusField: (name: string) => void,
-    onTouchField: (name: string) => void,
-}
-
-export const createFormProps = function<
-    FormData,
-    SubmitArg = any,
-    FormErrors extends FormErrorsBase<FormData> = SimpleFormErrors<FormData>
->(options: {
-    formState: FormState<FormData>,
-    dispatch: Dispatch<any>,
-    actions: FormActionCreator<FormData>,
-    initialData?: FormData,
-    errorsSelector?: (state: FormState<FormData>) => FormErrors,
-    performSubmit?: (data: FormData, arg: SubmitArg) => void,
-    performCancel?: () => void,
-}): FormProps<FormData, SubmitArg, FormErrors> {
-    let errors = options.errorsSelector && options.errorsSelector(options.formState) || {} as any;
-    let errorCount = Object.values(errors).reduce((count: number, value) => value !== undefined ? count + 1 : count, 0);
-    let dispatch = options.dispatch;
-    let actions = options.actions;
-    return {
-        form: options.formState,
-        errors: errors,
-        canSubmit: errorCount === 0,
-        initialData: options.initialData,
-        onCancel: () => {
-            dispatch(actions.CLEAR({}));
-            options.performCancel && options.performCancel()
-        },
-        onSubmit: (arg: SubmitArg) => {
-            if (errorCount === 0) {
-                options.performSubmit && options.performSubmit(options.formState.data, arg);
-            } else {
-                // force touched all fields
-                Object.keys(options.formState.data).forEach(key => {
-                    dispatch(actions.TOUCH(key))
-                })
-            }
-        },
-        onUpdateData: (data) => dispatch(actions.UPDATE(data)),
-        onClearData: () => dispatch(actions.CLEAR({})),
-        onFocusField: (name) => dispatch(actions.FOCUS(name)),
-        onTouchField: (name) => dispatch(actions.TOUCH(name))
     }
 }
 
@@ -581,13 +420,11 @@ export default {
     actionWithMeta,
     asyncAction,
     entityAction,
-    formAction,
     undoableAction,
 
     ReducerBuilder,
     LoadingReducerBuilder,
     EntityReducerBuilder,
-    FormReducerBuilder,
     undoable,
 
     DispatcherBase,

@@ -4,13 +4,11 @@ import { TextInput, TextInputProperties, View, Text } from "react-native";
 import Stylable from "./stylable";
 
 export interface TextFieldProperties extends TextInputProperties {
-    name: string,
     nextField?: string,
     label?: string,
     error?: string,
     focus?: boolean,
     styles?: typeof defaultStyles;
-    onUpdate?: (data: { [key: string]: string }) => void,
     onFocusNext?: (next?: string) => void,
     submitOnBlur?: boolean,
     initialValue?: string,
@@ -81,7 +79,6 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
 
     private onChangeText = (text: string) => { 
         this.setState({text: text});
-        this.props.onUpdate && this.props.onUpdate({ [this.props.name]: text });
         this.props.onChangeText && this.props.onChangeText(text);
     }
 

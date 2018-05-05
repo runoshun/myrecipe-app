@@ -23,7 +23,7 @@ const defaultStyles = new Stylable({
     }
 }, defaultVars);
 
-interface CheckboxProperties extends TextProperties {
+export interface CheckboxProperties extends TextProperties {
     checked?: boolean,
     onIcon?: string,
     offIcon?: string,

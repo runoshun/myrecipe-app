@@ -1,21 +1,16 @@
 import * as React from "react";
 
 import { MeelPrepFormData } from "@root/reducers/app";
-import MeelPrepForm, { MeelPrepFormProperties } from "@root/views/components/MeelPrepForm";
+import MeelPrepForm from "@root/views/components/MeelPrepForm";
 import { 
     createContainer,
     createAnchor,
-    createDispacherProps,
-    createFormProps,
-    FormProps,
     ThemedViews as V,
-    actions,
-    selectors,
     res,
 } from "./Imports";
+import { InjectedFormProps, reduxForm } from "redux-form";
 
 export interface MeelPrepFormScreenProperties{
-    formProps: FormProps<MeelPrepFormData>
     id?: string,
 }
 
@@ -24,12 +19,14 @@ interface State {
 
 interface Params {
     id: string | undefined,
-    data?: MeelPrepFormProperties["initialData"];
+    data?: MeelPrepFormData
 }
+
+type Props = InjectedFormProps<MeelPrepFormData, MeelPrepFormScreenProperties> & MeelPrepFormScreenProperties;
 
 const anchor = createAnchor<Params>("MeelPrepForm");
 
-export class MeelPrepFormScreen extends React.Component<MeelPrepFormScreenProperties, State> {
+export class MeelPrepFormScreen extends React.Component<Props, State> {
 
     public static anchor = anchor;
 
@@ -37,36 +34,24 @@ export class MeelPrepFormScreen extends React.Component<MeelPrepFormScreenProper
         return (
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.meelPrepsTitle()}
-                    renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={this.props.formProps.onCancel} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={() => this.props.formProps.onSubmit(this.props.id)} />}
+                    renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => null} />}
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit(data => console.log(data))} />}
                 />
-                <MeelPrepForm {...this.props.formProps} />
+                <MeelPrepForm />
             </V.Screen>
         );
     }
 }
 
-export default createContainer(MeelPrepFormScreen)((state, dispatch, ownProps) => {
-    let dispatchers = createDispacherProps(dispatch);
-    let initialData = MeelPrepFormScreen.anchor.getParam(ownProps, "data");
+const _MeelPrepFormScreen = reduxForm<MeelPrepFormData, MeelPrepFormScreenProperties>({
+    form: "meepPrep"
+})(MeelPrepFormScreen);
+
+export default createContainer(_MeelPrepFormScreen)((_state, _dispatch, ownProps) => {
+    let initialValues = MeelPrepFormScreen.anchor.getParam(ownProps, "data");
     let id = MeelPrepFormScreen.anchor.getParam(ownProps, "id");
     return {
         id,
-        formProps: createFormProps({
-            formState: state.app.meelPrepForm,
-            dispatch,
-            actions: actions.app.MEEL_PREP_FORM,
-            initialData: initialData,
-            errorsSelector: selectors.app.meelPrepFormErrorsSelector,
-            performCancel: () => dispatchers.router.back("MeelPrepForm"),
-            performSubmit: (data, id) => {
-                if (id === undefined) {
-                    dispatchers.entities.addMeelPrep(data);
-                } else {
-                    dispatchers.entities.updateMeelPrep(id, data);
-                }
-                dispatchers.router.back("MeelPrepForm");
-            }
-        })
+        initialValues
     }
 });

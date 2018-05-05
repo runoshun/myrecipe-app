@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ShoppingListFormData } from "@root/reducers/app";
 
-import ShoppingListItemForm  from "@root/views/components/ShoppingListItemForm";
+import ShoppingListItemForm from "@root/views/components/ShoppingListItemForm";
 import { 
     createContainer,
     createAnchor,
@@ -52,4 +52,4 @@ export default createContainer(_ShoppingListFormScreen)((_state, _dispatch, ownP
     let initialValues = ShoppingListFormScreen.anchor.getParam(ownProps, "data");
     let id = ShoppingListFormScreen.anchor.getParam(ownProps, "id");
     return { initialValues, id };
-})
+});

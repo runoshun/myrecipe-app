@@ -19,8 +19,6 @@ export type DatePickerOpen = (options: DatePickerOptions) => Promise<DatePickerR
 
 let openImpl: DatePickerOpen; 
 if (Platform.OS === "ios") {
-    let resolve: (res: DatePickerResult) => void;
-    let reject: (err: any) => void;
 
     const styles = StyleSheet.create({
         buttonbar: {
@@ -64,7 +62,7 @@ if (Platform.OS === "ios") {
         render() {
             let props = this.props;
             let buttonBarProps = {
-                onCancel: () => popupId.hide({ type: "dissmissed" }),
+                onCancel: () => popupId.hide(),
                 onOk: () => popupId.hide(this.getSelectedResult()),
             };
             return (
@@ -91,6 +89,8 @@ if (Platform.OS === "ios") {
         animation: "hight",
     })
 
+    let resolve: (res: DatePickerResult) => void;
+
     let popupId: RegisteredPopup<DatePickerOptions, DatePickerResult> = PopupRegistry.register((props) => {
         let { popupProps, date, ...rest } = props;
         return (
@@ -98,14 +98,13 @@ if (Platform.OS === "ios") {
                 <DatePickerCompIOS date={date || new Date(Date.now())} {...rest} />
             </Popup>
         )
-    }
-    , (res) => res ? resolve(res) : reject("unknown result"));
+    },
+    (res) => res ? resolve(res) : resolve({ type: "dissmissed" }));
 
     openImpl = async (options) => {
-        let promise = new Promise<DatePickerResult>((res, rej) => {
+        let promise = new Promise<DatePickerResult>((res, _rej) => {
             resolve = res;
-            reject = rej
-        })
+        });
         popupId.show(options);
         return promise;
     }

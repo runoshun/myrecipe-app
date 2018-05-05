@@ -1,4 +1,4 @@
-import { ImagePicker, FileSystem } from "expo"
+import { ImagePicker, FileSystem, Permissions } from "expo"
 import { ImageURISource } from "react-native";
 
 // TODO: resize image
@@ -13,6 +13,7 @@ const copyImage = async (from: string) => {
 };
 
 export const takePhoto = async (): Promise<ImageURISource> => {
+    await Permissions.askAsync(Permissions.CAMERA_ROLL as any);
     let result = await ImagePicker.launchCameraAsync({ quality: 0 });
     if (result.cancelled === true) {
         throw "canceled";
@@ -27,6 +28,7 @@ export const takePhoto = async (): Promise<ImageURISource> => {
 }
 
 export const pickImage = async (): Promise<ImageURISource> => {
+    await Permissions.askAsync(Permissions.CAMERA_ROLL as any);
     let result = await ImagePicker.launchImageLibraryAsync({ quality: 0 });
     if (result.cancelled === true) {
         throw "canceld"

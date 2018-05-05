@@ -5,6 +5,5 @@ export { createAnchor, Router } from "@root/navigators"
 export { createContainer, createDispacherProps, DispatcherProps } from "@root/views/createContainer";
 export { EntitiesDispatcher } from "@root/dispatchers/EntitiesDispatcher";
 export { selectors, actions } from "@root/reducers";
-export { createFormProps, FormProps } from "@root/utils/redux";
 
 export const ThemedViews = _ThemedViews;

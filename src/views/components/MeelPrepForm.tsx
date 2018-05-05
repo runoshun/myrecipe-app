@@ -1,124 +1,99 @@
 import * as React from "react";
-
-import * as V from "./Themed";
-import res from "@root/resources";
-import { MeelPrepFormData } from "@root/reducers/app";
-import { FormProps } from "@root/utils/redux";
-
-import ImageField from "./ImageField";
+import { TouchableOpacity } from "react-native";
+import { Field, WrappedFieldProps } from "redux-form";
 
 import api from "@root/api";
+import res from "@root/resources";
+import formUtils from "@root/views/formUtils";
 
-export type InputNames = keyof MeelPrepFormData;
+import * as V from "./Themed";
+import ImageField from "./ImageField";
+import ReduxFormField from "@root/views/components/ReduxFormField";
 
-export interface MeelPrepFormProperties extends FormProps<MeelPrepFormData, string | undefined> {
+export interface MeelPrepFormProperties {
 }
 
 interface State { }
 
 export default class MeelPrepForm extends React.Component<MeelPrepFormProperties, State> {
 
-    private formatDate = (time?: number) => {
-        if (time) {
-            let date = new Date(time);
-            return `${date.getFullYear()}/${('0' + (date.getMonth() + 1)).slice(-2)}/${('0' + date.getDate()).slice(-2)}`;
-        } else {
-            return undefined;
-        }
-    }
+    renderPhotoField = (props: WrappedFieldProps) => (
+        <ImageField
+            onPickImage={api.image.pickImage}
+            onTakeImage={api.image.takePhoto}
+            onChangeImage={(source) => props.input.onChange(source.uri)}
+            initialImage={props.input.value}
+            noImage={{ uri: res.images.noImage }}
+            imageStyle={styles.values.image} />
+    )
 
-    private propsFor(name: InputNames) {
-        let val = this.props.initialData ? this.props.initialData[name] : undefined;
-        if ((name === "createdAt" || name === "expiredAt")) {
-            val = this.formatDate(val as number);
-        }
-        return {
-            name: name,
-            onUpdate: this.props.onUpdateData,
-            onFocus: () => this.props.onFocusField(name),
-            onFocusNext: (next?: string) => this.props.onFocusField(next || "none"),
-            error: this.props.form.touched[name] ? this.props.errors[name] : undefined,
-            focus: this.props.form.focus === name,
-            initialValue: (val == undefined || Object.is(val, NaN)) ? undefined : val.toString(),
-        }
-    }
+    renderNameField = (props: WrappedFieldProps) => (
+        <ReduxFormField
+            fieldProps={props}
+            returnKeyType={"next"}
+            nextField={"amount"}
+            keyboardType={"default"}
+            label={res.strings.meelPrepFormNameLabel()}
+            placeholder={res.strings.meelPrepFormNamePlaceholder()}
+            style={styles.values.nameInput} />
+    )
 
-    private openCreateDatePicker = async () => {
-        let time = this.props.form.data.createdAt;
-        let date = time ? new Date(time) : new Date();
+    renderAmountField = (props: WrappedFieldProps) => (
+        <ReduxFormField
+            fieldProps={props}
+            returnKeyType={"next"}
+            nextField={"createdAt"}
+            keyboardType={"numbers-and-punctuation"}
+            label={res.strings.meelPrepFormAmountLabel()}
+            placeholder={res.strings.meelPrepFormAmountPlaceholder()}
+            style={styles.values.amountInput} />
+    )
+
+    renderDatePickerField = (props: WrappedFieldProps) => (
+        <TouchableOpacity activeOpacity={0.9} onPress={this.openDatePicker(props.input.onChange, props.input.value)}>
+            <ReduxFormField
+                fieldProps={props}
+                pointerEvents={"none"}
+                keyboardType={"numbers-and-punctuation"}
+                label={props.label} />
+        </TouchableOpacity>
+    )
+
+    private openDatePicker = (onChange: (value: any) => void, dateStr?: string) => async () => {
+        let time = formUtils.parseDate(dateStr) || Date.now();
         let result = await V.DatePicker.open({
-            date,
-            maxDate: new Date(Date.now())
+            date: new Date(time),
+            localeIOS: "ja"
         });
         if (result.type === "selected") {
             let date = new Date(result.year, result.month, result.day);
-            this.props.onUpdateData({ createdAt: this.formatDate(date.getTime()) })
+            onChange(formUtils.formatDate(date.getTime()))
         }
     }
 
-    private openExpiredDatePicker = async () => {
-        let time = this.props.form.data.expiredAt;
-        let date = time ? new Date(time) : new Date();
-        let result = await V.DatePicker.open({ date });
-        if (result.type === "selected") {
-            let date = new Date(result.year, result.month, result.day);
-            this.props.onUpdateData({ expiredAt: this.formatDate(date.getTime()) })
-        }
-    }
 
     render() {
-        let photo = (this.props.initialData && this.props.initialData.photo);
         return (
             <V.VBox style={styles.values.container}>
-                <ImageField 
-                    onPickImage={api.image.pickImage}
-                    onTakeImage={api.image.takePhoto}
-                    onChangeImage={(source) => this.props.onUpdateData({photo: source.uri})}
-                    initialImage={photo !== undefined ? { uri: photo } : undefined}
-                    noImage={{ uri: res.images.noImage }}
-                    imageStyle={styles.values.image} />
+                <Field name="photo" component={this.renderPhotoField} />
                 <V.HBox style={styles.values.halfInputsContainer}>
-                    <V.FormField
-                        {...this.propsFor("name")}
-                        returnKeyType={"next"}
-                        nextField={"amount"}
-                        keyboardType={"default"}
-                        label={res.strings.meelPrepFormNameLabel()}
-                        placeholder={res.strings.meelPrepFormNamePlaceholder()}
-                        style={styles.values.nameInput} />
-                    <V.FormField
-                        {...this.propsFor("amount")}
-                        returnKeyType={"next"}
-                        nextField={"createdAt"}
-                        keyboardType={"numbers-and-punctuation"}
-                        label={res.strings.meelPrepFormAmountLabel()}
-                        placeholder={res.strings.meelPrepFormAmountPlaceholder()}
-                        style={styles.values.amountInput} />
+                    <Field name="name" component={this.renderNameField} />
+                    <Field name="amount" component={this.renderAmountField} />
                 </V.HBox>
-                <V.FormField
-                    {...this.propsFor("createdAt")}
-                    returnKeyType={"next"}
-                    nextField={"expiredAt"}
-                    value={this.formatDate(this.props.form.data.createdAt)}
-                    onTouchStart={this.openCreateDatePicker}
-                    keyboardType={"numbers-and-punctuation"}
+                <Field
+                    name={"createdAt"}
+                    component={this.renderDatePickerField}
                     label={res.strings.meelPrepFormCreateAtLabel()}
-                    placeholder={res.strings.meelPrepFormCreateAtPlaceholder()} />
-                <V.FormField
-                    {...this.propsFor("expiredAt")}
-                    returnKeyType={"done"}
-                    nextField={"none"}
-                    value={this.formatDate(this.props.form.data.expiredAt)}
-                    onTouchStart={this.openExpiredDatePicker}
-                    keyboardType={"numbers-and-punctuation"}
+                    format={formUtils.formatDate}
+                    parse={formUtils.parseDate} />
+                <Field
+                    name={"expiredAt"}
+                    component={this.renderDatePickerField}
                     label={res.strings.meelPrepFormExpiredAtLabel()}
-                    placeholder={res.strings.meelPrepFormExpiredAtPlaceholder()} />
+                    format={formUtils.formatDate}
+                    parse={formUtils.parseDate} />
             </V.VBox>
         );
-    }
-
-    componentWillUnmount() {
-        this.props.onCancel();
     }
 }
 
