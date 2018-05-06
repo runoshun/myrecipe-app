@@ -127,7 +127,6 @@ export class ShoppingListScreen extends React.Component<ShoppingListScreenProper
                 <ShoppingListItem
                     name={info.item.name}
                     amount={info.item.amount}
-                    unit={info.item.unit}
                     checked={info.item.checked}
                     onDelete={() => this.handleDeleteMerged(info.item)}
                     onEdit={() => this.handleEditMerged(info.item)}
@@ -151,7 +150,6 @@ export class ShoppingListScreen extends React.Component<ShoppingListScreenProper
                     <ShoppingListItem
                         name={info.item.name}
                         amount={info.item.amount}
-                        unit={info.item.unit}
                         checked={info.item.checked}
                         onDelete={() => this.handleDelete(info.item)}
                         onEdit={() => this.handleEdit(info.item)}

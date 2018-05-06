@@ -5,8 +5,7 @@ export interface EntityCommon<Version> {
 
 export interface Ingredient {
     name: string,
-    amount: number,
-    unit: string,
+    amount: string,
 }
 
 export interface RecipeEntity extends EntityCommon<"1"> {
@@ -37,8 +36,7 @@ export interface MeelEntity extends EntityCommon<"1"> {
 export interface ShoppingListItemEntity extends EntityCommon<"1"> {
     id: string,
     name: string,
-    amount: number,
-    unit: string,
+    amount: string,
     checked: boolean,
     recipeId?: string,
 }
@@ -48,6 +46,5 @@ export interface MergedShoppingListItem {
     id: string[],
     name: ShoppingListItemEntity["name"],
     amount: ShoppingListItemEntity["amount"],
-    unit: ShoppingListItemEntity["unit"],
     checked: ShoppingListItemEntity["checked"],
 }

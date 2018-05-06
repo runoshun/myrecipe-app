@@ -49,7 +49,7 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
     renderUrlField = (props: WrappedFieldProps) => (
         <ReduxFormField fieldProps={props}
             returnKeyType="next"
-            nextField="amount"
+            nextField="ingredients[0].name"
             keyboardType="default"
             label={res.strings.recipeFormUrlLabel()}
             placeholder={res.strings.recipeFormUrlPlaceholder()} />
@@ -62,47 +62,44 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
                     <Field
                         name={`${name}.name`}
                         component={this.renderIngredientNameField}
-                        label={index === 0 ? res.strings.recipeFormIngredientNameLabel() : undefined} />
+                        label={index.toString()} />
                     <Field
                         name={`${name}.amount`} 
                         component={this.renderIngredientAmountField}
-                        label={index === 0 ? res.strings.recipeFormIngredientAmountLabel() : undefined} />
-                    <Field
-                        name={`${name}.unit`}
-                        component={this.renderIngredientUnitField}
-                        label={index === 0 ? res.strings.recipeFormIngredientUnitLabel() : undefined} />
+                        label={index.toString()} />
                 </V.HBox>
             ))}
             <V.TransparentAccentButton icon="add" style={styles.values.ingAddButton} onPress={() => props.fields.push({})} />
         </V.VBox>
     );
 
-    renderIngredientNameField = (props: WrappedFieldProps) => (
-        <ReduxFormField
-            fieldProps={props}
-            keyboardType={"default"}
-            label={props.label}
-            placeholder={res.strings.recipeFormIngredientNamePlaceholder()}
-            style={styles.values.ingName} />
-    );
+    renderIngredientNameField = (props: WrappedFieldProps) => {
+        let index = parseInt(props.label || "0");
+        return (
+            <ReduxFormField
+                fieldProps={props}
+                keyboardType={"default"}
+                returnKeyType={"next"}
+                nextField={`ingredients[${index}].amount`}
+                label={index === 0 ? res.strings.recipeFormIngredientNameLabel() : ""}
+                placeholder={res.strings.recipeFormIngredientNamePlaceholder()}
+                style={styles.values.ingName} />
+        );
+    }
 
-    renderIngredientAmountField = (props: WrappedFieldProps) => (
-        <ReduxFormField
-            fieldProps={props}
-            keyboardType={"numbers-and-punctuation"}
-            label={props.label}
-            placeholder={res.strings.recipeFormIngredientAmountPlaceholder()}
-            style={styles.values.ingAmountUnit} />
-    );
-
-    renderIngredientUnitField = (props: WrappedFieldProps) => (
-        <ReduxFormField
-            fieldProps={props}
-            keyboardType={"default"}
-            label={props.label}
-            placeholder={res.strings.recipeFormIngredientUnitPlaceholder()}
-            style={styles.values.ingAmountUnit} />
-    )
+    renderIngredientAmountField = (props: WrappedFieldProps) => {
+        let index = parseInt(props.label || "0");
+        return (
+            <ReduxFormField
+                fieldProps={props}
+                keyboardType={"numbers-and-punctuation"}
+                returnKeyType={"next"}
+                nextField={`ingredients[${index + 1}].name`}
+                label={index === 0 ? res.strings.recipeFormIngredientAmountLabel() : ""}
+                placeholder={res.strings.recipeFormIngredientAmountPlaceholder()}
+                style={styles.values.ingAmountUnit} />
+        );
+    }
 }
 
 const styles = new V.Stylable({
@@ -119,10 +116,10 @@ const styles = new V.Stylable({
         justifyContent: "space-between",
     },
     ingName: {
-        width: "55%",
+        width: "70%",
     },
     ingAmountUnit: {
-        width: "18%",
+        width: "25%",
     },
     ingAddButton: {
         width: "100%",

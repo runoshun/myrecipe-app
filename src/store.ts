@@ -20,10 +20,17 @@ const rootReducer = combineReducers<StoreState>({
     entities: reducers.entities,
     form: formReducer,
 });
+
+const DISABLE_PERSIST = true;
+const persistBlackList = ["form", ...Object.keys(navigators.reducers)];
+if (DISABLE_PERSIST) {
+    persistBlackList.push("app", "entities");
+}
+
 const persistedRootReducer = persistReducer({
     key: "root",
     storage,
-    blacklist: ["form", "app", ...Object.keys(navigators.reducers)],
+    blacklist: persistBlackList,
 }, rootReducer as any);
 
 export const configureStore = () => {

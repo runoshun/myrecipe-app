@@ -6,8 +6,7 @@ import * as V from "@root/views/components/Themed";
 export interface IngredientViewProperties {
     item: {
         name: string,
-        amount: number,
-        unit: string,
+        amount: string,
     },
     style?: ViewProperties["style"],
 }
@@ -22,7 +21,6 @@ export default class IngredientView extends React.Component<IngredientViewProper
                 <V.Texts.Body>{this.props.item.name}</V.Texts.Body>
                 <View style={{ flex: 1 }} />
                 <V.Texts.Body>{this.props.item.amount || ""}</V.Texts.Body>
-                <V.Texts.Body>{this.props.item.unit || ""}</V.Texts.Body>
             </V.HBox>
         );
     }

@@ -17,7 +17,6 @@ export default class ShoppingListItemForm extends React.Component<ShoppingListIt
             <V.VBox style={styles.values.container}>
                 <Field name="name" component={this.renderNameField} />
                 <Field name="amount" component={this.renderAmountField} />
-                <Field name="unit" component={this.renderUnitField} />
             </V.VBox>
         )
     }
@@ -37,16 +36,6 @@ export default class ShoppingListItemForm extends React.Component<ShoppingListIt
             fieldProps={props}
             label={res.strings.shoppingListFormAmountLabel()}
             placeholder={res.strings.shoppingListFormAmountPlaceholder()}
-            keyboardType="default"
-            returnKeyType="next"
-            nextField="unit" />
-    }
-
-    renderUnitField(props: WrappedFieldProps) {
-        return <ReduxFormField 
-            fieldProps={props}
-            label={res.strings.shoppingListFormUnitLabel()}
-            placeholder={res.strings.shoppingListFormUnitPlaceholder()}
             keyboardType="default"
             returnKeyType="next"
             nextField="unit" />

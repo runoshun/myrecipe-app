@@ -9,6 +9,7 @@ import { DispatcherBase } from "@root/utils/redux";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
 import { ShoppingListFormData, MeelPrepFormData, RecipeFormData } from "@root/reducers/app";
 import { Omit } from "@root/utils/types";
+import mayBeMultiplyAmount from "@root/common/extractUnit";
 
 export class EntitiesDispatcher extends DispatcherBase<StoreState> {
 
@@ -23,15 +24,17 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     //     dispatch(actionCreator({ code, message }));
     // }
 
-    private ingredientToShoppingList = (ingredient: Types.Ingredient, recipeId: string, multiply: number): Omit<Types.ShoppingListItemEntity, "id"> => ({
-        name: ingredient.name,
-        amount: (ingredient.amount * multiply),
-        unit: ingredient.unit,
-        checked: false,
-        recipeId: recipeId,
-        _version: "1",
-        _lastModified: Date.now()
-    })
+    private ingredientToShoppingList = (ingredient: Types.Ingredient, recipeId: string, multiply: number): Omit<Types.ShoppingListItemEntity, "id"> => {
+        let amount = mayBeMultiplyAmount(ingredient.amount, multiply)
+        return {
+            name: ingredient.name,
+            amount: amount,
+            checked: false,
+            recipeId: recipeId,
+            _version: "1",
+            _lastModified: Date.now()
+        }
+    }
 
     public addIngredientsToShoppingList = (ingredients: Types.Ingredient[], recipeId: string, multiply= 1) => {
         let shoppingListItems = ingredients.map(i => this.ingredientToShoppingList(i, recipeId, multiply));
@@ -62,7 +65,6 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
         return {
             name: data.name,
             amount: data.amount,
-            unit: data.unit,
             recipeId: undefined,
             _version: "1",
             _lastModified: Date.now()
@@ -83,7 +85,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
                  ...this.shoppingListFormDataToEntity(data)
                 }));
         } else {
-            let amount = data.amount / id.length;
+            let amount = mayBeMultiplyAmount(data.amount, 1 / id.length);
             id.forEach(id => {
                 this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
                     ...this.shoppingListFormDataToEntity(data),
@@ -133,7 +135,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     }
 
     private filterIngredients = (data: RecipeFormData["ingredients"]): Types.Ingredient[] => {
-        return data.map(item => (item.name) ? { name: item.name, amount: item.amount, unit: item.unit } : undefined)
+        return data.map(item => (item.name) ? { name: item.name, amount: item.amount } : undefined)
                    .filter(item => item !== undefined) as Types.Ingredient[];
     }
 

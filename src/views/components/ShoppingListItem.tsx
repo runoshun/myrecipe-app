@@ -9,8 +9,7 @@ import { Expandable } from "./common/anim/PropAnimationView";
 export interface ShoppingListItemProperties {
     checked: boolean,
     name: string,
-    amount: number,
-    unit: string,
+    amount: string,
     onToggleCheck: () => void,
     onDelete: () => void,
     onEdit?: () => void,
@@ -53,7 +52,6 @@ export default class ShoppingListItem extends React.Component<ShoppingListItemPr
         let checked = this.props.checked;
         let name = this.props.name;
         let amount = this.props.amount;
-        let unit = this.props.unit;
 
         if (checked) {
             textStyle.push(styles.values.checkedText);
@@ -67,8 +65,7 @@ export default class ShoppingListItem extends React.Component<ShoppingListItemPr
                         <V.Checkbox checked={checked} styles={checkboxStyles} onIcon="checkmark-circle" offIcon="checkmark-circle-outline" />
                         <V.Texts.Body style={textStyle}>{name}</V.Texts.Body>
                         <View style={{ flex: 1 }} />
-                        <V.Texts.Body style={textStyle}>{isNaN(amount) ? "" : amount}</V.Texts.Body>
-                        <V.Texts.Body style={textStyle}>{unit}</V.Texts.Body>
+                        <V.Texts.Body style={textStyle}>{!amount ? "" : amount}</V.Texts.Body>
                         <Expandable expanded={this.state.moreMenuVisible} animationType={{ type: "width" }} style={styles.values.moreButtonsContainer}>
                             <V.TransparentAccentButton icon={"trash-outline"} onPress={this.handleDelete} style={styles.values.actionButton} />
                             {

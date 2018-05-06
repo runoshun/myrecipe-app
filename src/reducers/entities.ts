@@ -4,6 +4,7 @@ import res from "@root/resources";
 import * as reduxUtils from "@root/utils/redux";
 import * as Types from "@root/EntityTypes";
 import { obj } from "@root/utils";
+import { extract as extractUnit, mayBeAddAmount } from "@root/common/extractUnit";
 
 const uuidv4 = require("uuid/v4");
 
@@ -33,20 +34,20 @@ export const actions = {
 // ===================================================================================== //
 
 let initialEntities;
-//if (__DEV__ && false) {
-//    const testdata = require("./testdata");
-//    initialEntities = {
-//        recipes: testdata.recipes,
-//        shoppingList: testdata.shoppingList,
-//        meelPreps: testdata.meelPreps,
-//    }
-//} else {
+if (__DEV__) {
+    const testdata = require("./testdata");
+    initialEntities = {
+        recipes: testdata.recipes,
+        shoppingList: testdata.shoppingList,
+        meelPreps: testdata.meelPreps,
+    }
+} else {
     initialEntities = {
         recipes: {},
         shoppingList: {},
         meelPreps: {}
     }
-//}
+}
 
 const recipeEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.RecipeEntity>(actions.RECIPES, uuidv4, initialEntities.recipes).build();
 const meelEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelEntity>(actions.MEELS, uuidv4).build();
@@ -91,18 +92,25 @@ const shoppingListArraySelector = createSelector(
 const mergedShoppingListSelector = createSelector(
     shoppingListArraySelector,
     shoppingList => obj.asArray(shoppingList.reduce((merged, item) => {
-        let key = item.name + "/" + item.unit + "/" + item.checked;
+        let amount = item.amount;
+        let canExtract = false;
+        let extracted = extractUnit(item.amount)
+        if (extracted) {
+            amount = extracted[1];
+            canExtract = true;
+        }
+
+        let key = item.name + "/" + amount + "/" + item.checked + "/" + canExtract;
         if (merged[key] === undefined) {
             merged[key] = {
                 id: [item.id],
                 name: item.name,
                 amount: item.amount,
-                unit: item.unit,
                 checked: item.checked,
             }
         } else {
             merged[key].id.push(item.id);
-            merged[key].amount += item.amount;
+            merged[key].amount = mayBeAddAmount(merged[key].amount, item.amount) || item.amount;
         }
         return merged;
     }, ({} as { [key: string]: Types.MergedShoppingListItem }))
