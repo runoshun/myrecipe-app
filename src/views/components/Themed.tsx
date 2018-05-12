@@ -211,15 +211,17 @@ export const UndoSnackbar: RegisteredPopup<UndoSnackbarProps, AppMenuResult> = P
 export type ConfimationDialogResult = () => void;
 interface ConfimationDialogProps {
     title?: string,
-    message: string,
+    message?: string,
     onOk?: () => void,
     onCancel?: () => void,
+    content?: JSX.Element,
 }
 export const ConfimationDialog: RegisteredPopup<ConfimationDialogProps, ConfimationDialogResult> = PopupRegistry.register((props) =>
     <Dialog
         title={props.title || res.strings.commonConfirmationTitle()}
         message={props.message || ""}
         {...props.popupProps}>
+        { props.content }
         <HBox>
             <TransparentAccentButton
                 onPress={() => ConfimationDialog.hide(props.onCancel)}

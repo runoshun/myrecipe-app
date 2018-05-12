@@ -4,19 +4,23 @@ import * as V from "./Themed";
 import res from "@root/resources";
 import ReduxFormField from "./ReduxFormField";
 import { Field, WrappedFieldProps } from "redux-form";
+import { notEmpty, isNumber } from "@root/common/formUtils";
 
 export interface ShoppingListItemFormProperties {
 }
 
 interface State { }
 
+const nameRequired = notEmpty(res.strings.shoppingListFormErrorNameRequired());
+const amountIsNumber = isNumber(res.strings.shoppingListFormErrorAmountIsNonNumber());
+
 export default class ShoppingListItemForm extends React.Component<ShoppingListItemFormProperties, State> {
 
     render() {
         return (
             <V.VBox style={styles.values.container}>
-                <Field name="name" component={this.renderNameField} />
-                <Field name="amount" component={this.renderAmountField} />
+                <Field name="name" component={this.renderNameField} validate={[nameRequired]} />
+                <Field name="amount" component={this.renderAmountField} validate={[amountIsNumber]} />
             </V.VBox>
         )
     }

@@ -25,6 +25,9 @@ export const recipeDetailEdit = () => "レシピを編集";
 export const recipeDetailDelete = () => "このレシピを削除";
 export const recipeDetailDeletedMessage = () => "レシピを削除しました";
 
+export const addRecipeTitle = () => "レシピを追加";
+
+export const recipeFormTitle = () => "レシピ";
 export const recipeFormNameLabel = () => "レシピ名";
 export const recipeFormNamePlaceholder = () => "レシピ名";
 export const recipeFormUrlLabel = () => "URL(任意)";
@@ -48,6 +51,8 @@ export const shoppingListEmptyMessage3 = () => "またはレシピ詳細から�
 export const shoppingListItemDeleted = (name: string) => `${name}を削除しました。`;
 export const shoppingListSectionOther = () => "その他";
 
+
+export const shoppingListFormTitle = () => "買い物リスト";
 export const shoppingListFormNameLabel = () => "商品/材料名";
 export const shoppingListFormNamePlaceholder = () => "商品/材料名"
 export const shoppingListFormAmountLabel = () => "数量";
@@ -71,6 +76,7 @@ const formatDate = (time: number) => {
 export const meelPrepsCreated = (createdAt: number) => `作った日: ${formatDate(createdAt)}`;
 export const meelPrepsExpired = (expiredAt: number) => `消費期限: ${formatDate(expiredAt)}`;
 
+export const meelPrepFormTitle = () => "作り置き"
 export const meelPrepFormNameLabel = () => "名前";
 export const meelPrepFormNamePlaceholder = () => "名前";
 export const meelPrepFormCreateAtLabel = () => "作った日";
@@ -82,3 +88,5 @@ export const meelPrepFormAmountPlaceholder = () => "数量(オプション)";
 export const meelPrepFormErrorNameRequired = () => "名前を入力してください";
 export const meelPrepFormErrorAmountIsNonNumber = () => "数字で入力してください";
 export const meelPrepFormErrorInValidDate = () => "正しい日付を入力してください";
+
+export const webBrowserUrlDialogTitle = () => "URLを入力";

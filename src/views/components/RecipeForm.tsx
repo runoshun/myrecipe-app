@@ -1,11 +1,31 @@
 import * as React from "react";
-import { Field, WrappedFieldProps, FieldArray, WrappedFieldArrayProps } from "redux-form";
+import { Field, WrappedFieldProps, FieldArray, WrappedFieldArrayProps, Validator } from "redux-form";
 
 import api from "@root/api";
 import res from "@root/resources";
 import * as V from "./Themed";
 import ImageField from "./ImageField";
 import ReduxFormField from "./ReduxFormField";
+import { notEmpty } from "@root/common/formUtils";
+import { RecipeFormData } from "@root/reducers/form";
+
+const nameRequired = notEmpty(res.strings.recipeFormErrorNameRequired());
+
+const ingNameValidateCache: { [key: number]: Validator } = {};
+const ingNameRequiredIfAmountIsNotEmpty = (index: number) => {
+    if (ingNameValidateCache[index] === undefined) {
+        let validate = (data: string, all: RecipeFormData) => {
+            if ((data === undefined || data === "") &&
+                (all.ingredients && all.ingredients[index].amount !== undefined)) {
+                return res.strings.recipeFormErrorIngredientNameRequired();
+            } else {
+                return undefined;
+            }
+        }
+        ingNameValidateCache[index] = validate; 
+    }
+    return ingNameValidateCache[index];
+}
 
 export interface RecipeFormProperties {
 }
@@ -17,9 +37,9 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
     render() {
         return (
             <V.VBox style={styles.values.container}>
-                <Field name="photo" component={this.renderPhotoField} />
+                <Field name="photo" component={this.renderPhotoField}/>
                 <V.VBox style={styles.values.inputsContainer}>
-                    <Field name="name" component={this.renderNameField} />
+                    <Field name="name" component={this.renderNameField} validate={[nameRequired]} />
                     <Field name="url" component={this.renderUrlField} />
                     <FieldArray name="ingredients" component={this.renderIngredientFieldArray as any} />
                 </V.VBox>
@@ -55,23 +75,30 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
             placeholder={res.strings.recipeFormUrlPlaceholder()} />
     )
 
-    renderIngredientFieldArray = (props: WrappedFieldArrayProps<any>) => (
-        <V.VBox>
-            {props.fields.map((name, index) => (
-                <V.HBox key={index.toString()} style={styles.values.ingContainer}>
-                    <Field
-                        name={`${name}.name`}
-                        component={this.renderIngredientNameField}
-                        label={index.toString()} />
-                    <Field
-                        name={`${name}.amount`} 
-                        component={this.renderIngredientAmountField}
-                        label={index.toString()} />
-                </V.HBox>
-            ))}
-            <V.TransparentAccentButton icon="add" style={styles.values.ingAddButton} onPress={() => props.fields.push({})} />
-        </V.VBox>
-    );
+    renderIngredientFieldArray = (props: WrappedFieldArrayProps<any>) => {
+        if (props.fields.length === 0) {
+            props.fields.push({});
+        }
+
+        return (
+            <V.VBox>
+                {props.fields.map((name, index) => (
+                    <V.HBox key={index.toString()} style={styles.values.ingContainer}>
+                        <Field
+                            name={`${name}.name`}
+                            component={this.renderIngredientNameField}
+                            label={index.toString()}
+                            validate={[ingNameRequiredIfAmountIsNotEmpty(index)]} />
+                        <Field
+                            name={`${name}.amount`}
+                            component={this.renderIngredientAmountField}
+                            label={index.toString()} />
+                    </V.HBox>
+                ))}
+                <V.TransparentAccentButton icon="add" style={styles.values.ingAddButton} onPress={() => props.fields.push({})} />
+            </V.VBox>
+        )
+    };
 
     renderIngredientNameField = (props: WrappedFieldProps) => {
         let index = parseInt(props.label || "0");

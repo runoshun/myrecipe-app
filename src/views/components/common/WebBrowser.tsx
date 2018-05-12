@@ -21,6 +21,7 @@ interface State {
     canGoBack?: boolean,
     canGoForword?: boolean,
     title?: string,
+    url?: string,
 }
 
 const defaultButtonStyles = Button.defaultStyles.applyVars({
@@ -131,9 +132,10 @@ export default class WebBrowser extends React.Component<WebBrowserProperties, St
     private handleNavigationStateChange = (event: NavState) => {
         if (this.state.canGoBack !== event.canGoBack ||
             this.state.canGoForword != event.canGoForward ||
-            this.state.title !== event.title) 
+            this.state.title !== event.title ||
+            this.state.url !== event.url) 
         {
-            this.setState({ canGoBack: event.canGoBack, canGoForword: event.canGoForward, title: event.title })
+            this.setState({ canGoBack: event.canGoBack, canGoForword: event.canGoForward, title: event.title, url: event.url })
         }
         if (this.props.onNavigationStateChange) {
             this.props.onNavigationStateChange(event);

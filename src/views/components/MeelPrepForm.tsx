@@ -4,7 +4,7 @@ import { Field, WrappedFieldProps } from "redux-form";
 
 import api from "@root/api";
 import res from "@root/resources";
-import formUtils from "@root/views/formUtils";
+import { notEmpty, isDate, isNumber, formatDate, parseDate } from "@root/common/formUtils";
 
 import * as V from "./Themed";
 import ImageField from "./ImageField";
@@ -15,14 +15,47 @@ export interface MeelPrepFormProperties {
 
 interface State { }
 
+const nameRequired = notEmpty(res.strings.meelPrepFormErrorNameRequired());
+const amountMustBeNumber = isNumber(res.strings.meelPrepFormErrorAmountIsNonNumber());
+const invalidDate = isDate(res.strings.meelPrepFormErrorInValidDate());
+
 export default class MeelPrepForm extends React.Component<MeelPrepFormProperties, State> {
+
+    render() {
+        return (
+            <V.VBox style={styles.values.container}>
+                <Field name="photo" component={this.renderPhotoField} />
+                <V.HBox style={styles.values.halfInputsContainer}>
+                    <Field
+                        name="name"
+                        component={this.renderNameField}
+                        validate={[nameRequired]} />
+                    <Field
+                        name="amount"
+                        component={this.renderAmountField}
+                        validate={[amountMustBeNumber]}
+                         />
+                </V.HBox>
+                <Field
+                    name={"createdAt"}
+                    component={this.renderDatePickerField}
+                    label={res.strings.meelPrepFormCreateAtLabel()}
+                    validate={[invalidDate]} />
+                <Field
+                    name={"expiredAt"}
+                    component={this.renderDatePickerField}
+                    label={res.strings.meelPrepFormExpiredAtLabel()}
+                    validate={[invalidDate]} />
+            </V.VBox>
+        );
+    }
 
     renderPhotoField = (props: WrappedFieldProps) => (
         <ImageField
             onPickImage={api.image.pickImage}
             onTakeImage={api.image.takePhoto}
             onChangeImage={(source) => props.input.onChange(source.uri)}
-            initialImage={props.input.value}
+            initialImage={props.input.value && { uri: props.input.value }}
             noImage={{ uri: res.images.noImage }}
             imageStyle={styles.values.image} />
     )
@@ -53,6 +86,7 @@ export default class MeelPrepForm extends React.Component<MeelPrepFormProperties
         <TouchableOpacity activeOpacity={0.9} onPress={this.openDatePicker(props.input.onChange, props.input.value)}>
             <ReduxFormField
                 fieldProps={props}
+                editable={false}
                 pointerEvents={"none"}
                 keyboardType={"numbers-and-punctuation"}
                 label={props.label} />
@@ -60,40 +94,15 @@ export default class MeelPrepForm extends React.Component<MeelPrepFormProperties
     )
 
     private openDatePicker = (onChange: (value: any) => void, dateStr?: string) => async () => {
-        let time = formUtils.parseDate(dateStr) || Date.now();
+        let time = parseDate(dateStr) || Date.now();
         let result = await V.DatePicker.open({
             date: new Date(time),
             localeIOS: "ja"
         });
         if (result.type === "selected") {
             let date = new Date(result.year, result.month, result.day);
-            onChange(formUtils.formatDate(date.getTime()))
+            onChange(formatDate(date.getTime()))
         }
-    }
-
-
-    render() {
-        return (
-            <V.VBox style={styles.values.container}>
-                <Field name="photo" component={this.renderPhotoField} />
-                <V.HBox style={styles.values.halfInputsContainer}>
-                    <Field name="name" component={this.renderNameField} />
-                    <Field name="amount" component={this.renderAmountField} />
-                </V.HBox>
-                <Field
-                    name={"createdAt"}
-                    component={this.renderDatePickerField}
-                    label={res.strings.meelPrepFormCreateAtLabel()}
-                    format={formUtils.formatDate}
-                    parse={formUtils.parseDate} />
-                <Field
-                    name={"expiredAt"}
-                    component={this.renderDatePickerField}
-                    label={res.strings.meelPrepFormExpiredAtLabel()}
-                    format={formUtils.formatDate}
-                    parse={formUtils.parseDate} />
-            </V.VBox>
-        );
     }
 }
 

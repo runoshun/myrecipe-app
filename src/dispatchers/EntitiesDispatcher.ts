@@ -7,7 +7,7 @@ import * as Types from "@root/EntityTypes";
 
 import { DispatcherBase } from "@root/utils/redux";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
-import { ShoppingListFormData, MeelPrepFormData, RecipeFormData } from "@root/reducers/app";
+import { ShoppingListFormData, MeelPrepFormData, RecipeFormData } from "@root/reducers/form";
 import { Omit } from "@root/utils/types";
 import mayBeMultiplyAmount from "@root/common/extractUnit";
 
@@ -63,36 +63,37 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
 
     private shoppingListFormDataToEntity = (data: ShoppingListFormData): Omit<Types.ShoppingListItemEntity, "id" | "checked"> => {
         return {
-            name: data.name,
-            amount: data.amount,
+            name: data.name || "",
+            amount: data.amount || "",
             recipeId: undefined,
             _version: "1",
             _lastModified: Date.now()
         }
     }
 
-    public addShoppingListItem = (data: ShoppingListFormData) => {
-        this.dispatch(entities.actions.SHOPPING_LIST.ADD({
-            checked: false,
-            ...this.shoppingListFormDataToEntity(data)
-        }));
-    }
-
-    public updateShoppingListItem = (id: string | string[], data: ShoppingListFormData) => {
-        if (typeof id === "string") {
-            this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
-                 id,
-                 ...this.shoppingListFormDataToEntity(data)
-                }));
-        } else {
-            let amount = mayBeMultiplyAmount(data.amount, 1 / id.length);
-            id.forEach(id => {
+    public submitShoppingListForm = (id: string | string[] | undefined, data: ShoppingListFormData) => {
+        if (id === undefined) {
+            this.dispatch(entities.actions.SHOPPING_LIST.ADD({
+                checked: false,
+                ...this.shoppingListFormDataToEntity(data)
+            }));
+        }
+        else {
+            if (typeof id === "string") {
                 this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
-                    ...this.shoppingListFormDataToEntity(data),
                     id,
-                    amount,
-                }))
-            })
+                    ...this.shoppingListFormDataToEntity(data)
+                }));
+            } else {
+                let amount = mayBeMultiplyAmount(data.amount || "", 1 / id.length);
+                id.forEach(id => {
+                    this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
+                        ...this.shoppingListFormDataToEntity(data),
+                        id,
+                        amount,
+                    }))
+                })
+            }
         }
     }
 
@@ -102,30 +103,30 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
 
     private meelPrepFormDataToEntity = (data: MeelPrepFormData): Omit<Types.MeelPrepEntity, "id"> => {
         return {
-            name: data.name,
-            amount: data.amount,
+            name: data.name || "",
+            amount: parseInt(data.amount || ""),
             photo: data.photo || res.images.noImage,
-            createdAt: data.createdAt,
-            expiredAt: data.expiredAt,
+            createdAt: data.createdAt !== undefined ? Date.parse(data.createdAt) : undefined,
+            expiredAt: data.expiredAt !== undefined ? Date.parse(data.expiredAt) : undefined,
             _version: "1",
             _lastModified: Date.now()
         }
     }
 
-    public addMeelPrep = (data: MeelPrepFormData) => {
-        this.dispatch(entities.actions.MEEL_PREPS.ADD(this.meelPrepFormDataToEntity(data)))
-    }
-
-    public updateMeelPrep = (id: string, data: MeelPrepFormData) => {
-        this.dispatch(entities.actions.MEEL_PREPS.UPDATE({
-            id,
-            ...this.meelPrepFormDataToEntity(data)
-        }))
+    public submitMeelPrepForm = (id: string | undefined, data: MeelPrepFormData) => {
+        if (id === undefined) {
+            this.dispatch(entities.actions.MEEL_PREPS.ADD(this.meelPrepFormDataToEntity(data)))
+        } else {
+            this.dispatch(entities.actions.MEEL_PREPS.UPDATE({
+                id,
+                ...this.meelPrepFormDataToEntity(data)
+            }))
+        }
     }
 
     private recipeFormDataToEntity = (data: RecipeFormData): Omit<Types.RecipeEntity, "id"> => {
         return {
-            name: data.name,
+            name: data.name || "",
             photo: data.photo || res.images.noImage,
             ingredients: this.filterIngredients(data.ingredients),
             url: data.url,
@@ -135,19 +136,23 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     }
 
     private filterIngredients = (data: RecipeFormData["ingredients"]): Types.Ingredient[] => {
-        return data.map(item => (item.name) ? { name: item.name, amount: item.amount } : undefined)
-                   .filter(item => item !== undefined) as Types.Ingredient[];
+        if (data !== undefined) {
+            return data.map(item => item.name ? { name: item.name, amount: item.amount } : undefined)
+                       .filter(item => item !== undefined) as Types.Ingredient[];
+        } else {
+            return [];
+        }
     }
 
-    public addRecipe = (data: RecipeFormData) => {
-        this.dispatch(entities.actions.RECIPES.ADD(this.recipeFormDataToEntity(data)))
-    }
-
-    public updateRecipe = (id: string, data: RecipeFormData) => {
-        this.dispatch(entities.actions.RECIPES.UPDATE({
-            id,
-            ...this.recipeFormDataToEntity(data)
-        }))
+    public submitRecipeForm = (id: string | undefined, data: RecipeFormData) => {
+        if (id === undefined) {
+            this.dispatch(entities.actions.RECIPES.ADD(this.recipeFormDataToEntity(data)))
+        } else {
+            this.dispatch(entities.actions.RECIPES.UPDATE({
+                id,
+                ...this.recipeFormDataToEntity(data)
+            }));
+        }
     }
 }
 

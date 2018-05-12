@@ -84,6 +84,7 @@ const WebBrowserScreen = require("@root/views/screens/WebBrowserScreen").default
 const ShoppingListItemFormScreen = require("@root/views/screens/ShoppingListFormScreen").default;
 const MeelPrepFormScreen = require("@root/views/screens/MeelPrepFormScreen").default;
 const RecipeFormScreen = require("@root/views/screens/RecipeFormScreen").default;
+const AddRecipeScreen = require("@root/views/screens/AddRecipeScreen").default;
 
 export const RootStack = createStackNavigator({
     navState: (state: StoreState) => state.rootStackState,
@@ -94,6 +95,7 @@ export const RootStack = createStackNavigator({
         MeelPrepForm: { screen: MeelPrepFormScreen },
         RecipeForm: { screen: RecipeFormScreen },
         WebBrowser: { screen: WebBrowserScreen },
+        AddRecipe: { screen: AddRecipeScreen },
     },
     config: {
         headerMode: "none"

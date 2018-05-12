@@ -11,13 +11,13 @@ export interface ReduxFormFieldProps extends V.TextFieldProperties {
 
 export const ReduxFormField = (props: ReduxFormFieldProps) => {
     let { fieldProps: { input, meta }, ...rest } = props;
-    log(`FormField(${input.name}) = `, input.value)
+    log(`FormField(${input.name}) = `, (typeof input.value === "string" ? input.value.substring(0, 20) : input.value));
     return (
         <V.FormField
             onChange={input.onChange}
             onBlur={input.onBlur as any}
             onFocus={input.onFocus as any}
-            error={meta.error}
+            error={meta.touched && meta.error}
             focus={meta.active}
             value={input.value}
             onFocusNext={(next) => meta.dispatch(focus(meta.form, next || "none"))}

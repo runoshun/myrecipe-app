@@ -13,7 +13,7 @@ import {
 
 import RecipeCard from "@root/views/components/RecipeCard";
 import { RecipeDetailScreen } from "./RecipeDetailScreen";
-import { RecipeFormScreen } from "@root/views/screens/RecipeFormScreen";
+import { AddRecipeScreen } from "@root/views/screens/AddRecipeScreen";
 
 export interface RecipesScreenProperties extends DispatcherProps {
     recipes: Types.RecipeEntity[],
@@ -31,7 +31,7 @@ export class RecipesScreen extends React.Component<RecipesScreenProperties, Stat
     }
 
     onPressAdd = () => {
-        this.props.router.navigate(RecipeFormScreen.anchor, { id: undefined })
+        this.props.router.navigate(AddRecipeScreen.anchor, { })
     }
 
     render() {

@@ -42,7 +42,7 @@ export const extract = (amount: string): [number, string] | undefined => {
 
 export const format = (extracted: [number, string], multiply = 1): string => {
     let num = extracted[0] * multiply;
-    return extracted[1].replace(mark, num.toString())
+    return extracted[1].replace(mark, num.toFixed(1))
 }
 
 export const mayBeMultiplyAmount = (amount: string, multiply = 1): string => {
