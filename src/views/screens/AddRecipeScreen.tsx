@@ -29,9 +29,12 @@ type AddMethod =
 class AddMethodList extends FlatList<AddMethod> {}
 
 const methodlList: AddMethod[] = [
-    { type: "browser", icon: res.images.noImage, uri: "https://www.google.com", title: "Google" },
-    { type: "browser", icon: res.images.noImage, uri: "https://erecipe.woman.excite.co.jp", title: "E レシピ" },
-    { type: "form", icon: res.images.noImage, title: "自分で追加" }
+    { type: "browser", icon: res.images.google, uri: "https://www.google.com", title: "Google" },
+    { type: "browser", icon: res.images.erecipe, uri: "https://erecipe.woman.excite.co.jp", title: "E レシピ" },
+    { type: "browser", icon: res.images.shirogohan, uri: "https://www.sirogohan.com", title: "白ごはん.com" },
+    { type: "browser", icon: res.images.chefgohan, uri: "https://chefgohan.gnavi.co.jp", title: "シェフごはん" },
+    { type: "browser", icon: res.images.cookpad, uri: "https://cookpad.com", title: "クックパッド" },
+    { type: "form", icon: res.images.transparent, title: "自分で追加" }
 ] 
 
 export class AddRecipeScreen extends React.Component<AddRecipeScreenProperties, State> {

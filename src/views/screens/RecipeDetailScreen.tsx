@@ -102,10 +102,13 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                     />
                     <ScrollView style={styles.values.scrollView}>
                         <Image source={{ uri: recipe.photo }} style={styles.values.image} />
-                        <V.Card style={styles.values.contentCard}>
-                            <V.Texts.H3 style={styles.values.label}>{res.strings.recipeDetailIngredient()}</V.Texts.H3>
-                            {this.renderIngredients(recipe.ingredients)}
-                        </V.Card>
+                        {
+                            recipe.ingredients.length > 0 &&
+                            <V.Card style={styles.values.contentCard}>
+                                <V.Texts.H3 style={styles.values.label}>{res.strings.recipeDetailIngredient()}</V.Texts.H3>
+                                {this.renderIngredients(recipe.ingredients)}
+                            </V.Card>
+                        }
                     </ScrollView>
 
                     <V.HBox style={V.styles.values.bottomBar} justifyContent="flex-end">

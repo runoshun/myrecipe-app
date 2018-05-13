@@ -21,7 +21,7 @@ const rootReducer = combineReducers<StoreState>({
     form: formReducer,
 });
 
-const DISABLE_PERSIST = true;
+const DISABLE_PERSIST = false && __DEV__;
 const persistBlackList = ["form", ...Object.keys(navigators.reducers)];
 if (DISABLE_PERSIST) {
     persistBlackList.push("app", "entities");

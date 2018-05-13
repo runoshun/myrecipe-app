@@ -88,6 +88,7 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 action2Handler={this.addToRecipe}
                 onMessage={this.onMessage}
                 injectedJavaScript={injectedJavascript}
+                javaScriptEnabled={true}
                 />
         );
     }
@@ -114,7 +115,6 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
         }
     }
 }
-
 
 interface ImageElem { elem: HTMLElement, src: string };
 const initWebview = () => {
@@ -153,20 +153,32 @@ const initWebview = () => {
         return imageTags.concat(backgroundImages);
     }
 
-    var calcScore = (dim: { width: number, height: number, surface: number }, img: HTMLElement): number => {
+    var calcScore = (dim: { width: number, height: number, surface: number }, img: HTMLElement, renderScore = false): number => {
         // too large image will be page background image
         if (img.clientHeight >= dim.height * 0.5) {
             return -1;
         }
 
-        var surface = Math.min(img.clientHeight * img.clientWidth / dim.surface * 10, 1);
-        var top = (img.clientTop / dim.height / 2);
-        var left = (img.clientLeft / dim.width / 2);
+        var rect = img.getBoundingClientRect();
 
-        return surface - top - left;
+        var surface = Math.min(rect.width * rect.height / dim.surface * 5, 1);
+        var top = (rect.top / dim.height);
+        var left = (rect.left / dim.width) / 3;
+
+        var score = surface - top - left;
+
+        if (renderScore) {
+            var e = document.createElement("div");
+            e.innerHTML = score.toFixed(4);
+            e.setAttribute("style", `position: absolute; left: ${rect.left}px; top: ${rect.top}px; background-color: #00000030; color: #ffffff`);
+            document.body.appendChild(e);
+        }
+
+        return score
     };
 
-    (window as any).resolveLargestImage = () => {
+    // avoid code mangling
+    (window as any)["resolveLargestImage"] = () => {
         var bodyDim = {
             width: document.body.clientWidth,
             height: document.body.clientHeight,
@@ -184,10 +196,9 @@ const initWebview = () => {
  };
 const injectedJavascript = '(' + String(initWebview) + ')();';
 
-const resolveLargestImage: any = undefined;
 const addToRecipe = (reqCode: number) => {
     try {
-        var result = resolveLargestImage();
+        var result = (window as any)["resolveLargestImage"]();
         if (result) {
             window.postMessage(JSON.stringify({ type: "success", data: result, reqCode: reqCode }), "reactNative");
         } else {
