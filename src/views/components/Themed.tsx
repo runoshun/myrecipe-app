@@ -9,6 +9,7 @@ import { PopupMenu, Dialog, HBox, Popup, Stylable, Typography, Button, bindDefau
 import * as colors from "@root/resources/colors";
 import { Platform } from "react-native";
 import { PixelRatio } from "react-native";
+import { rn } from "@root/utils";
 
 const pxRatio = PixelRatio.get();
 export const nrPixel = (size: number) => {
@@ -126,6 +127,7 @@ export const AppScreenHeader = bindDefaultProps(ScreenHeader, {
         colorBackground: res.colors.accent,
         colorForeground: res.colors.white,
         colorBorderBottom: res.colors.accentThin,
+        statusBarPadding: (rn.os() === "ios" ? 20 : 0),
     })
 })
 

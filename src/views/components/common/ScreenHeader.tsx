@@ -5,25 +5,26 @@ import rn from "@root/utils/rn";
 import Button, { ButtonProperties } from "./Button";
 import Stylable from "./stylable";
 
+const defaultStatusBarPadding = 
+    (Platform.OS == "ios") ? 20 :
+    rn.isRunningOnExpo() ? 28 : 0;
+
 const defaultVars = {
     colorBackground: Platform.OS === "ios" ? "#f7f7f7" : "#fff",
     colorForeground: "#000",
     colorBorderBottom: "#ccc",
     textSizeTitle: 18,
-    dimNavBarHeight: 44,
+    navBarHeight: 44,
+    statusBarPadding: defaultStatusBarPadding,
 };
 
 type Vars = typeof defaultVars;
 
-const statusBarPadding = 
-    (Platform.OS == "ios") ? 20 :
-    rn.isRunningOnExpo() ? 28 : 0;
-
 const defaultStyles = new Stylable({
     TUI_Header: {
         backgroundColor: (v: Vars) => v.colorBackground,
-        height: (v: Vars) => v.dimNavBarHeight + statusBarPadding,
-        paddingTop: statusBarPadding,
+        height: (v: Vars) => v.navBarHeight + v.statusBarPadding,
+        paddingTop: (v: Vars) => v.statusBarPadding,
         borderBottomColor: (v: Vars) => v.colorBorderBottom,
         borderBottomWidth: 1,
         justifyContent: "center",
@@ -41,7 +42,7 @@ const defaultStyles = new Stylable({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        top: statusBarPadding,
+        top: (v: Vars) => v.statusBarPadding,
         left: 0,
         right: 0,
         bottom: 0,
