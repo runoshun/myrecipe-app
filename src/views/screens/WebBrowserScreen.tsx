@@ -154,12 +154,16 @@ const initWebview = () => {
     }
 
     var calcScore = (dim: { width: number, height: number, surface: number }, img: HTMLElement, renderScore = false): number => {
+        var rect = img.getBoundingClientRect();
+
         // too large image will be page background image
-        if (img.clientHeight >= dim.height * 0.5) {
+        if (rect.height >= dim.height * 0.5) {
             return -1;
         }
-
-        var rect = img.getBoundingClientRect();
+        // position at out of screen image is ignored
+        if (rect.top < 0 || rect.left < 0) {
+            return -1;
+        }
 
         var surface = Math.min(rect.width * rect.height / dim.surface * 5, 1);
         var top = (rect.top / dim.height);
@@ -177,6 +181,12 @@ const initWebview = () => {
         return score
     };
 
+    var absUrl = (url: string) => {
+        var a = document.createElement("a");
+        a.href = url;
+        return a.href;
+    } 
+
     // avoid code mangling
     (window as any)["resolveLargestImage"] = () => {
         var bodyDim = {
@@ -190,7 +200,7 @@ const initWebview = () => {
         if (withScore.length === 0) {
             return undefined;
         } else {
-            return withScore[0].elem.src;
+            return absUrl(withScore[0].elem.src);
         }
     }
  };
