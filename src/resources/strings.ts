@@ -19,6 +19,9 @@ export const imageFieldPickImage = () => "ライブラリから選択";
 export const imageFieldInputUrl = () => "URLから取得";
 export const imageFieldDeleteImage = () => "画像を削除";
 
+export const recipeListEmptyMessage1 = () => "レシピが登録されていません。";
+export const recipeListEmptyMessage2 = () => "こちらから追加";
+
 export const recipeDetailIngredient = () => "材料一覧";
 export const recipeDetailLink = () => "リンクを開く";
 export const recipeDetailToShoppingList = () => "リストに追加";

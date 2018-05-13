@@ -108,9 +108,10 @@ export const TransparentOnAccentButton = bindDefaultProps(Button, {
 
 export const FullAccentButton = bindDefaultProps(Button, {
     styles: Button.defaultStyles.applyVars({
-        colorBackground: res.colors.accentThin,
-        colorForeground: res.colors.white,
+        colorBackground: "transparent",
+        colorForeground: res.colors.accent,
         labelSize: nrPixel(16),
+        iconSize: nrPixel(24),
         growInnerContainer: true,
     }).override({
         TUI_ButtonContainer: {
