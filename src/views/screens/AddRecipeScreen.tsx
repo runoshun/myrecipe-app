@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FlatList, SectionList, Image, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 
 import { 
     createContainer,

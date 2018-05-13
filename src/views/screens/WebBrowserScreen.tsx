@@ -135,7 +135,7 @@ const initWebview = () => {
         var backgroundImages: ImageElem[] = Array.from(
             Array.from(document.querySelectorAll('*'))
                 .reduce((collection, node) => {
-                    let prop = window.getComputedStyle(node, null)
+                    let prop = window.getComputedStyle(node, undefined)
                         .getPropertyValue('background-image')
                     // match `url(...)`
                     let match = srcChecker.exec(prop)
