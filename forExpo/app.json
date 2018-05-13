@@ -1,6 +1,9 @@
 {
   "expo": {
     "sdkVersion": "27.0.0",
-    "name": "tsukurioki"
+    "name": "tsukurioki",
+    "android": {
+      "package": "net.runoshun.android.tsukurioki"
+    }
   }
 }

@@ -9,8 +9,7 @@
     ["module-resolver", {
       "root": ["./build/"],
       "alias": {
-        "@root": "./build/src",
-        "@images": "./images"
+        "@root": "./build/src"
       }
     }]
   ]

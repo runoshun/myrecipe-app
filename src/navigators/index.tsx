@@ -23,6 +23,7 @@ export const createAnchor = bindCreateAnchor<Routes>();
 const RecipesScreen = require("@root/views/screens/RecipesScreen").default;
 const MeelPrepsScreen = require("@root/views/screens/MeelPrepsScreen").default;
 const ShoppingListScreen = require("@root/views/screens/ShoppingListScreen").default;
+const DebugScreen = require("@root/views/screens/DebugScreen").default;
 
 export const MainTab = createTabNavigator({
     navState: (state: StoreState) => state.mainTabState,
@@ -47,6 +48,13 @@ export const MainTab = createTabNavigator({
                 tabBarLabel: res.strings.tabbarLabelShoppingList(),
             },
             screen: ShoppingListScreen
+        },
+        Debug: {
+            navigationOptions: {
+                tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="settings" />,
+                tabBarLabel: "Debug",
+            },
+            screen: DebugScreen,
         }
     },
     config: {

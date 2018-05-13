@@ -379,6 +379,26 @@ export const undoable = function<State>(reducer: (state: State | undefined, acti
     return builder.build();
 }
 
+export const capture = function<State>(origReducer: Reducer<State>, wrapper: Reducer<State>) {
+    const wrapped: Reducer<State> = (state, action) => {
+        let newState = wrapper(state, action);
+        if (state === newState) {
+            return origReducer(state, action);
+        } else {
+            return newState;
+        }
+    }
+    return wrapped;
+}
+
+export const replacable = function<State>(reducer: Reducer<State>, action: ActionCreator<State, never>) {
+    const initial = reducer(undefined as any, action);
+    const wrapper = new ReducerBuilder(initial)
+        .case(action, (_state, payload) => payload)
+        .build();
+    return capture(reducer, wrapper)
+}
+
 export interface MapToProps<RootState, Props, OwnProps> {
     (state: RootState, dispatch: Dispatch<any>, ownProps: OwnProps): Props & Children
 }

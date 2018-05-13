@@ -27,6 +27,7 @@ export const actions = {
     SHOPPING_LIST: reduxUtils.entityAction<Types.ShoppingListItemEntity>("shoppingList"),
 
     UNDO_ENTITIES: reduxUtils.undoableAction("entities"),
+    REPLACE_ENTITIES: reduxUtils.action<UndoableEntitiesState>("entities/replace"),
 }
 
 // ===================================================================================== //
@@ -54,7 +55,7 @@ const meelEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelEntity
 const meelPrepsEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelPrepEntity>(actions.MEEL_PREPS, uuidv4, initialEntities.meelPreps).build();
 const shoppingListEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.ShoppingListItemEntity>(actions.SHOPPING_LIST, uuidv4, initialEntities.shoppingList).build();
 
-export const reducer = reduxUtils.undoable(
+const undoableReducer = reduxUtils.undoable(
     reduxUtils.combineReducers<EntitiesState>({
         meels: meelEntitiesReducer,
         meelPreps: meelPrepsEntitiesReducer,
@@ -65,6 +66,8 @@ export const reducer = reduxUtils.undoable(
     {
         limit: 1,
     });
+
+export const reducer = reduxUtils.replacable(undoableReducer, actions.REPLACE_ENTITIES);
 
 // ===================================================================================== //
 //                                       Selectors                                       //

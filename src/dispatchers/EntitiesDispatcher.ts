@@ -11,6 +11,8 @@ import { ShoppingListFormData, MeelPrepFormData, RecipeFormData } from "@root/re
 import { Omit } from "@root/utils/types";
 import mayBeMultiplyAmount from "@root/common/extractUnit";
 
+import entitiesStateSchama from "@root/resources/schema/entitesState";
+
 export class EntitiesDispatcher extends DispatcherBase<StoreState> {
 
     constructor(dispatch: Dispatch<any>) {
@@ -152,6 +154,17 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
                 id,
                 ...this.recipeFormDataToEntity(data)
             }));
+        }
+    }
+
+    public importData = (data: any) => {
+        const Ajv = require("ajv");
+        let ajv = new Ajv();
+        let valid = ajv.validate(entitiesStateSchama, data);
+        if (!valid) {
+           throw (ajv.errors);
+        } else {
+            this.dispatch(entities.actions.REPLACE_ENTITIES(data))
         }
     }
 }
