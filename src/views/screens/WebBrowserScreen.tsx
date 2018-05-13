@@ -89,6 +89,7 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 onMessage={this.onMessage}
                 injectedJavaScript={injectedJavascript}
                 javaScriptEnabled={true}
+                ScreenHeaderComponent={V.AppScreenHeader}
                 />
         );
     }

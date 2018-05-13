@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Provider } from "react-redux";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { PersistGate } from 'redux-persist/integration/react';
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StatusBar } from "react-native";
 
 import store from "./store";
 import navigators from "@root/navigators";
@@ -23,6 +23,7 @@ export default class App extends React.Component {
                             </PopupRegistry>
                         </View>
                         {rn.isRunningOnExpo() && rn.os() === "ios" && <KeyboardSpacer />}
+                        {rn.isRunningOnExpo() && rn.os() === "ios" && <StatusBar barStyle="light-content" />}
                     </View>
                 </PersistGate>
             </Provider>

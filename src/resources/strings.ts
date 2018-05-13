@@ -32,7 +32,7 @@ export const recipeDetailDeletedMessage = () => "レシピを削除しました"
 
 export const addRecipeTitle = () => "レシピを追加";
 
-export const recipeFormTitle = () => "レシピ";
+export const recipeFormTitle = () => "レシピ編集";
 export const recipeFormNameLabel = () => "レシピ名";
 export const recipeFormNamePlaceholder = () => "レシピ名";
 export const recipeFormUrlLabel = () => "URL(任意)";

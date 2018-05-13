@@ -1,8 +1,8 @@
 import * as React from "react";
-import { View, WebViewProperties, Text, WebView, NavState, ActivityIndicator } from "react-native";
+import { View, WebViewProperties, WebView, NavState, ActivityIndicator } from "react-native";
 
 import { Screen } from "./Screen";
-import ScreenHeader from "./ScreenHeader";
+import ScreenHeader, { ScreenHeaderProperties, ScreenHeaderButton } from "./ScreenHeader";
 import { HBox } from "./Layouts";
 import Button from "./Button";
 import Stylable from "@root/views/components/common/stylable";
@@ -10,11 +10,13 @@ import Stylable from "@root/views/components/common/stylable";
 export interface WebBrowserProperties extends WebViewProperties {
     requestClose: () => void
     buttonStyles?: typeof Button.defaultStyles,
+    headerButtonStyles?: typeof Button.defaultStyles,
     styles?: typeof defaultStyles,
     action1Icon?: string,
     action1Handler?: (webView?: WebView, state?: NavState) => void,
     action2Icon?: string,
     action2Handler?: (webView?: WebView, state?: NavState) => void,
+    ScreenHeaderComponent?: React.ComponentType<ScreenHeaderProperties>,
 }
 
 interface State {
@@ -74,10 +76,11 @@ export default class WebBrowser extends React.Component<WebBrowserProperties, St
     }
 
     render() {
-        let { requestClose, buttonStyles: _b, children,
+        let { requestClose, buttonStyles: _b, headerButtonStyles: _h, children,
             action1Icon, action1Handler, action2Icon, action2Handler,
              ...rest } = this.props;
         let buttonStyles = _b || defaultButtonStyles;
+        let headerButtonStyles = _h || defaultButtonStyles;
         let styles = this.props.styles || defaultStyles;
 
         let action1Button, action2Button;
@@ -93,16 +96,14 @@ export default class WebBrowser extends React.Component<WebBrowserProperties, St
             action2Button = <View />
         }
 
+        const ScreenHeaderComp = this.props.ScreenHeaderComponent || ScreenHeader;
+
         return (
             <Screen>
-                <ScreenHeader
-                    renderLeft={() => <Button icon="close" onPress={requestClose} styles={buttonStyles}/>}
-                    renderCenter={() => 
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.values.TUI_WebBrowser_Title}>
-                            {this.state.title}
-                        </Text>
-                    }
-                    renderRight={() => <Button icon="refresh" onPress={this.handleRefresh} styles={buttonStyles} />}/>
+                <ScreenHeaderComp
+                    title={this.state.title}
+                    renderLeft={(tint) => <ScreenHeaderButton tintColor={tint} icon="close" onPress={requestClose} styles={headerButtonStyles}/>}
+                    renderRight={(tint) => <ScreenHeaderButton tintColor={tint} icon="refresh" onPress={this.handleRefresh} styles={headerButtonStyles} />}/>
                 <WebView
                     style={styles.values.TUI_WebBrowser_WebView}
                     ref={this.bindWebView}

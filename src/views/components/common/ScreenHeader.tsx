@@ -8,6 +8,7 @@ import Stylable from "./stylable";
 const defaultVars = {
     colorBackground: Platform.OS === "ios" ? "#f7f7f7" : "#fff",
     colorForeground: "#000",
+    colorBorderBottom: "#ccc",
     textSizeTitle: 18,
     dimNavBarHeight: 44,
 };
@@ -23,7 +24,7 @@ const defaultStyles = new Stylable({
         backgroundColor: (v: Vars) => v.colorBackground,
         height: (v: Vars) => v.dimNavBarHeight + statusBarPadding,
         paddingTop: statusBarPadding,
-        borderBottomColor: "#ccc",
+        borderBottomColor: (v: Vars) => v.colorBorderBottom,
         borderBottomWidth: 1,
         justifyContent: "center",
         alignItems: "center",

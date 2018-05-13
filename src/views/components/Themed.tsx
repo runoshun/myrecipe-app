@@ -122,14 +122,17 @@ export const FullAccentButton = bindDefaultProps(Button, {
 
 export const AppScreenHeader = bindDefaultProps(ScreenHeader, {
     styles: ScreenHeader.defaultStyles.applyVars({
-        textSizeTitle: nrPixel(18)
+        textSizeTitle: nrPixel(18),
+        colorBackground: res.colors.accent,
+        colorForeground: res.colors.white,
+        colorBorderBottom: res.colors.accentThin,
     })
 })
 
 export const AppScreenHeaderButton = bindDefaultProps(ScreenHeaderButton, {
-    tintColor: colors.accent,
+    tintColor: res.colors.white,
     styles: ScreenHeaderButton.defaultStyles.applyVars({
-        iconSize: nrPixel(32)
+        iconSize: nrPixel(32),
     })
 })
 
