@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import * as Types from "@root/EntityTypes";
 import MeelPrepForm from "@root/views/components/MeelPrepForm";
 import { 
     createContainer,
@@ -11,7 +10,7 @@ import {
     createDispacherProps,
 } from "./Imports";
 import { InjectedFormProps, reduxForm } from "redux-form";
-import { meelPrepEntityToFormData, MeelPrepFormData } from "@root/reducers/form";
+import { meelPrepEntityToFormData, MeelPrepFormData, MeelPrepFormEntity } from "@root/reducers/form";
 
 export interface MeelPrepFormScreenProperties extends DispatcherProps {
     id?: string,
@@ -22,7 +21,7 @@ interface State {
 
 interface Params {
     id: string | undefined,
-    data?: Types.MeelPrepEntity,
+    data?: MeelPrepFormEntity,
 }
 
 type Props = InjectedFormProps<MeelPrepFormData, MeelPrepFormScreenProperties> & MeelPrepFormScreenProperties;

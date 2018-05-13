@@ -24,6 +24,10 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     //     dispatch(actionCreator({ code, message }));
     // }
 
+    public undoEntities = () => {
+        this.dispatch(entities.actions.UNDO_ENTITIES.UNDO({}))
+    }
+
     private ingredientToShoppingList = (ingredient: Types.Ingredient, recipeId: string, multiply: number): Omit<Types.ShoppingListItemEntity, "id"> => {
         let amount = mayBeMultiplyAmount(ingredient.amount, multiply)
         return {
@@ -41,16 +45,12 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
         this.dispatch(entities.actions.SHOPPING_LIST.ADD_MANY(shoppingListItems));
     }
 
-    public toggleShoppingListItemChecked = (id: string, checked: boolean) => {
-        this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({ id, checked: !checked }));
-    }
-
     public deleteRecipe = (recipe: Types.RecipeEntity) => {
         this.dispatch(entities.actions.RECIPES.DELETE({ id: recipe.id }))
     }
 
-    public undoEntities = () => {
-        this.dispatch(entities.actions.UNDO_ENTITIES.UNDO({}))
+    public toggleShoppingListItemChecked = (id: string, checked: boolean) => {
+        this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({ id, checked: !checked }));
     }
 
     public clearShoppingList = () => {

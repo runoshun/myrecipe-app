@@ -30,7 +30,7 @@ const defaultStyles = new Stylable({
         flex: (vars: Vars) => vars.growInnerContainer ? 1 : undefined,
     },
     TUI_ButtonText: {
-        margin: (vars: Vars) => vars.marginUnit * 2,
+        padding: (vars: Vars) => vars.marginUnit * 2,
         color: (vars: Vars) => vars.colorForeground,
         fontSize: (vars: Vars) => vars.labelSize,
     },

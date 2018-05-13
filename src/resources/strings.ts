@@ -3,6 +3,8 @@ export const commonOk = () => "OK";
 export const commonCancel = () => "キャンセル";
 export const commonUndo = () => "元に戻す";
 export const commonConfirmationTitle = () => "確認";
+export const commonDelete = () => "削除";
+export const commonEdit = () => "編集";
 
 export const recipesTitle = () => "レシピ一覧";
 export const meelPrepsTitle = () => "作り置き一覧";

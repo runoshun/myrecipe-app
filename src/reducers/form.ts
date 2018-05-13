@@ -19,7 +19,9 @@ export type ShoppingListFormData = {
     [P in keyof Omit<Types.ShoppingListItemEntity, EntityExluceCommon | "checked" | "recipeId">]: string | undefined
 };
 
-export const meelPrepEntityToFormData = (entity: Types.MeelPrepEntity): MeelPrepFormData => {
+export type MeelPrepFormEntity = Omit<Types.MeelPrepEntity, EntityExluceCommon>;
+
+export const meelPrepEntityToFormData = (entity: MeelPrepFormEntity): MeelPrepFormData => {
     return {
         name: entity.name,
         amount: isNaN(entity.amount) ? "" : entity.amount.toString(),

@@ -47,7 +47,7 @@ export default class MeelPrepItem extends React.Component<MeelPrepItemProperties
     }
 
     render() {
-        let textStyle = [styles.values.text];
+        let textStyle = styles.values.text;
         let name = this.props.name;
         let amount = this.props.amount;
         let createdAt = this.props.createdAt;
@@ -58,22 +58,30 @@ export default class MeelPrepItem extends React.Component<MeelPrepItemProperties
             <V.Card style={styles.values.card}>
                 <V.HBox style={[styles.values.container, this.props.style, { overflow: "visible" }]}>
                     <Image source={{uri: photo}} style={styles.values.image} />
-                    <V.VBox>
-                        <V.Texts.H3 style={textStyle}>{name}</V.Texts.H3>
+                    <V.VBox style={styles.values.textsContainer}>
+                        <V.Texts.H3 numberOfLines={1} ellipsizeMode="tail" style={[textStyle]}>{name}</V.Texts.H3>
                         <V.Texts.Body style={textStyle}>{createdAt ? res.strings.meelPrepsCreated(createdAt) : ""}</V.Texts.Body>
                         <V.Texts.Body style={textStyle}>{expiredAt ? res.strings.meelPrepsExpired(expiredAt) : ""}</V.Texts.Body>
                     </V.VBox>
                     <View style={{ flex: 1 }} />
                     <V.Texts.Body style={textStyle}>{isNaN(amount) ? "" : amount}</V.Texts.Body>
-                    <Expandable expanded={this.state.moreMenuVisible} animationType={{ type: "width" }} style={styles.values.moreButtonsContainer}>
-                        <V.TransparentAccentButton icon={"trash-outline"} onPress={this.handleDelete} style={styles.values.actionButton} />
-                        {
-                            this.props.onEdit &&
-                            <V.TransparentAccentButton icon={"create-outline"} onPress={this.handleEdit} style={styles.values.actionButton} />
-                        }
-                    </Expandable>
                     <V.TransparentAccentButton icon={this.state.moreMenuVisible ? "close" : "more"} onPress={this.toggleMore} style={styles.values.actionButton} />
                 </V.HBox>
+                <Expandable expanded={this.state.moreMenuVisible} animationType={{ type: "height", max: 100 }} style={styles.values.moreButtonsContainer}>
+                    <V.TransparentAccentButton
+                        icon={"trash-outline"}
+                        label={res.strings.commonDelete()}
+                        onPress={this.handleDelete}
+                        style={styles.values.actionButton} />
+                    {
+                        this.props.onEdit &&
+                        <V.TransparentAccentButton
+                            icon={"create-outline"}
+                            label={res.strings.commonEdit()}
+                            onPress={this.handleEdit}
+                            style={styles.values.actionButton} />
+                    }
+                </Expandable>
             </V.Card>
         );
     }
@@ -90,7 +98,12 @@ const styles = new V.Stylable({
         width: "100%",
         alignItems: "center"
     },
+    textsContainer: {
+        maxWidth: "60%",
+    },
     text: {
+    },
+    title: {
     },
     image: {
         height: 68,
@@ -99,8 +112,12 @@ const styles = new V.Stylable({
     },
     moreButtonsContainer: {
         flexDirection: "row",
+        justifyContent: "flex-end",
+        alignSelf: "stretch",
+        borderTopWidth: 1,
+        borderTopColor: res.colors.lightGray,
     },
     actionButton: {
-        padding: 4,
+        margin: 4,
     }
 })

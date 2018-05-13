@@ -7,6 +7,7 @@ import { WebBrowserScreen } from "@root/views/screens/WebBrowserScreen";
 import { RecipeFormScreen } from "@root/views/screens/RecipeFormScreen";
 
 import { createAnchor, createContainer, createDispacherProps, DispatcherProps, ThemedViews as V, res, } from "./Imports";
+import { MeelPrepFormScreen } from "@root/views/screens/MeelPrepFormScreen";
 
 export interface RecipesDetailProperties extends DispatcherProps {
     recipes: { [id: string]: Types.RecipeEntity | undefined }
@@ -73,6 +74,21 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
         link && this.props.router.navigate(WebBrowserScreen.anchor, { uri: link })
     }
 
+    private addToMeelPrep = (recipe?: Types.RecipeEntity) => {
+        if (recipe) {
+            this.props.router.navigate(MeelPrepFormScreen.anchor, {
+                id: undefined,
+                data: {
+                    name: recipe.name,
+                    photo: recipe.photo,
+                    amount: 1,
+                    createdAt: Date.now(),
+                    expiredAt: NaN,
+                }
+            })
+        }
+    }
+
     render() {
         let recipeId = anchor.getParam(this.props, "recipeId");
         let recipe = recipeId !== undefined ? this.props.recipes[recipeId] : undefined;
@@ -82,6 +98,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                     <V.AppScreenHeader
                         title={recipe.name}
                         renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => this.props.router.back()} />}
+                        renderRight={() => <V.AppScreenHeaderButton icon="restaurant-outline" onPress={() => this.addToMeelPrep(recipe)} />}
                     />
                     <ScrollView style={styles.values.scrollView}>
                         <Image source={{ uri: recipe.photo }} style={styles.values.image} />
@@ -99,11 +116,14 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                                 onPress={() => this.onPressOpenLink(recipe && recipe.url)}
                                 style={styles.values.actionButton} />
                         }
-                        <V.TransparentAccentButton
-                            icon="cart-outline"
-                            label={res.strings.recipeDetailToShoppingList()} 
-                            onPress={() => this.onPressToShoppingList(recipe)}
-                            style={styles.values.actionButton} />
+                        {
+                            recipe.ingredients.length > 0 &&
+                            <V.TransparentAccentButton
+                                icon="cart-outline"
+                                label={res.strings.recipeDetailToShoppingList()}
+                                onPress={() => this.onPressToShoppingList(recipe)}
+                                style={styles.values.actionButton} />
+                        }
                         <V.TransparentAccentButton
                             icon="more-outline"
                             style={styles.values.actionButton}
