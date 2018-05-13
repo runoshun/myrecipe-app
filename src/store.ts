@@ -31,6 +31,7 @@ const persistedRootReducer = persistReducer({
     key: "root",
     storage,
     blacklist: persistBlackList,
+    version: 1,
 }, rootReducer as any);
 
 export const configureStore = () => {
