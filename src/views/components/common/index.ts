@@ -16,6 +16,7 @@ export { default as PopupMenu, PopupMenuProperties } from "./PopupMenu";
 export { default as PopupRegistry, RegisteredPopup, RegisteredPopupProperties } from "./PopupRegistry";
 export { default as TextField, TextFieldProperties } from "./TextField";
 export { default as DatePicker, DatePickerResult, DatePickerOpen, DatePickerOptions } from "./DatePicker";
+export { default as Draggable, DraggableProperties } from "./Draggable";
 
 export { default as Stylable } from "./stylable";
 export { default as Animation } from "./anim/Animation";

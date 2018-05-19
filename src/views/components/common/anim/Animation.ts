@@ -21,6 +21,10 @@ export interface DefaultAnimationConfigs {
     interpolate: Animated.InterpolationConfigType;
 }
 
+export type DefaultAnimationConfigParams = Partial<{
+    [P in keyof DefaultAnimationConfigs]: Partial<DefaultAnimationConfigParams[P]>
+}>
+
 export type PanEvent = { type: "start" | "move" | "end", gs: PanResponderGestureState }
 export type PanHandler = (value: Animated.Value, evt: PanEvent) => void;
 
@@ -46,7 +50,7 @@ export default class Animation<T extends AnimationStyleDefinition> {
 
     private _runningCount: number = 0;
 
-    constructor(inputRange: number[], styleDefs: T | (() => T), defaultConfigs?: Partial<DefaultAnimationConfigs>) {
+    constructor(inputRange: number[], styleDefs: T | (() => T), defaultConfigs?: Partial<DefaultAnimationConfigParams>) {
         this._value = new Animated.Value(inputRange[0]);
         this._inputRange = inputRange;
         this._defaultConfigs = Object.assign({
@@ -63,7 +67,7 @@ export default class Animation<T extends AnimationStyleDefinition> {
             interpolate: {
                 inputRange,
                 outputRange: inputRange,
-                extrapolate: "clamp",
+                extrapolate: "clamp" as (Animated.InterpolationConfigType["extrapolate"]),
             }
         }, defaultConfigs);
         this._styleDefs = styleDefs;
@@ -131,11 +135,13 @@ export default class Animation<T extends AnimationStyleDefinition> {
 
     private _interplateValue(styleValue: any) {
         if (Array.isArray(styleValue)) {
-            return this._value.interpolate({
-                inputRange: this._inputRange,
-                outputRange: styleValue,
-                extrapolate: "clamp",
-            });
+            return this._value.interpolate(Object.assign({},
+                this._defaultConfigs.interpolate,
+                { 
+                    outputRange: styleValue,
+                    inputRange: this._inputRange,
+                }
+            ));
         } else if (typeof styleValue === "object") {
             return this._value.interpolate(Object.assign({},
                 this._defaultConfigs.interpolate,
