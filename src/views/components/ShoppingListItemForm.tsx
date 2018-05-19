@@ -12,7 +12,6 @@ export interface ShoppingListItemFormProperties {
 interface State { }
 
 const nameRequired = notEmpty(res.strings.shoppingListFormErrorNameRequired());
-const amountIsNumber = isNumber(res.strings.shoppingListFormErrorAmountIsNonNumber());
 
 export default class ShoppingListItemForm extends React.Component<ShoppingListItemFormProperties, State> {
 
@@ -20,7 +19,7 @@ export default class ShoppingListItemForm extends React.Component<ShoppingListIt
         return (
             <V.VBox style={styles.values.container}>
                 <Field name="name" component={this.renderNameField} validate={[nameRequired]} />
-                <Field name="amount" component={this.renderAmountField} validate={[amountIsNumber]} />
+                <Field name="amount" component={this.renderAmountField} />
             </V.VBox>
         )
     }
