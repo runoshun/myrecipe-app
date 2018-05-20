@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pack-deploy": "repack-zip",
+    "deploy": "repack-zip; aws lambda update-function-code --function-name parseIngredientsFromHtml --zip-file fileb://./parseingredients.zip",
     "test": "jest"
   },
   "author": "runoshun",
