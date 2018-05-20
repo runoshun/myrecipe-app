@@ -1,0 +1,118 @@
+import * as cheerio from "cheerio";
+import * as url from "url";
+
+interface Ingredient {
+    name: string,
+    amount: string,
+}
+
+export type Ingredients = Ingredient[];
+
+interface SimpleQueryOptions {
+    removeChildren?: boolean
+}
+
+type ParseSpec =
+    | { type: "simpleQuery", names: string, amounts: string, options?: SimpleQueryOptions }
+    | { type: "queryAndSplit", selector: string, separator: string }
+    ;
+
+export class ParseError implements Error {
+    name: string;
+    message: string;
+    constructor(message: string) {
+        this.message = message;
+        this.name = "ParseError";
+    }
+}
+
+export default async (pageUrl: string, html: string): Promise<Ingredients> => {
+    const parsedUrl = url.parse(pageUrl);
+    if (!parsedUrl.hostname) {
+        return Promise.reject(new ParseError("invalied url"));
+    } 
+
+    const hostnamePath = parsedUrl.hostname + parsedUrl.path;
+    const specName = Object.keys(parseSpecs).find(key => hostnamePath.startsWith(key));
+    if (!specName) {
+        return Promise.reject(new ParseError("parse spec is not defined for " + hostnamePath));
+    }
+
+    const spec = parseSpecs[specName];
+    switch (spec.type) {
+        case "simpleQuery":
+            return performSimpleQuery(html, spec.names, spec.amounts, spec.options || {})
+        case "queryAndSplit":
+            return performQueryAndSplit(html, spec.selector, spec.separator);
+        default:
+            return Promise.reject(new ParseError("unknown parse spec type"));
+    }
+}
+
+const performSimpleQuery = (html: string, namesSelector: string, amountSelector: string, opts: SimpleQueryOptions): Promise<Ingredients> => {
+    const $html = cheerio.load(html);
+    const names = $html(namesSelector);
+    const amounts = $html(amountSelector);
+
+    return Promise.resolve(names.toArray().map((elem, i) => {
+        let $name = cheerio(elem);
+        let $amount = cheerio(amounts[i]);
+        if (opts.removeChildren) {
+            $name = $name.clone().children().remove().end();
+            $amount = $amount.clone().children().remove().end();
+        }
+
+        return {
+            name: trimUnneeded($name.text()),
+            amount: trimUnneeded($amount.text()),
+        }
+    }));
+};
+
+const performQueryAndSplit = (html: string, selector: string, separator: string): Promise<Ingredients> => {
+    const $html = cheerio.load(html);
+    const elems = $html(selector);
+
+    return Promise.resolve(elems.toArray().map(elem => {
+        let texts = cheerio(elem).text().split(separator);
+        return {
+            name: trimUnneeded(texts[0]),
+            amount: trimUnneeded(texts[1])
+        }
+    }));
+}
+
+const trimUnneeded = (text: string) => {
+    return text.replace(/・/g, "").replace(/　/g, "").trim()
+}
+
+const parseSpecs: { [host: string]: ParseSpec } = {
+    "erecipe.woman.excite.co.jp/sp": {
+        type: "simpleQuery",
+        names: "#change_material .simplelist .material_name",
+        amounts: "#change_material .simplelist .amount",
+    },
+    "www.kyounoryouri.jp": {
+        type: "simpleQuery",
+        names: "#ingredients_list dt .ingredient",
+        amounts: "#ingredients_list dt .floatright"
+    },
+    "cookpad.com": {
+        type: "simpleQuery",
+        names: "#ingredients-list .ingredient_row",
+        amounts: "#ingredients-list .quantity",
+    },
+    "chefgohan.gnavi.co.jp": {
+        type: "simpleQuery",
+        names: ".box-recipetable tbody tr th",
+        amounts: ".box-recipetable tbody tr td",
+        options: {
+            removeChildren: true
+        }
+    },
+    "www.sirogohan.com/sp": {
+        type: "queryAndSplit",
+        selector: ".material-halfbox ul li",
+        separator: "…",
+    }
+}

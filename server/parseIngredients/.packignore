@@ -1,0 +1,4 @@
+src/**/*
+**/*.test.js
+**/*.js.map
+tsconfig.json
