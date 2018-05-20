@@ -5,5 +5,11 @@ export default async (url: string, html: string): Promise<Ingredient[]> => {
         method: "POST",
         headers: { "x-api-key": "6B5brscZeF6XiKffl2FcT8GI0G3jbDTg7q8e3EXc", "Content-Type": "application/json" },
         body: JSON.stringify({ url, html }),
-    }).then(res => res.json());
+    }).then(res => {
+        if (res.status !== 200) {
+            throw res.json();
+        } else {
+            return res.json();
+        }
+    });
 }

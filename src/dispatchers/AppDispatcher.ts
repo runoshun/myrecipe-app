@@ -38,7 +38,6 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
             // do nothing
             console.log(e);
         }
-        console.log(ingredients);
 
         // avoid cyclic deps
         const { RecipeFormScreen } = require("@root/views/screens/RecipeFormScreen");
@@ -48,7 +47,7 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
                 name: title,
                 url: url,
                 photo: photo,
-                ingredients,
+                ingredients: ingredients.filter(i => !(i.name === "" || i.name == undefined)),
             }
         });
     }
