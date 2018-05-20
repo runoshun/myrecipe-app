@@ -6,10 +6,11 @@ import { Router, createAnchor } from "@root/navigators";
 import { WebBrowser } from "@root/views/components/common";
 import { createContainer } from "@root/views/createContainer";
 import * as V from "@root/views/components/Themed";
-import { RecipeFormScreen } from "@root/views/screens/RecipeFormScreen";
+import { AppDispatcher } from "@root/dispatchers";
 
 export interface WebBrowserScreenProperties {
-    router: Router;
+    router: Router,
+    app: AppDispatcher;
 }
 
 interface State {
@@ -109,7 +110,12 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
             webview.injectJavaScript(addToRecipeJavascriptCode(reqCode));
             try {
                 let data = await this.waitMessage(reqCode);
-                this.props.router.navigate(RecipeFormScreen.anchor, { id: undefined, data: {name: state.title || "", url: state.url, photo: data, ingredients: []} })
+                this.props.app.addRecipeFromWebPage(
+                    state.title || "",
+                    state.url || "",
+                    data.photo,
+                    data.html
+                );
             } catch (e) {
                 console.log(e)
             }
@@ -209,9 +215,11 @@ const injectedJavascript = '(' + String(initWebview) + ')();';
 
 const addToRecipe = (reqCode: number) => {
     try {
-        var result = (window as any)["resolveLargestImage"]();
-        if (result) {
-            window.postMessage(JSON.stringify({ type: "success", data: result, reqCode: reqCode }), "reactNative");
+        var photo = (window as any)["resolveLargestImage"]();
+        var html = document.body.innerHTML;
+        if (photo || html) {
+            var data = { photo, html };
+            window.postMessage(JSON.stringify({ type: "success", data: data, reqCode: reqCode }), "reactNative");
         } else {
             window.postMessage(JSON.stringify({ type: "error", data: "no result", reqCode: reqCode }), "reactNative");
         }
@@ -232,5 +240,6 @@ const styles = new V.Stylable({
 export default createContainer(WebBrowserScreen)((_state, dispatch) => {
     return {
         router: new Router(dispatch),
+        app: new AppDispatcher(dispatch),
     }
 })
