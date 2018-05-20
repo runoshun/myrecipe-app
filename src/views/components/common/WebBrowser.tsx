@@ -136,7 +136,13 @@ export default class WebBrowser extends React.Component<WebBrowserProperties, St
             this.state.title !== event.title ||
             this.state.url !== event.url) 
         {
-            this.setState({ canGoBack: event.canGoBack, canGoForword: event.canGoForward, title: event.title, url: event.url })
+            let url = event.url;
+            // on iOS, postMessage will change url to like 'react-js-navigation://...'
+            // following code prevent it.
+            if (url && !url.startsWith("http")) {
+                url = this.state.url;
+            }
+            this.setState({ canGoBack: event.canGoBack, canGoForword: event.canGoForward, title: event.title, url })
         }
         if (this.props.onNavigationStateChange) {
             this.props.onNavigationStateChange(event);

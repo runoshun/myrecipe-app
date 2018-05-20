@@ -162,26 +162,28 @@ const initWebview = () => {
 
     var calcScore = (dim: { width: number, height: number, surface: number }, img: HTMLElement, renderScore = false): number => {
         var rect = img.getBoundingClientRect();
+        var absTop = rect.top + window.pageYOffset;
+        var absLeft = rect.left + window.pageXOffset;
 
         // too large image will be page background image
         if (rect.height >= dim.height * 0.5) {
             return -1;
         }
         // position at out of screen image is ignored
-        if (rect.top < 0 || rect.left < 0) {
+        if (absTop < 0 || absLeft < 0) {
             return -1;
         }
 
         var surface = Math.min(rect.width * rect.height / dim.surface * 5, 1);
-        var top = (rect.top / dim.height);
-        var left = (rect.left / dim.width) / 3;
+        var top = Math.min((absTop / dim.height) * 3, 1);
+        var left = (absLeft / dim.width) / 3;
 
         var score = surface - top - left;
 
         if (renderScore) {
             var e = document.createElement("div");
             e.innerHTML = score.toFixed(4);
-            e.setAttribute("style", `position: absolute; left: ${rect.left}px; top: ${rect.top}px; background-color: #00000030; color: #ffffff`);
+            e.setAttribute("style", `position: absolute; left: ${absLeft}px; top: ${absTop}px; background-color: #00000030; color: #ffffff`);
             document.body.appendChild(e);
         }
 
