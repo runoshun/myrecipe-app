@@ -9,23 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cheerio = require("cheerio");
-const url = require("url");
-class ParseError {
-    constructor(message) {
-        this.message = message;
-        this.name = "ParseError";
-    }
-}
-exports.ParseError = ParseError;
-exports.default = (pageUrl, html) => __awaiter(this, void 0, void 0, function* () {
-    const parsedUrl = url.parse(pageUrl);
-    if (!parsedUrl.hostname) {
-        return Promise.reject(new ParseError("invalied url"));
-    }
+exports.default = (parsedUrl, html) => __awaiter(this, void 0, void 0, function* () {
     const hostnamePath = parsedUrl.hostname + parsedUrl.path;
     const specName = Object.keys(parseSpecs).find(key => hostnamePath.startsWith(key));
     if (!specName) {
-        return Promise.reject(new ParseError("parse spec is not defined for " + hostnamePath));
+        return Promise.resolve([]);
     }
     const spec = parseSpecs[specName];
     switch (spec.type) {
@@ -34,7 +22,7 @@ exports.default = (pageUrl, html) => __awaiter(this, void 0, void 0, function* (
         case "queryAndSplit":
             return performQueryAndSplit(html, spec.selector, spec.separator);
         default:
-            return Promise.reject(new ParseError("unknown parse spec type"));
+            return Promise.reject("unknown parse spec type");
     }
 });
 const performSimpleQuery = (html, namesSelector, amountSelector, opts) => {

@@ -17,25 +17,11 @@ type ParseSpec =
     | { type: "queryAndSplit", selector: string, separator: string }
     ;
 
-export class ParseError implements Error {
-    name: string;
-    message: string;
-    constructor(message: string) {
-        this.message = message;
-        this.name = "ParseError";
-    }
-}
-
-export default async (pageUrl: string, html: string): Promise<Ingredients> => {
-    const parsedUrl = url.parse(pageUrl);
-    if (!parsedUrl.hostname) {
-        return Promise.reject(new ParseError("invalied url"));
-    } 
-
-    const hostnamePath = parsedUrl.hostname + parsedUrl.path;
+export default async (parsedUrl: url.Url, html: string): Promise<Ingredients> => {
+    const hostnamePath = (parsedUrl.hostname as string) + parsedUrl.path;
     const specName = Object.keys(parseSpecs).find(key => hostnamePath.startsWith(key));
     if (!specName) {
-        return Promise.reject(new ParseError("parse spec is not defined for " + hostnamePath));
+        return Promise.resolve([]);
     }
 
     const spec = parseSpecs[specName];
@@ -45,7 +31,7 @@ export default async (pageUrl: string, html: string): Promise<Ingredients> => {
         case "queryAndSplit":
             return performQueryAndSplit(html, spec.selector, spec.separator);
         default:
-            return Promise.reject(new ParseError("unknown parse spec type"));
+            return Promise.reject("unknown parse spec type");
     }
 }
 

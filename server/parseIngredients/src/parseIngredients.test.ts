@@ -1,21 +1,22 @@
-import parseIngredients, { Ingredients, ParseError } from "./parseIngredients";
+import parseIngredients, { Ingredients } from "./parseIngredients";
 import * as phantom from "phantom";
+import * as url from "url";
 
 jest.setTimeout(30 * 1000);
 
 describe("parseIngredients works correctly", () => {
 
-    it("should return error for unknown url", async (done) => {
-        let url = "https://www.google.com";
-        let html = await getRenderedHtml(url);
-        await expect(parseIngredients(url, html)).rejects.toBeInstanceOf(ParseError)
+    it("should return empty array for unknown url", async (done) => {
+        let parsedUrl = url.parse("https://www.google.com");
+        let html = await getRenderedHtml(parsedUrl);
+        await expect(parseIngredients(parsedUrl, html)).resolves.toEqual([]);
         done();
     })
 
-    it("should return error for invalid url", async (done) => {
-        let url = "dummy";
+    it("should return empty array for invalid url", async (done) => {
+        let parsedUrl = url.parse("dummy");
         let html = "<html></html>"
-        await expect(parseIngredients(url, html)).rejects.toBeInstanceOf(ParseError)
+        await expect(parseIngredients(parsedUrl, html)).resolves.toEqual([]);
         done();
     })
 
@@ -130,11 +131,10 @@ describe("parseIngredients works correctly", () => {
 
 })
 
-const shouldReturnResult = async (url: string, expected: Ingredients) => {
-    let html = await getRenderedHtml(url);
-    let result = await parseIngredients(url, html);
-
-    debugger;
+const shouldReturnResult = async (urlString: string, expected: Ingredients) => {
+    let parsedUrl = url.parse(urlString);
+    let html = await getRenderedHtml(parsedUrl);
+    let result = await parseIngredients(parsedUrl, html);
 
     let actual = expect(result);
     actual.not.toBeUndefined();
@@ -142,7 +142,7 @@ const shouldReturnResult = async (url: string, expected: Ingredients) => {
     actual.toEqual(expected);
 }
 
-const getRenderedHtml = (url: string): Promise<string> => {
+const getRenderedHtml = (url: url.Url): Promise<string> => {
     let phInstance: phantom.PhantomJS;
     let create: (...args: any[]) => Promise<phantom.PhantomJS> = phantom.create
     return create(['--ignore-ssl-errors=yes', '--load-images=no'], { logLevel: "error" })
@@ -151,7 +151,7 @@ const getRenderedHtml = (url: string): Promise<string> => {
             return page.property("viewportSize", { width: 640, height: 960 })
                 .then(() => page.property("zoomFactor", 1))
                 .then(() => page.setting("userAgent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"))
-                .then(() => page.open(url))
+                .then(() => page.open(url.href as string))
                 .then(() => page.evaluate(function() { return document.body.innerHTML }))
         })
         .then(html => {

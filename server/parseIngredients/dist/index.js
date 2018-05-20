@@ -8,19 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const url = require("url");
 const parseIngredients_1 = require("./parseIngredients");
+const response = (code, body) => {
+    return {
+        statusCode: code,
+        body: JSON.stringify(body),
+    };
+};
+const error = (code, message) => {
+    return response(code, { message });
+};
 exports.default = (event, _context, callback) => __awaiter(this, void 0, void 0, function* () {
     try {
         let body = JSON.parse(event.body || "{}");
         if (!body.url || !body.html) {
-            callback(new Error("Bad request body"));
+            return callback(null, error(400, "invalid body"));
         }
-        else {
-            callback(null, yield parseIngredients_1.default(body.url, body.html));
+        try {
+            let parsedUrl = url.parse(body.url);
+            if (!parsedUrl.hostname) {
+                throw "";
+            }
+            let ingredients = yield parseIngredients_1.default(parsedUrl, body.html);
+            callback(null, response(200, ingredients));
+        }
+        catch (e) {
+            return callback(null, error(400, "invalied url parameter"));
         }
     }
     catch (e) {
-        callback(new Error(e.message));
+        callback(null, error(500, e.message || e.toString()));
     }
 });
 //# sourceMappingURL=index.js.map

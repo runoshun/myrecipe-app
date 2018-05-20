@@ -10,18 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const parseIngredients_1 = require("./parseIngredients");
 const phantom = require("phantom");
+const url = require("url");
 jest.setTimeout(30 * 1000);
 describe("parseIngredients works correctly", () => {
-    it("should return error for unknown url", (done) => __awaiter(this, void 0, void 0, function* () {
-        let url = "https://www.google.com";
-        let html = yield getRenderedHtml(url);
-        yield expect(parseIngredients_1.default(url, html)).rejects.toBeInstanceOf(parseIngredients_1.ParseError);
+    it("should return empty array for unknown url", (done) => __awaiter(this, void 0, void 0, function* () {
+        let parsedUrl = url.parse("https://www.google.com");
+        let html = yield getRenderedHtml(parsedUrl);
+        yield expect(parseIngredients_1.default(parsedUrl, html)).resolves.toEqual([]);
         done();
     }));
-    it("should return error for invalid url", (done) => __awaiter(this, void 0, void 0, function* () {
-        let url = "dummy";
+    it("should return empty array for invalid url", (done) => __awaiter(this, void 0, void 0, function* () {
+        let parsedUrl = url.parse("dummy");
         let html = "<html></html>";
-        yield expect(parseIngredients_1.default(url, html)).rejects.toBeInstanceOf(parseIngredients_1.ParseError);
+        yield expect(parseIngredients_1.default(parsedUrl, html)).resolves.toEqual([]);
         done();
     }));
     it("should return results (e-recipe)", (done) => __awaiter(this, void 0, void 0, function* () {
@@ -125,10 +126,10 @@ describe("parseIngredients works correctly", () => {
         done();
     }));
 });
-const shouldReturnResult = (url, expected) => __awaiter(this, void 0, void 0, function* () {
-    let html = yield getRenderedHtml(url);
-    let result = yield parseIngredients_1.default(url, html);
-    debugger;
+const shouldReturnResult = (urlString, expected) => __awaiter(this, void 0, void 0, function* () {
+    let parsedUrl = url.parse(urlString);
+    let html = yield getRenderedHtml(parsedUrl);
+    let result = yield parseIngredients_1.default(parsedUrl, html);
     let actual = expect(result);
     actual.not.toBeUndefined();
     actual.toHaveLength(expected.length);
@@ -143,7 +144,7 @@ const getRenderedHtml = (url) => {
         return page.property("viewportSize", { width: 640, height: 960 })
             .then(() => page.property("zoomFactor", 1))
             .then(() => page.setting("userAgent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"))
-            .then(() => page.open(url))
+            .then(() => page.open(url.href))
             .then(() => page.evaluate(function () { return document.body.innerHTML; }));
     })
         .then(html => {
