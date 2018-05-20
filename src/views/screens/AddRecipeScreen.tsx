@@ -34,6 +34,7 @@ const methodlList: AddMethod[] = [
     { type: "browser", icon: res.images.shirogohan, uri: "https://www.sirogohan.com", title: "白ごはん.com" },
     { type: "browser", icon: res.images.chefgohan, uri: "https://chefgohan.gnavi.co.jp", title: "シェフごはん" },
     { type: "browser", icon: res.images.cookpad, uri: "https://cookpad.com", title: "クックパッド" },
+    { type: "browser", icon: res.images.kyonoryori, uri: "https://www.kyounoryouri.jp", title: "みんなの今日の料理" },
     { type: "form", icon: res.images.transparent, title: "自分のレシピを追加" }
 ] 
 
