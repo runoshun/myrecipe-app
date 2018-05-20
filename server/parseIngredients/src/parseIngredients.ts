@@ -80,7 +80,7 @@ const parseSpecs: { [host: string]: ParseSpec } = {
     },
     "www.kyounoryouri.jp": {
         type: "simpleQuery",
-        names: "#ingredients_list dt .ingredient",
+        names: "#ingredients_list dt .ingredient, #ingredients_list dt a",
         amounts: "#ingredients_list dt .floatright"
     },
     "cookpad.com": {

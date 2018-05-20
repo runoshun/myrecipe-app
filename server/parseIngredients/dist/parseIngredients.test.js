@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const parseIngredients_1 = require("./parseIngredients");
 const phantom = require("phantom");
 const url = require("url");
-jest.setTimeout(30 * 1000);
+jest.setTimeout(8 * 1000);
 describe("parseIngredients works correctly", () => {
     it("should return empty array for unknown url", (done) => __awaiter(this, void 0, void 0, function* () {
         let parsedUrl = url.parse("https://www.google.com");
@@ -25,7 +25,7 @@ describe("parseIngredients works correctly", () => {
         yield expect(parseIngredients_1.default(parsedUrl, html)).resolves.toEqual([]);
         done();
     }));
-    it("should return results (e-recipe)", (done) => __awaiter(this, void 0, void 0, function* () {
+    it("should return results (e-recipe) - 1", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://erecipe.woman.excite.co.jp/sp/detail/dbbd0da93c32ee75498536571a569bf1.html", [
             { name: "グリーンアスパラ", amount: "6本" },
             { name: "だし汁", amount: "50ml" },
@@ -33,6 +33,9 @@ describe("parseIngredients works correctly", () => {
             { name: "薄口しょうゆ", amount: "大さじ1" },
             { name: "かつお節", amount: "適量" },
         ]);
+        done();
+    }));
+    it("should return results (e-recipe) - 2", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://erecipe.woman.excite.co.jp/sp/detail/a3f5b3692ef8e4096c97f4a6e403f4d5.html", [
             { name: "シイタケ", amount: "6個" },
             { name: "パン粉", amount: "大さじ2" },
@@ -44,7 +47,7 @@ describe("parseIngredients works correctly", () => {
         ]);
         done();
     }));
-    it("should return result (みんなの今日の料理)", (done) => __awaiter(this, void 0, void 0, function* () {
+    it("should return result (みんなの今日の料理) - 1", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://www.kyounoryouri.jp/recipe/15273_たたききゅうりの酢の物.html", [
             { name: "きゅうり", amount: "2本（200g）" },
             { name: "しょうが", amount: "1/2かけ" },
@@ -54,6 +57,9 @@ describe("parseIngredients works correctly", () => {
             { name: "砂糖", amount: "大さじ1+1/2" },
             { name: "ごま油", amount: "小さじ1" },
         ]);
+        done();
+    }));
+    it("should return result (みんなの今日の料理) - 2", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://www.kyounoryouri.jp/recipe/10841_新たまねぎと豚肉の南蛮漬け.html", [
             { name: "新たまねぎ", amount: "1コ（250g）" },
             { name: "豚もも肉", amount: "150g" },
@@ -69,7 +75,19 @@ describe("parseIngredients works correctly", () => {
         ]);
         done();
     }));
-    it("should return result (cookpad)", (done) => __awaiter(this, void 0, void 0, function* () {
+    it("should return result (みんなの今日の料理) - 3", (done) => __awaiter(this, void 0, void 0, function* () {
+        yield shouldReturnResult("https://www.kyounoryouri.jp/recipe/42584_ツナオムライス.html", [
+            { name: "米", amount: "180ml（1合）" },
+            { name: "ツナ", amount: "1缶（70g）" },
+            { name: "えんどう豆", amount: "40g" },
+            { name: "トマトケチャップ", amount: "大さじ5" },
+            { name: "卵", amount: "2コ" },
+            { name: "塩", amount: "" },
+            { name: "バター", amount: "10g" }
+        ]);
+        done();
+    }));
+    it("should return result (cookpad) - 1", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://cookpad.com/recipe/3241988", [
             { name: "米", amount: "２合分" },
             { name: "（今回そのうち大さじ２を", amount: "もち米にしています）" },
@@ -82,6 +100,9 @@ describe("parseIngredients works correctly", () => {
             { name: "塩", amount: "少々～" },
             { name: "昆布茶", amount: "小さじ1" }
         ]);
+        done();
+    }));
+    it("should return result (cookpad) - 2", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://cookpad.com/recipe/4332718", [
             { name: "薄切り豚ロース", amount: "１００g～１５０ｇ" },
             { name: "塩コショウ", amount: "少々" },
@@ -89,7 +110,7 @@ describe("parseIngredients works correctly", () => {
         ]);
         done();
     }));
-    it("should return result (chef gohan)", (done) => __awaiter(this, void 0, void 0, function* () {
+    it("should return result (chef gohan) - 1", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://chefgohan.gnavi.co.jp/detail/1710/", [
             { name: "カボチャ", amount: "1/4" },
             { name: "鷹の爪", amount: "お好み" },
@@ -103,7 +124,7 @@ describe("parseIngredients works correctly", () => {
         ]);
         done();
     }));
-    it("should return result (白ごはん.com)", (done) => __awaiter(this, void 0, void 0, function* () {
+    it("should return result (白ごはん.com) - 1", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://www.sirogohan.com/sp/recipe/nitamago/", [
             { name: "卵", amount: "6個" },
             { name: "醬油", amount: "大さじ4" },
@@ -111,6 +132,9 @@ describe("parseIngredients works correctly", () => {
             { name: "みりん", amount: "大さじ2" },
             { name: "砂糖", amount: "大さじ1" }
         ]);
+        done();
+    }));
+    it("should return result (白ごはん.com) - 2", (done) => __awaiter(this, void 0, void 0, function* () {
         yield shouldReturnResult("https://www.sirogohan.com/sp/recipe/nikudouhu/", [
             { name: "牛こま切れ肉", amount: "200ｇ" },
             { name: "木綿豆腐", amount: "1と1/2丁（計450ｇほど）" },
