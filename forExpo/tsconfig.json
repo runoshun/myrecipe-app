@@ -23,7 +23,7 @@
       "@root/*": ["../src/*"]
     },
     "moduleResolution": "node",
-    "types": [ ]
+    "types": [ "jest" ]
   },
   "include": ["../src/**/*"]
 }
