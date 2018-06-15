@@ -15,12 +15,13 @@ const ingNameValidateCache: { [key: number]: Validator } = {};
 const ingNameRequiredIfAmountIsNotEmpty = (index: number) => {
     if (ingNameValidateCache[index] === undefined) {
         let validate = (data: string, all: RecipeFormData) => {
-            if ((data === undefined || data === "") &&
-                (all.ingredients && all.ingredients[index].amount !== undefined)) {
-                return res.strings.recipeFormErrorIngredientNameRequired();
-            } else {
-                return undefined;
+            if ((data === undefined || data === "")) {
+                let ingredient = all.ingredients && all.ingredients[index];
+                if (ingredient && (ingredient.amount !== undefined || ingredient.amount === "")) {
+                    return res.strings.recipeFormErrorIngredientNameRequired();
+                }
             }
+            return undefined;
         }
         ingNameValidateCache[index] = validate; 
     }
@@ -93,6 +94,10 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
                             name={`${name}.amount`}
                             component={this.renderIngredientAmountField}
                             label={index.toString()} />
+                        <V.TransparentAccentButton
+                            icon="close"
+                            style={index !== 0 ? styles.values.ingDeleteButton : undefined}
+                            onPress={() => props.fields.remove(index)} />
                     </V.HBox>
                 ))}
                 <V.TransparentAccentButton icon="add" style={styles.values.ingAddButton} onPress={() => props.fields.push({})} />
@@ -122,7 +127,7 @@ export default class RecipeForm extends React.Component<RecipeFormProperties, St
                 keyboardType={"numbers-and-punctuation"}
                 returnKeyType={"next"}
                 nextField={`ingredients[${index + 1}].name`}
-                label={index === 0 ? res.strings.recipeFormIngredientAmountLabel() : ""}
+                label={index === 0 ? res.strings.recipeFormIngredientAmountLabel() : undefined}
                 placeholder={res.strings.recipeFormIngredientAmountPlaceholder()}
                 style={styles.values.ingAmountUnit} />
         );
@@ -141,9 +146,10 @@ const styles = new V.Stylable({
     },
     ingContainer: {
         justifyContent: "space-between",
+        alignItems: "center"
     },
     ingName: {
-        width: "70%",
+        width: "60%",
     },
     ingAmountUnit: {
         width: "25%",
@@ -151,5 +157,8 @@ const styles = new V.Stylable({
     ingAddButton: {
         width: "100%",
         alignSelf: "center",
+    },
+    ingDeleteButton: {
+        paddingBottom: 12,
     }
 })
