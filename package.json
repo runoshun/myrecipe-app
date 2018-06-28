@@ -9,7 +9,7 @@
     "build": "npm run clean; tsc",
     "clean-underlying-babelrc": "(find node_modules -type f -name .babelrc | grep -v /react-native/ | xargs rm) || true",
     "postinstall": "rndebugger-open; npm run clean-underlying-babelrc",
-    "gen-schema": "typescript-json-schema"
+    "patch": "node scripts/patch-react-native-xcode.js"
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^3.1.1",
@@ -24,6 +24,9 @@
     "redux-form": "^7.3.0",
     "redux-persist": "^5.9.1",
     "redux-thunk": "2.2.0",
+    "diff": "^3.5.0",
+    "redux-devtools-extension": "2.13.2",
+    "redux-logger": "^3.0.6",
     "reselect": "^3.0.1"
   },
   "devDependencies": {
@@ -40,11 +43,9 @@
     "babel-jest": "22.4.3",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.4.3",
-    "react-native-debugger-open": "^0.3.17",
     "react-native-scripts": "1.14.0",
     "react-test-renderer": "16.3.2",
-    "redux-devtools-extension": "2.13.2",
-    "redux-logger": "^3.0.6",
+    "react-native-debugger-open": "^0.3.17",
     "rimraf": "^2.6.2",
     "typescript": "2.7.2",
     "typescript-json-schema": "^0.23.0"

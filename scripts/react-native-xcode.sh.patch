@@ -1,0 +1,24 @@
+--- node_modules/react-native/scripts/react-native-xcode.sh	2018-06-27 19:47:43.271605604 +0900
++++ node_modules/react-native/scripts/react-native-xcode.patched.sh	2018-06-27 19:48:54.006392751 +0900
+@@ -93,12 +93,16 @@
+ DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
+ 
+ if [[ "$CONFIGURATION" = "Debug" && ! "$PLATFORM_NAME" == *simulator ]]; then
+-  IP=$(ipconfig getifaddr en0)
+-  if [ -z "$IP" ]; then
+-    IP=$(ifconfig | grep 'inet ' | grep -v ' 127.' | cut -d\   -f2  | awk 'NR==1{print $1}')
+-  fi
++  if [[ -n "$PACKAGER_IP" ]]; then
++    echo "$PACKAGER_IP" > "$DEST/ip.txt"
++  else
++    IP=$(ipconfig getifaddr en0)
++    if [ -z "$IP" ]; then
++      IP=$(ifconfig | grep 'inet ' | grep -v ' 127.' | cut -d\   -f2  | awk 'NR==1{print $1}')
++    fi
+ 
+-  echo "$IP" > "$DEST/ip.txt"
++    echo "$IP" > "$DEST/ip.txt"
++  fi
+ fi
+ 
+ BUNDLE_FILE="$DEST/main.jsbundle"
