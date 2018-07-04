@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -55,6 +54,7 @@
 		E1C7B168233E469299943F66 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B69FDAA3974E86994BDC30 /* libRNFirebase.a */; };
 		EC4E825E800047CDB77C9D63 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D95B88C244F54AA4B4832944 /* MaterialIcons.ttf */; };
 		F07D16A44AF6D62D0E61C1B1 /* libPods-tsukurioki-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 795186999393D7D92C15717E /* libPods-tsukurioki-tvOSTests.a */; };
+		82CAE27DEF2A47A3B93CF036 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5FA78599C08440BA88C3F9AB /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -387,6 +387,7 @@
 		D95B88C244F54AA4B4832944 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		DD9B1C57C2DDC63DF1260B7D /* libPods-tsukuriokiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tsukuriokiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4542489DF7A40538D5B4CE8 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		5FA78599C08440BA88C3F9AB /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -539,6 +540,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				5FA78599C08440BA88C3F9AB /* GoogleService-Info.plist */,
 			);
 			name = tsukurioki;
 			sourceTree = "<group>";
