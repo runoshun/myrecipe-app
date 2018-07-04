@@ -26,9 +26,5 @@ target 'tsukurioki-tvOS' do
 
   # Pods for tsukurioki-tvOS
 
-  target 'tsukurioki-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
 end
