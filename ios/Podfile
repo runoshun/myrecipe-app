@@ -9,6 +9,7 @@ target 'tsukurioki' do
   pod 'Firebase/Core'
   pod 'Firebase/AdMob'
   pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
 
   target 'tsukurioki-tvOSTests' do
     inherit! :search_paths
