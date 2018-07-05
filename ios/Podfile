@@ -10,6 +10,8 @@ target 'tsukurioki' do
   pod 'Firebase/AdMob'
   pod 'Firebase/Auth'
   pod 'Firebase/Messaging'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
   target 'tsukurioki-tvOSTests' do
     inherit! :search_paths
@@ -28,6 +30,4 @@ target 'tsukurioki-tvOS' do
   # use_frameworks!
 
   # Pods for tsukurioki-tvOS
-
-
 end
