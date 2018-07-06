@@ -43,18 +43,12 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.0)
-  - React (0.11.0):
-    - React/Core (= 0.11.0)
-  - react-native-image-picker (0.14.3):
-    - React
-  - React/Core (0.11.0)
 
 DEPENDENCIES:
   - Firebase/AdMob
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Messaging
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -69,11 +63,6 @@ SPEC REPOS:
     - GTMSessionFetcher
     - nanopb
     - Protobuf
-    - React
-
-EXTERNAL SOURCES:
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
 
 SPEC CHECKSUMS:
   Firebase: d66f4f29c23f22d96808d9abc174d81d8eee968f
@@ -87,9 +76,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
-  React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
-  react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
 
-PODFILE CHECKSUM: 6680740e1160515777c64272de5edd29323b4aa3
+PODFILE CHECKSUM: 8cbac4887813fe79e60e97f6b3571942aa71573f
 
 COCOAPODS: 1.5.3
