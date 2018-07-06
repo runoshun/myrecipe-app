@@ -10,24 +10,6 @@ target 'tsukurioki' do
   pod 'Firebase/AdMob'
   pod 'Firebase/Auth'
   pod 'Firebase/Messaging'
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
-  target 'tsukurioki-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-  target 'tsukuriokiTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end
-
-target 'tsukurioki-tvOS' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for tsukurioki-tvOS
 end

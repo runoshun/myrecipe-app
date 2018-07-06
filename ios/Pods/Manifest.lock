@@ -48,8 +48,6 @@ PODS:
   - react-native-image-picker (0.14.3):
     - React
   - React/Core (0.11.0)
-  - RNFS (2.10.14):
-    - React
 
 DEPENDENCIES:
   - Firebase/AdMob
@@ -57,7 +55,6 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Messaging
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
-  - RNFS (from `../node_modules/react-native-fs`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -77,8 +74,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
-  RNFS:
-    :path: "../node_modules/react-native-fs"
 
 SPEC CHECKSUMS:
   Firebase: d66f4f29c23f22d96808d9abc174d81d8eee968f
@@ -94,8 +89,7 @@ SPEC CHECKSUMS:
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
   react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
-  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
 
-PODFILE CHECKSUM: b50f4a59f4296117cecbb04a35a6a05f90162292
+PODFILE CHECKSUM: 6680740e1160515777c64272de5edd29323b4aa3
 
 COCOAPODS: 1.5.3
