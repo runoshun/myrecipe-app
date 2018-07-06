@@ -4,6 +4,7 @@ var config = {
     getBlacklistRE() {
         return blacklist([
             /forExpo\/.*/,
+            /ios\/.*/,
         ])
     }
 }
