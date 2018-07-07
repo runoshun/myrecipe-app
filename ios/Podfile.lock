@@ -43,21 +43,20 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.0)
-  - React (0.11.0):
-    - React/Core (= 0.11.0)
-  - react-native-image-picker (0.14.3):
-    - React
+  - QBImagePickerController (3.4.0)
   - React/Core (0.11.0)
-  - RNFS (2.10.14):
-    - React
+  - RNImageCropPicker (0.20.3):
+    - QBImagePickerController
+    - React/Core
+    - RSKImageCropper
+  - RSKImageCropper (2.1.0)
 
 DEPENDENCIES:
   - Firebase/AdMob
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Messaging
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
-  - RNFS (from `../node_modules/react-native-fs`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -72,13 +71,13 @@ SPEC REPOS:
     - GTMSessionFetcher
     - nanopb
     - Protobuf
+    - QBImagePickerController
     - React
+    - RSKImageCropper
 
 EXTERNAL SOURCES:
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
-  RNFS:
-    :path: "../node_modules/react-native-fs"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
 
 SPEC CHECKSUMS:
   Firebase: d66f4f29c23f22d96808d9abc174d81d8eee968f
@@ -92,10 +91,11 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
+  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
-  react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
-  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
+  RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
+  RSKImageCropper: 0d0c6d8525a2381f03fde32a47c6703817a2feed
 
-PODFILE CHECKSUM: 4ea691e77516c0fec5bbc9fee7046a8c59eae87a
+PODFILE CHECKSUM: 53ad4b559260e27f9df1a4795bc38a0282704de7
 
 COCOAPODS: 1.5.3
