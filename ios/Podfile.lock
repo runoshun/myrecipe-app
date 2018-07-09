@@ -44,19 +44,59 @@ PODS:
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.0)
   - QBImagePickerController (3.4.0)
-  - React/Core (0.11.0)
+  - React/Core (0.55.4):
+    - yoga (= 0.55.4.React)
+  - React/fishhook (0.55.4)
+  - React/RCTActionSheet (0.55.4):
+    - React/Core
+  - React/RCTAnimation (0.55.4):
+    - React/Core
+  - React/RCTBlob (0.55.4):
+    - React/Core
+  - React/RCTGeolocation (0.55.4):
+    - React/Core
+  - React/RCTImage (0.55.4):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTLinkingIOS (0.55.4):
+    - React/Core
+  - React/RCTNetwork (0.55.4):
+    - React/Core
+  - React/RCTSettings (0.55.4):
+    - React/Core
+  - React/RCTText (0.55.4):
+    - React/Core
+  - React/RCTVibration (0.55.4):
+    - React/Core
+  - React/RCTWebSocket (0.55.4):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
   - RNImageCropPicker (0.20.3):
     - QBImagePickerController
     - React/Core
     - RSKImageCropper
   - RSKImageCropper (2.1.0)
+  - yoga (0.55.4.React)
 
 DEPENDENCIES:
   - Firebase/AdMob
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Messaging
+  - React/Core (from `../node_modules/react-native`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTGeolocation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTLinkingIOS (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTVibration (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -72,12 +112,15 @@ SPEC REPOS:
     - nanopb
     - Protobuf
     - QBImagePickerController
-    - React
     - RSKImageCropper
 
 EXTERNAL SOURCES:
+  React:
+    :path: "../node_modules/react-native"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
 SPEC CHECKSUMS:
   Firebase: d66f4f29c23f22d96808d9abc174d81d8eee968f
@@ -92,10 +135,11 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
-  React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
+  React: aa2040dbb6f317b95314968021bd2888816e03d5
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RSKImageCropper: 0d0c6d8525a2381f03fde32a47c6703817a2feed
+  yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 53ad4b559260e27f9df1a4795bc38a0282704de7
+PODFILE CHECKSUM: 767069d3dfdfb829150230c5dc71b49a9ae52b78
 
 COCOAPODS: 1.5.3
