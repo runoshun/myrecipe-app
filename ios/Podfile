@@ -27,7 +27,8 @@ target 'tsukurioki' do
     'RCTSettings',
     'RCTText',
     'RCTVibration',
-    'RCTWebSocket'
+    'RCTWebSocket',
+    'DevSupport',
   ]
 
 end

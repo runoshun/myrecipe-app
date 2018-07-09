@@ -46,6 +46,9 @@ PODS:
   - QBImagePickerController (3.4.0)
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
+  - React/DevSupport (0.55.4):
+    - React/Core
+    - React/RCTWebSocket
   - React/fishhook (0.55.4)
   - React/RCTActionSheet (0.55.4):
     - React/Core
@@ -85,6 +88,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Messaging
   - React/Core (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTGeolocation (from `../node_modules/react-native`)
@@ -140,6 +144,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: 0d0c6d8525a2381f03fde32a47c6703817a2feed
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 767069d3dfdfb829150230c5dc71b49a9ae52b78
+PODFILE CHECKSUM: b5f77b0285ad0dd419dd4fe2c30cac9cf62a49f2
 
 COCOAPODS: 1.5.3
