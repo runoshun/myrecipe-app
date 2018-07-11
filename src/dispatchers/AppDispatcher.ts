@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 
 import api from "@root/api";
-import app, { ShoppingListType } from "@root/reducers/app";
+import app, { ShoppingListType, AccountType } from "@root/reducers/app";
 import { StoreState } from "@root/store";
 
 import { DispatcherBase } from "@root/utils/redux";
@@ -50,6 +50,10 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
                 ingredients: ingredients.filter(i => !(i.name === "" || i.name == undefined)),
             }
         });
+    }
+
+    public debugSetToAccountType = (type: AccountType) => {
+        this.dispatch(app.actions.SET_ACCOUNT_TYPE({ type }));
     }
 }
 

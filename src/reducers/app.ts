@@ -14,10 +14,16 @@ export interface ShoppingListState {
     listType: ShoppingListType,
 }
 
+export type AccountType = "free" | "adRemove" | "premium";
+export interface AccountState {
+    accountType: AccountType,
+}
+
 export interface AppState {
     recipes: RecipesState,
     meelPreps: MeelPrepsState,
     shoppingList: ShoppingListState,
+    account: AccountState,
 }
 
 // ===================================================================================== //
@@ -25,6 +31,8 @@ export interface AppState {
 // ===================================================================================== //
 export const actions = {
     SET_SHOPPING_LIST_TYPE: reduxUtils.action<{ type: ShoppingListType }>("app/shoppingList/setType"),
+
+    SET_ACCOUNT_TYPE: reduxUtils.action<{type: AccountType}>("app/account/setAccountType"),
 }
 
 // ===================================================================================== //
@@ -51,10 +59,20 @@ export const shoppingListReducer = new reduxUtils.ReducerBuilder<ShoppingListSta
     }))
     .build();
 
+export const accountReducer = new reduxUtils.ReducerBuilder<AccountState>({
+    accountType: "free"
+})
+    .case(actions.SET_ACCOUNT_TYPE, (state, payload) => ({
+        ...state,
+        accountType: payload.type
+    }))
+    .build();
+
 export const reducer = reduxUtils.combineReducers<AppState>({
     recipes: recipesReducer,
     meelPreps: meelPrepsReducer,
     shoppingList: shoppingListReducer,
+    account: accountReducer,
 });
 
 // ===================================================================================== //

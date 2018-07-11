@@ -7,7 +7,7 @@ import { WebBrowserScreen } from "@root/views/screens/WebBrowserScreen";
 import { RecipeFormScreen } from "@root/views/screens/RecipeFormScreen";
 
 import { createAnchor, createContainer, createDispacherProps, DispatcherProps, ThemedViews as V, res, } from "./Imports";
-import { MeelPrepFormScreen } from "@root/views/screens/MeelPrepFormScreen";
+//import { MeelPrepFormScreen } from "@root/views/screens/MeelPrepFormScreen";
 
 export interface RecipesDetailProperties extends DispatcherProps {
     recipes: { [id: string]: Types.RecipeEntity | undefined }
@@ -74,6 +74,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
         link && this.props.router.navigate(WebBrowserScreen.anchor, { uri: link })
     }
 
+    /*
     private addToMeelPrep = (recipe?: Types.RecipeEntity) => {
         if (recipe) {
             this.props.router.navigate(MeelPrepFormScreen.anchor, {
@@ -88,6 +89,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
             })
         }
     }
+    */
 
     render() {
         let recipeId = anchor.getParam(this.props, "recipeId");
@@ -98,7 +100,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                     <V.AppScreenHeader
                         title={recipe.name}
                         renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => this.props.router.back()} />}
-                        renderRight={() => <V.AppScreenHeaderButton icon="restaurant-outline" onPress={() => this.addToMeelPrep(recipe)} />}
+                        /*renderRight={() => <V.AppScreenHeaderButton icon="restaurant-outline" onPress={() => this.addToMeelPrep(recipe)} />} */
                     />
                     <ScrollView style={styles.values.scrollView}>
                         <Image source={{ uri: recipe.photo }} style={styles.values.image} />
@@ -111,7 +113,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                         }
                     </ScrollView>
 
-                    <V.HBox style={V.styles.values.bottomBar} justifyContent="flex-end">
+                    <V.HBox style={styles.values.bottomBar}>
                         { recipe.url !== undefined &&
                             <V.TransparentAccentButton
                                 icon="globe-outline"
@@ -178,5 +180,13 @@ const styles = new V.Stylable({
         ...res.styles.padding(4, 16)
     },
     actionButton: {
-    }
+    },
+    bottomBar: {
+        backgroundColor: res.colors.background,
+        borderTopWidth: 1,
+        borderTopColor: res.colors.lightGray,
+        alignSelf: "stretch",
+        justifyContent: "flex-end",
+        padding: 8,
+    },
 });

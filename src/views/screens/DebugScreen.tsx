@@ -9,6 +9,8 @@ import {
     ThemedViews as V,
 } from "./Imports";
 
+const ImagePicker = require("react-native-image-crop-picker").default;
+
 export interface AddRecipeScreenProperties extends DispatcherProps {
     entitiesState: string
 }
@@ -19,6 +21,10 @@ interface State {
 }
 
 interface Params {
+}
+
+const buttonStyle = {
+    margin: 4
 }
 
 export class DebugScreen extends React.Component<AddRecipeScreenProperties, State> {
@@ -41,12 +47,24 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
                     <View style={{borderBottomWidth: 1, borderBottomColor: "#ccc", alignSelf: "stretch"}} />
                     <V.Texts.H3>Import</V.Texts.H3>
                     <TextInput onChangeText={text => this.setState({ import: text })} numberOfLines={5} style={{borderWidth: 1, borderColor: "#ccc", padding: 4}} />
-                    <V.AccentButton label={"import data"} onPress={this.handleImport} />
-                    <V.AccentButton label={"download blob"} onPress={this.handleDownload}/>
+                    <V.AccentButton style={buttonStyle} label={"import data"} onPress={this.handleImport} />
+                    <V.AccentButton style={buttonStyle} label={"download blob"} onPress={this.handleDownload}/>
                     {this.state.imageUrl && <Image source={{ uri: this.state.imageUrl }} style={{width: 64, height: 64}}/>}
+
+                    <V.AccentButton style={buttonStyle} label={"set account type to premium"} onPress={this.handleSetToPremium} />
+                    <V.AccentButton style={buttonStyle} label={"set account type to free"} onPress={this.handleSetToFree} />
                 </V.VBox>
             </V.Screen>
         );
+    }
+
+    handleSetToPremium = () => {
+        this.props.app.debugSetToAccountType("premium")
+    }
+
+    handleSetToFree = () => {
+        this.props.app.debugSetToAccountType("free")
+        ImagePicker.openPicker({width: 300, height: 400}).then((image: any) => console.log(image));
     }
 
     handleImport = () => {

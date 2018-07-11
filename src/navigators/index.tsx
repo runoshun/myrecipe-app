@@ -21,7 +21,7 @@ export const createAnchor = bindCreateAnchor<Routes>();
 
 
 const RecipesScreen = require("@root/views/screens/RecipesScreen").default;
-const MeelPrepsScreen = require("@root/views/screens/MeelPrepsScreen").default;
+//const MeelPrepsScreen = require("@root/views/screens/MeelPrepsScreen").default;
 const ShoppingListScreen = require("@root/views/screens/ShoppingListScreen").default;
 const DebugScreen = require("@root/views/screens/DebugScreen").default;
 
@@ -35,6 +35,7 @@ export const MainTab = createTabNavigator({
             },
             screen: RecipesScreen
         },
+        /*
         MeelPreps: { 
             navigationOptions: {
                 tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="restaurant" />,
@@ -42,6 +43,7 @@ export const MainTab = createTabNavigator({
             },
             screen: MeelPrepsScreen,
         },
+        */
         ShoppingList: {
             navigationOptions: {
                 tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="cart" />,
