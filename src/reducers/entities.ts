@@ -10,7 +10,6 @@ const uuidv4 = require("uuid/v4");
 
 export interface EntitiesState {
     recipes: reduxUtils.EntityState<Types.RecipeEntity>,
-    meels: reduxUtils.EntityState<Types.MeelEntity>,
     meelPreps: reduxUtils.EntityState<Types.MeelPrepEntity>,
     shoppingList: reduxUtils.EntityState<Types.ShoppingListItemEntity>,
 };
@@ -22,7 +21,6 @@ export type UndoableEntitiesState = reduxUtils.UndoableState<EntitiesState>;
 // ===================================================================================== //
 export const actions = {
     RECIPES: reduxUtils.entityAction<Types.RecipeEntity>("recipes"),
-    MEELS: reduxUtils.entityAction<Types.MeelEntity>("meels"),
     MEEL_PREPS: reduxUtils.entityAction<Types.MeelPrepEntity>("meelPreps"),
     SHOPPING_LIST: reduxUtils.entityAction<Types.ShoppingListItemEntity>("shoppingList"),
 
@@ -51,13 +49,11 @@ if (__DEV__) {
 }
 
 const recipeEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.RecipeEntity>(actions.RECIPES, uuidv4, initialEntities.recipes).build();
-const meelEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelEntity>(actions.MEELS, uuidv4).build();
 const meelPrepsEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelPrepEntity>(actions.MEEL_PREPS, uuidv4, initialEntities.meelPreps).build();
 const shoppingListEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.ShoppingListItemEntity>(actions.SHOPPING_LIST, uuidv4, initialEntities.shoppingList).build();
 
 const undoableReducer = reduxUtils.undoable(
     reduxUtils.combineReducers<EntitiesState>({
-        meels: meelEntitiesReducer,
         meelPreps: meelPrepsEntitiesReducer,
         recipes: recipeEntitiesReducer,
         shoppingList: shoppingListEntitiesReducer,

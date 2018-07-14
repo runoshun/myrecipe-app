@@ -32,6 +32,7 @@ const persistedRootReducer = persistReducer({
     storage,
     blacklist: persistBlackList,
     version: 1,
+    timeout: 10 * 1000,
 }, rootReducer as any);
 
 export const configureStore = () => {
