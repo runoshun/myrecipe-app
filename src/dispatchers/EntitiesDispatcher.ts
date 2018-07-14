@@ -9,7 +9,7 @@ import { DispatcherBase } from "@root/utils/redux";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
 import { ShoppingListFormData, MeelPrepFormData, RecipeFormData } from "@root/reducers/form";
 import { Omit } from "@root/utils/types";
-import mayBeMultiplyAmount from "@root/common/extractUnit";
+import api from "@root/api";
 
 import entitiesStateSchama from "@root/resources/schema/entitesState";
 
@@ -31,7 +31,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     }
 
     private ingredientToShoppingList = (ingredient: Types.Ingredient, recipeId: string, multiply: number): Omit<Types.ShoppingListItemEntity, "id"> => {
-        let amount = mayBeMultiplyAmount(ingredient.amount, multiply)
+        let amount = api.units.mayBeMultiplyAmount(ingredient.amount, multiply)
         return {
             name: ingredient.name,
             amount: amount,
@@ -87,7 +87,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
                     ...this.shoppingListFormDataToEntity(data)
                 }));
             } else {
-                let amount = mayBeMultiplyAmount(data.amount || "", 1 / id.length);
+                let amount = api.units.mayBeMultiplyAmount(data.amount || "", 1 / id.length);
                 id.forEach(id => {
                     this.dispatch(entities.actions.SHOPPING_LIST.UPDATE({
                         ...this.shoppingListFormDataToEntity(data),

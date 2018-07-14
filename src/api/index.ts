@@ -1,9 +1,15 @@
-import { ImageURISource, NativeModules } from "react-native";
-import logger from "@root/utils/logger";
+import { ImageURISource } from "react-native";
 import { Ingredient } from "@root/EntityTypes";
-import common from "./common";
 
-const log = logger.create("backend");
+import _image from "./image";
+import _web from "./web";
+import * as _units from "./common/extractUnit";
+import * as _forms from "./common/formUtils";
+
+export const image = _image;
+export const web = _web;
+export const forms = _forms;
+export const units = _units;
 
 export interface API {
     image: {
@@ -12,18 +18,14 @@ export interface API {
     },
     web: {
         parseIngredientsFromHtml: (url: string, html: string) => Promise<Ingredient[]>,
-    }
+    },
+    units: typeof units,
+    forms: typeof forms,
 }
 
-let backend: API;
-if (NativeModules.ExponentConstants) {
-    log("Using Expo backend");
-    backend = require("./expo").default;
-} else {
-    log("Using Native backend");
-    backend = require("./native").default;
-}
-
-backend.web = common.web;
-
-export default backend;
+export default ({
+    image,
+    web,
+    units,
+    forms
+} as API);

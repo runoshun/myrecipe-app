@@ -4,7 +4,7 @@ import * as V from "./Themed";
 import res from "@root/resources";
 import ReduxFormField from "./ReduxFormField";
 import { Field, WrappedFieldProps } from "redux-form";
-import { notEmpty } from "@root/common/formUtils";
+import { notEmpty } from "@root/api/common/formUtils";
 
 export interface ShoppingListItemFormProperties {
 }

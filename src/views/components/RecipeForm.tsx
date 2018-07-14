@@ -6,7 +6,7 @@ import res from "@root/resources";
 import * as V from "./Themed";
 import ImageField from "./ImageField";
 import ReduxFormField from "./ReduxFormField";
-import { notEmpty } from "@root/common/formUtils";
+import { notEmpty } from "@root/api/common/formUtils";
 import { RecipeFormData } from "@root/reducers/form";
 
 const nameRequired = notEmpty(res.strings.recipeFormErrorNameRequired());

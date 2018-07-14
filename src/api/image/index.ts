@@ -41,3 +41,8 @@ export const pickImage = async (): Promise<ImageURISource> => {
         }
     }
 }
+
+export default {
+    takePhoto,
+    pickImage,
+}

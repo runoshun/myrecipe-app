@@ -4,7 +4,7 @@ import res from "@root/resources";
 import * as reduxUtils from "@root/utils/redux";
 import * as Types from "@root/EntityTypes";
 import { obj } from "@root/utils";
-import { extract as extractUnit, mayBeAddAmount } from "@root/common/extractUnit";
+import api from "@root/api";
 
 const uuidv4 = require("uuid/v4");
 
@@ -97,7 +97,7 @@ const mergedShoppingListSelector = createSelector(
     shoppingList => obj.asArray(shoppingList.reduce((merged, item) => {
         let amount = item.amount;
         let canExtract = false;
-        let extracted = extractUnit(item.amount)
+        let extracted = api.units.extract(item.amount)
         if (extracted) {
             amount = extracted[1];
             canExtract = true;
@@ -113,7 +113,7 @@ const mergedShoppingListSelector = createSelector(
             }
         } else {
             merged[key].id.push(item.id);
-            merged[key].amount = mayBeAddAmount(merged[key].amount, item.amount) || item.amount;
+            merged[key].amount = api.units.mayBeAddAmount(merged[key].amount, item.amount) || item.amount;
         }
         return merged;
     }, ({} as { [key: string]: Types.MergedShoppingListItem }))

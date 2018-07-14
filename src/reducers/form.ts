@@ -1,6 +1,6 @@
 import * as Types from "@root/EntityTypes";
 import { Omit } from "@root/utils/types";
-import formUtils from "@root/common/formUtils";
+import { forms } from "@root/api";
 
 type EntityExluceCommon = "id" | "_version" | "_lastModified";
 type IngredientFormData = {
@@ -26,7 +26,7 @@ export const meelPrepEntityToFormData = (entity: MeelPrepFormEntity): MeelPrepFo
         name: entity.name,
         amount: isNaN(entity.amount) ? "" : entity.amount.toString(),
         photo: entity.photo || "",
-        createdAt: formUtils.formatDate(entity.createdAt),
-        expiredAt: formUtils.formatDate(entity.expiredAt),
+        createdAt: forms.formatDate(entity.createdAt),
+        expiredAt: forms.formatDate(entity.expiredAt),
     }
 }

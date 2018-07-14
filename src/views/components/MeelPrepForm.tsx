@@ -4,7 +4,7 @@ import { Field, WrappedFieldProps } from "redux-form";
 
 import api from "@root/api";
 import res from "@root/resources";
-import { notEmpty, isDate, isNumber, formatDate, parseDate } from "@root/common/formUtils";
+import { notEmpty, isDate, isNumber, formatDate, parseDate } from "@root/api/common/formUtils";
 
 import * as V from "./Themed";
 import ImageField from "./ImageField";
