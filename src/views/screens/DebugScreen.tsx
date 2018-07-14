@@ -9,8 +9,12 @@ import {
     ThemedViews as V,
 } from "./Imports";
 
+import api from "@root/api";
+import { EntitiesState } from "@root/reducers";
+
 export interface AddRecipeScreenProperties extends DispatcherProps {
     entitiesState: string
+    rawEntities: EntitiesState,
 }
 
 interface State {
@@ -50,9 +54,15 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
 
                     <V.AccentButton style={buttonStyle} label={"set account type to premium"} onPress={this.handleSetToPremium} />
                     <V.AccentButton style={buttonStyle} label={"set account type to free"} onPress={this.handleSetToFree} />
+                    <V.AccentButton style={buttonStyle} label={"clean images"} onPress={this.handleCleanImage} />
                 </V.VBox>
             </V.Screen>
         );
+    }
+
+    handleCleanImage = () => {
+        let usedImages = Object.values(this.props.rawEntities.recipes).map(recipe => recipe && recipe.photo || "").filter(i => i !== "");
+        api.image.cleanImages(usedImages);
     }
 
     handleSetToPremium = () => {
@@ -92,5 +102,6 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
 export default createContainer(DebugScreen)((state, dispatch) => ({
     ...createDispacherProps(dispatch),
     entitiesState: JSON.stringify(state.entities),
+    rawEntities: state.entities.present,
 }));
 

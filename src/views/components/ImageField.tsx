@@ -9,7 +9,7 @@ export interface ImageFieldProperties {
     onTakeImage?: () => Promise<ImageURISource>,
     onPickImage?: () => Promise<ImageURISource>,
     onInputSource?: (input: string) => Promise<ImageURISource>,
-    onChangeImage?: (image: ImageURISource)=> void,
+    onChangeImage?: (image: ImageURISource, oldImage?: ImageURISource)=> void,
     imageStyle?: ImageProperties["style"],
     style?: ViewProperties["style"],
     initialImage?: ImageURISource,
@@ -41,8 +41,9 @@ export default class ImageField extends React.Component<ImageFieldProperties, St
     }
 
     fireOnChange = (source: ImageURISource) => {
+        let old = this.state.source;
         this.setState({ source: source, hasImage: true });
-        this.props.onChangeImage && this.props.onChangeImage(source);
+        this.props.onChangeImage && this.props.onChangeImage(source, old);
     }
 
     handleTakeImage = async () => {

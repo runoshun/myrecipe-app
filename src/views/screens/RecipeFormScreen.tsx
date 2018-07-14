@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { ScrollView } from "react-native";
+import { InjectedFormProps, reduxForm } from "redux-form";
 import { RecipeFormData } from "@root/reducers/form";
 import RecipeForm from "@root/views/components/RecipeForm";
 import {
@@ -9,8 +11,8 @@ import {
     DispatcherProps,
     createDispacherProps,
 } from "./Imports";
-import { ScrollView } from "react-native";
-import { InjectedFormProps, reduxForm } from "redux-form";
+
+import api from "@root/api";
 
 export interface RecipeFormScreenProperties extends DispatcherProps {
     id?: string,
@@ -37,7 +39,8 @@ export class RecipeFormScreen extends React.Component<Props, State> {
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.recipeFormTitle()}
                     renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => this.props.router.back("RecipeForm")} />}
-                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit(data => {
+                    renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit(async (data) => {
+                        data.photo = await api.image.maybeDownloadImage(data.photo);
                         this.props.entities.submitRecipeForm(this.props.id, data);
                         this.props.router.reset("MainTab", {});
                     })} />}

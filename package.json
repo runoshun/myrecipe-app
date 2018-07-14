@@ -30,23 +30,25 @@
     "redux-devtools-extension": "2.13.2",
     "redux-form": "^7.3.0",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^5.9.1",
-    "redux-thunk": "2.2.0",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "2.3.0",
     "reselect": "^3.0.1",
+    "url-parse": "^1.4.1",
     "xcode": "^1.0.0"
   },
   "devDependencies": {
-    "@types/expo": "^25.0.9",
     "@types/jest": "22.0.1",
     "@types/prop-types": "15.5.2",
     "@types/react": "16.3.13",
     "@types/react-native": "0.55.8",
+    "@types/react-native-fs": "^2.8.1",
     "@types/react-native-keep-awake": "^2.0.1",
     "@types/react-native-vector-icons": "4.6.1",
     "@types/react-navigation": "1.5.9",
     "@types/react-redux": "5.0.19",
     "@types/redux-form": "^7.2.4",
     "@types/redux-persist": "^4.3.1",
+    "@types/url-parse": "^1.1.1",
     "babel-jest": "22.4.3",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.4.3",
@@ -54,8 +56,7 @@
     "react-native-scripts": "1.14.0",
     "react-test-renderer": "16.3.2",
     "rimraf": "^2.6.2",
-    "typescript": "2.7.2",
-    "typescript-json-schema": "^0.23.0"
+    "typescript": "2.7.2"
   },
   "react-native": {
     "expo": false

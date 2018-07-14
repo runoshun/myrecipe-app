@@ -48,7 +48,7 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     }
 
     public deleteRecipe = (recipe: Types.RecipeEntity) => {
-        this.dispatch(entities.actions.RECIPES.DELETE({ id: recipe.id }))
+        this.dispatch(entities.actions.RECIPES.DELETE({ id: recipe.id }));
     }
 
     public toggleShoppingListItemChecked = (id: string, checked: boolean) => {
