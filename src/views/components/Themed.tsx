@@ -32,6 +32,10 @@ export const Texts = Typography.createText({
         fontSize: nrPixel(20),
         fontWeight: "bold",
     },
+    Label: {
+        color: colors.text,
+        fontSize: nrPixel(18),
+    },
     Body: {
         color: colors.text,
         fontSize: nrPixel(16),

@@ -9,8 +9,6 @@ import {
     ThemedViews as V,
 } from "./Imports";
 
-const ImagePicker = require("react-native-image-crop-picker").default;
-
 export interface AddRecipeScreenProperties extends DispatcherProps {
     entitiesState: string
 }
@@ -29,7 +27,7 @@ const buttonStyle = {
 
 export class DebugScreen extends React.Component<AddRecipeScreenProperties, State> {
 
-    public static anchor = createAnchor<Params>("AddRecipe");
+    public static anchor = createAnchor<Params>("Debug");
 
     constructor(props: any) {
         super(props);
@@ -37,7 +35,6 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
     }
 
     render() {
-        console.log(this.state)
         return (
             <V.Screen>
                 <V.AppScreenHeader title={"Debug"} />
@@ -64,7 +61,6 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
 
     handleSetToFree = () => {
         this.props.app.debugSetToAccountType("free")
-        ImagePicker.openPicker({width: 300, height: 400}).then((image: any) => console.log(image));
     }
 
     handleImport = () => {

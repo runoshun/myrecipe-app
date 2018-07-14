@@ -19,11 +19,16 @@ export interface AccountState {
     accountType: AccountType,
 }
 
+export interface SettingsState {
+    keepAwakeWhileBrowse: boolean,
+}
+
 export interface AppState {
     recipes: RecipesState,
     meelPreps: MeelPrepsState,
     shoppingList: ShoppingListState,
     account: AccountState,
+    settings: SettingsState,
 }
 
 // ===================================================================================== //
@@ -31,8 +36,8 @@ export interface AppState {
 // ===================================================================================== //
 export const actions = {
     SET_SHOPPING_LIST_TYPE: reduxUtils.action<{ type: ShoppingListType }>("app/shoppingList/setType"),
-
     SET_ACCOUNT_TYPE: reduxUtils.action<{type: AccountType}>("app/account/setAccountType"),
+    SET_KEEP_AWAKE_WHILE_BROWSE: reduxUtils.action<boolean>("app/settings/setKeepAwakeWhileIdle"),
 }
 
 // ===================================================================================== //
@@ -68,11 +73,21 @@ export const accountReducer = new reduxUtils.ReducerBuilder<AccountState>({
     }))
     .build();
 
+export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
+    keepAwakeWhileBrowse: true
+})
+    .case(actions.SET_KEEP_AWAKE_WHILE_BROWSE, (state, payload) => ({
+        ...state,
+        keepAwakeWhileBrowse: payload
+    }))
+    .build()
+
 export const reducer = reduxUtils.combineReducers<AppState>({
     recipes: recipesReducer,
     meelPreps: meelPrepsReducer,
     shoppingList: shoppingListReducer,
     account: accountReducer,
+    settings: settingsReducer,
 });
 
 // ===================================================================================== //

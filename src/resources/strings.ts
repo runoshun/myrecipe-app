@@ -13,6 +13,7 @@ export const shoppingListTitle = () => "買い物リスト";
 export const tabbarLabelRecipes = () => "レシピ";
 export const tabbarLabelStocks = () => "作り置き";
 export const tabbarLabelShoppingList = () => "買い物リスト";
+export const tabbarLabelSettings = () => "設定";
 
 export const imageFieldTakePhoto = () => "カメラで撮影";
 export const imageFieldPickImage = () => "ライブラリから選択";
@@ -95,3 +96,6 @@ export const meelPrepFormErrorAmountIsNonNumber = () => "数字で入力して�
 export const meelPrepFormErrorInValidDate = () => "正しい日付を入力してください";
 
 export const webBrowserUrlDialogTitle = () => "URLを入力";
+
+export const settingsTitle = () => "設定";
+export const settingsKeepAwakeWhileBrowse = () => "レシピサイト表示時に画面OFFを抑止";

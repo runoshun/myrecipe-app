@@ -55,6 +55,10 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
     public debugSetToAccountType = (type: AccountType) => {
         this.dispatch(app.actions.SET_ACCOUNT_TYPE({ type }));
     }
+
+    public setKeepAwakeWhileBrowse = (value: boolean) => {
+        this.dispatch(app.actions.SET_KEEP_AWAKE_WHILE_BROWSE(value));
+    }
 }
 
 export default AppDispatcher;

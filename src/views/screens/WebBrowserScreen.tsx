@@ -1,6 +1,8 @@
 import * as React from "react";
 import { WebView, NavState, TextInput } from "react-native";
 
+import KeepAwake from "react-native-keep-awake";
+
 import res from "@root/resources";
 import { Router, createAnchor } from "@root/navigators";
 import { WebBrowser } from "@root/views/components/common";
@@ -8,9 +10,11 @@ import { createContainer } from "@root/views/createContainer";
 import * as V from "@root/views/components/Themed";
 import { AppDispatcher } from "@root/dispatchers";
 
+
 export interface WebBrowserScreenProperties {
     router: Router,
     app: AppDispatcher;
+    keepAwakeWhileBrowse: boolean,
 }
 
 interface State {
@@ -85,7 +89,7 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 requestClose={() => this.props.router.back()}
                 action1Icon="open-outline"
                 action1Handler={this.openUrlDialog}
-                action2Icon="download-outline"
+                action2Icon="attach-outline"
                 action2Handler={this.addToRecipe}
                 onMessage={this.onMessage}
                 injectedJavaScript={injectedJavascript}
@@ -93,6 +97,16 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 ScreenHeaderComponent={V.AppScreenHeader}
                 />
         );
+    }
+
+    componentDidMount() {
+        if (this.props.keepAwakeWhileBrowse) {
+            KeepAwake.activate();
+        }
+    }
+
+    componentWillUnmount() {
+        KeepAwake.deactivate();
     }
 
     private openUrlDialog = () => {
@@ -239,9 +253,10 @@ const styles = new V.Stylable({
     }
 })
 
-export default createContainer(WebBrowserScreen)((_state, dispatch) => {
+export default createContainer(WebBrowserScreen)((state, dispatch) => {
     return {
         router: new Router(dispatch),
         app: new AppDispatcher(dispatch),
+        keepAwakeWhileBrowse: state.app.settings.keepAwakeWhileBrowse,
     }
 })

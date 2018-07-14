@@ -23,7 +23,7 @@ export const createAnchor = bindCreateAnchor<Routes>();
 const RecipesScreen = require("@root/views/screens/RecipesScreen").default;
 //const MeelPrepsScreen = require("@root/views/screens/MeelPrepsScreen").default;
 const ShoppingListScreen = require("@root/views/screens/ShoppingListScreen").default;
-const DebugScreen = require("@root/views/screens/DebugScreen").default;
+const SettingsScreen = require("@root/views/screens/SettingsScreen").default;
 
 export const MainTab = createTabNavigator({
     navState: (state: StoreState) => state.mainTabState,
@@ -51,12 +51,12 @@ export const MainTab = createTabNavigator({
             },
             screen: ShoppingListScreen
         },
-        Debug: {
+        Settings: {
             navigationOptions: {
                 tabBarIcon: (param: { tintColor: string }) => <Icon size={nrPixel(24)} color={param.tintColor} name="settings" />,
-                tabBarLabel: "Debug",
+                tabBarLabel: res.strings.tabbarLabelSettings(),
             },
-            screen: DebugScreen,
+            screen: SettingsScreen,
         }
     },
     config: {
@@ -95,6 +95,7 @@ const ShoppingListItemFormScreen = require("@root/views/screens/ShoppingListForm
 const MeelPrepFormScreen = require("@root/views/screens/MeelPrepFormScreen").default;
 const RecipeFormScreen = require("@root/views/screens/RecipeFormScreen").default;
 const AddRecipeScreen = require("@root/views/screens/AddRecipeScreen").default;
+const DebugScreen = require("@root/views/screens/DebugScreen").default;
 
 export const RootStack = createStackNavigator({
     navState: (state: StoreState) => state.rootStackState,
@@ -106,6 +107,7 @@ export const RootStack = createStackNavigator({
         RecipeForm: { screen: RecipeFormScreen },
         WebBrowser: { screen: WebBrowserScreen },
         AddRecipe: { screen: AddRecipeScreen },
+        Debug: { screen: DebugScreen },
     },
     config: {
         headerMode: "none"
