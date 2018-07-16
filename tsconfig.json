@@ -25,7 +25,6 @@
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types"],
     "types": [
-      "expo",
       "jest",
       "prop-types",
       "react",

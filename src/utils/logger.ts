@@ -4,11 +4,15 @@ let enabledTags: { [tag: string]: boolean } = {
 };
 
 export const create = (tag: string, logFn = console.log) => {
-    return (...args: any[]) => {
-        if (enabledTags[tag] !== disabledByDefault) {
-            let _args = [`[${tag}]`, ...args];
-            logFn.apply(undefined, _args);
+    if (__DEV__) {
+        return (...args: any[]) => {
+            if (enabledTags[tag] !== disabledByDefault) {
+                let _args = [`[${tag}]`, ...args];
+                logFn.apply(undefined, _args);
+            }
         }
+    } else {
+        return () => undefined;
     }
 }
 
