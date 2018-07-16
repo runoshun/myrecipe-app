@@ -49,15 +49,19 @@ export class DebugScreen extends React.Component<AddRecipeScreenProperties, Stat
                     <V.Texts.H3>Import</V.Texts.H3>
                     <TextInput onChangeText={text => this.setState({ import: text })} numberOfLines={5} style={{borderWidth: 1, borderColor: "#ccc", padding: 4}} />
                     <V.AccentButton style={buttonStyle} label={"import data"} onPress={this.handleImport} />
-                    <V.AccentButton style={buttonStyle} label={"download blob"} onPress={this.handleDownload}/>
-                    {this.state.imageUrl && <Image source={{ uri: this.state.imageUrl }} style={{width: 64, height: 64}}/>}
-
                     <V.AccentButton style={buttonStyle} label={"set account type to premium"} onPress={this.handleSetToPremium} />
                     <V.AccentButton style={buttonStyle} label={"set account type to free"} onPress={this.handleSetToFree} />
                     <V.AccentButton style={buttonStyle} label={"clean images"} onPress={this.handleCleanImage} />
+                    <V.AccentButton style={buttonStyle} label={"enable prod build"} onPress={() => this.handleSetEnableDev(false)} />
+                    <V.AccentButton style={buttonStyle} label={"enable debug build"} onPress={() => this.handleSetEnableDev(true)} />
                 </V.VBox>
             </V.Screen>
         );
+    }
+
+    handleSetEnableDev = (devEnabled: boolean) => {
+        const { DevSupportEx } = require("react-native").NativeModules;
+        DevSupportEx.setDevBuildEnabled(devEnabled);
     }
 
     handleCleanImage = () => {

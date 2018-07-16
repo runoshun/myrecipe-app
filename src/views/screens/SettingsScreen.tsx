@@ -34,7 +34,7 @@ export class AddRecipeScreen extends React.Component<SettingsScreenProperties, S
                             onValueChange={this.props.app.setKeepAwakeWhileBrowse} />
                     </V.HBox>
                     {
-                        __DEV__ &&
+                        (__DEV__ || !!require("react-native").NativeModules.DevSettings) &&
                         <V.Touchable onPress={() => this.props.router.navigate(DebugScreen.anchor, {})}>
                             <V.HBox style={styles.values.itemContainer}>
                                 <V.Texts.Label style={styles.values.itemLabel}>Debug Menu</V.Texts.Label>
