@@ -44,6 +44,10 @@ PODS:
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.0)
   - QBImagePickerController (3.4.0)
+  - React (0.55.4):
+    - React/Core (= 0.55.4)
+  - react-native-keep-awake (3.0.1):
+    - React
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
   - React/DevSupport (0.55.4):
@@ -75,6 +79,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNFS (2.10.14):
+    - React
   - RNImageCropPicker (0.20.3):
     - QBImagePickerController
     - React/Core
@@ -87,6 +93,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Messaging
+  - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - React/Core (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
@@ -99,6 +106,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
@@ -121,6 +129,10 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  react-native-keep-awake:
+    :path: "../node_modules/react-native-keep-awake"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
   yoga:
@@ -140,10 +152,12 @@ SPEC CHECKSUMS:
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-keep-awake: 0de4bd66de0c23178107dce0c2fcc3354b2a8e94
+  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RSKImageCropper: 0d0c6d8525a2381f03fde32a47c6703817a2feed
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 66bb7ec7ec33ed01f77ba59ead0ee7ec492a71a2
+PODFILE CHECKSUM: fce11079a4ea607d71668373843d95b23effd40b
 
 COCOAPODS: 1.5.3
