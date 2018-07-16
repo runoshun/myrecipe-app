@@ -2,7 +2,7 @@ import * as React from "react";
 import { Provider } from "react-redux";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { PersistGate } from "redux-persist/integration/react";
-import { View, ActivityIndicator, StatusBar } from "react-native";
+import { View, ActivityIndicator, StatusBar, YellowBox } from "react-native";
 import firebase from "react-native-firebase";
 
 import store from "./store";
@@ -11,6 +11,7 @@ import PopupRegistry from "@root/views/components/common/PopupRegistry";
 import rn from "@root/utils/rn";
 import Banner from "@root/views/containers/Banner";
 
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 export default class App extends React.Component {
 

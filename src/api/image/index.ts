@@ -3,7 +3,8 @@ import * as RNFS from "react-native-fs";
 import ImagePicker, { Image, Options } from "react-native-image-crop-picker";
 import logger from "@root/utils/logger";
 
-const parseUrl: (url: string) => URL = require("url-parse");
+import firebase from "react-native-firebase";
+import { SAVE_IMAGE_FAILED } from "@root/resources/errorCodes";
 
 const log = logger.create("image");
 
@@ -82,23 +83,35 @@ export const cleanImages = async (excludes: string[]) => {
     return Promise.all(ps).then(() => undefined);
 };
 
+const extensionFromMime = (contentType: string) => contentType.substring(contentType.lastIndexOf("/") + 1);
+
 export const maybeDownloadImage = async (url?: string) => {
-    if (url && url.startsWith("http")) {
-        let parsedUrl = parseUrl(url);
-        let pathname = parsedUrl.pathname;
-        let imagePath = imageDir + "/" + pathname.substring(pathname.lastIndexOf("/") + 1);
+    try {
+        if (url && url.startsWith("http")) {
+            let tmp = RNFS.TemporaryDirectoryPath + "/" + "tmp.image";
 
-        let result = await RNFS.downloadFile({
-            fromUrl: url,
-            toFile: imagePath,
-        }).promise;
+            let contentType = "";
+            let result = await RNFS.downloadFile({
+                fromUrl: url,
+                toFile: tmp,
+                begin: (res) => { contentType = res.headers["Content-Type"]; console.log(res) }
+            }).promise;
 
-        log("url: ", url);
-        log("download result: ", result);
-        log("imagePath: ", imagePath);
-        if (result.statusCode === 200) {
-            return toFileUri(imagePath);
+            let imagePath = `${imageDir}/${require('uuid/v4')()}.${extensionFromMime(contentType)}`
+            await RNFS.moveFile(tmp, imagePath);
+
+            log("url: ", url);
+            log("download result: ", result);
+            log("imagePath: ", imagePath);
+            if (result.statusCode === 200) {
+                return toFileUri(imagePath);
+            }
         }
+    } catch (e) {
+        firebase.crashlytics().recordError(SAVE_IMAGE_FAILED, JSON.stringify({
+            url,
+            message: e.message,
+        }))
     }
 
     return url;
