@@ -298,7 +298,7 @@ export abstract class DispatcherBase<State> {
         handleError: (dispatch:Dispatch<any>, errorActionCreator: ActionCreator<Error, never>, e: any) => void
     ): Promise<boolean> {
         return new Promise((resolve) => {
-            this.dispatch(async (dispatch, getState: () => State) => {
+            this.dispatch(async (dispatch: Dispatch<any>, getState: () => State) => {
                 try {
                     dispatch(asyncActionCreator.START({}));
                     let success = await handler(getState);
@@ -411,7 +411,7 @@ export function bindCreateContainer<State>() {
         return function createContainer<OwnProps>(mapToProps: MapToProps<State, Props, OwnProps & ReadOnlyChildren>, passThroughOwnProps?: boolean) {
             const decorator = connect(
                 (state: State) => ({ state: state }),
-                (dispatch: Dispatch<any>) => ({ dispatch: dispatch }),
+                (dispatch) => ({ dispatch }),
                 (state, dispatch, ownProps: OwnProps & ReadOnlyChildren) => {
                     const mapped = mapToProps(state.state, dispatch.dispatch, ownProps);
                     if (!mapped.children) {

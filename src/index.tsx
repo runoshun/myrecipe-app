@@ -2,7 +2,7 @@ import * as React from "react";
 import { Provider } from "react-redux";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { PersistGate } from "redux-persist/integration/react";
-import { View, ActivityIndicator, StatusBar } from "react-native";
+import { View, ActivityIndicator, StatusBar, YellowBox } from "react-native";
 import firebase from "react-native-firebase";
 
 import store from "./store";
@@ -11,13 +11,27 @@ import PopupRegistry from "@root/views/components/common/PopupRegistry";
 import rn from "@root/utils/rn";
 import Banner from "@root/views/containers/Banner";
 
-const { store: _store, persistor } = store.configure();
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 export default class App extends React.Component {
+
+  private store: any;
+  private persistor: any;
+
+  componentWillMount() {
+    (firebase as any)
+      .admob()
+      .initialize("ca-app-pub-5911972503110852~3179445304");
+
+    const { store: _store, persistor } = store.configure();
+    this.store = _store;
+    this.persistor = persistor;
+  }
+
   render() {
     return (
-      <Provider store={_store}>
-        <PersistGate persistor={persistor} loading={<ActivityIndicator />}>
+      <Provider store={this.store}>
+        <PersistGate persistor={this.persistor} loading={<ActivityIndicator />}>
           <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
               <PopupRegistry>
@@ -33,9 +47,4 @@ export default class App extends React.Component {
     );
   }
 
-  componentWillMount() {
-    (firebase as any)
-      .admob()
-      .initialize("ca-app-pub-5911972503110852~3179445304");
-  }
 }

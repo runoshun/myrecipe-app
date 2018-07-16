@@ -1,7 +1,7 @@
 import { bindCreateContainer } from "@root/utils/redux";
 import { StoreState } from "@root/store";
 import { Router } from "@root/navigators";
-import { Dispatch } from "react-redux";
+import { Dispatch } from "redux";
 import { AppDispatcher, EntitiesDispatcher } from "@root/dispatchers";
 
 export const createContainer = bindCreateContainer<StoreState>();

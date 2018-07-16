@@ -26,14 +26,13 @@
     "react-navigation": "1.5.11",
     "react-navigation-redux-helpers": "^1.0.5",
     "react-redux": "5.0.7",
-    "redux": "3.7.2",
+    "redux": "4.0.0",
     "redux-devtools-extension": "2.13.2",
-    "redux-form": "^7.3.0",
+    "redux-form": "^7.4.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
     "redux-thunk": "2.3.0",
     "reselect": "^3.0.1",
-    "url-parse": "^1.4.1",
     "xcode": "^1.0.0"
   },
   "devDependencies": {
@@ -45,18 +44,18 @@
     "@types/react-native-keep-awake": "^2.0.1",
     "@types/react-native-vector-icons": "4.6.1",
     "@types/react-navigation": "1.5.9",
-    "@types/react-redux": "5.0.19",
-    "@types/redux-form": "^7.2.4",
+    "@types/react-redux": "6.0.4",
+    "@types/redux-form": "^7.4.1",
     "@types/redux-persist": "^4.3.1",
     "@types/url-parse": "^1.1.1",
-    "babel-jest": "22.4.3",
+    "babel-jest": "23.4.0",
     "babel-preset-react-native": "4.0.0",
-    "jest": "22.4.3",
+    "jest": "23.4.1",
     "react-native-debugger-open": "^0.3.17",
     "react-native-scripts": "1.14.0",
-    "react-test-renderer": "16.3.2",
+    "react-test-renderer": "16.4.1",
     "rimraf": "^2.6.2",
-    "typescript": "2.7.2"
+    "typescript": "2.9.2"
   },
   "react-native": {
     "expo": false

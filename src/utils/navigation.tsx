@@ -9,6 +9,7 @@ import {
      NavigationActions,
      NavigationParams,
      NavigationAction,
+     NavigationNavigateActionPayload,
 } from "react-navigation";
 import { addNavigationHelpers, NavigationContainer, NavigationNavigatorProps } from "react-navigation";
 import { BackHandler } from "react-native";
@@ -196,11 +197,11 @@ export class Router<Routes> {
     }
 
     public back = (key?: keyof Routes): void => {
-        this.dispatch(NavigationActions.back({ key }))
+        this.dispatch(NavigationActions.back({ key: key as string }))
     };
 
     public navigate = <T extends NavigationParams>(anchor: Anchor<T, Routes>, params: T, key?: string): void => {
-        let actionParams = anchor.action(params)
+        let actionParams = anchor.action(params) as NavigationNavigateActionPayload;
         if (key) {
             actionParams["key"] = key;
         }
@@ -212,7 +213,7 @@ export class Router<Routes> {
             index: 0,
             actions: [
                 NavigationActions.navigate({
-                    routeName: route,
+                    routeName: route as string,
                     params
                 })
             ]
@@ -229,7 +230,7 @@ export function bindCreateAnchor<Routes>() {
             action: (params) => ({
                 routeName,
                 params: convert ? convert(params) : params,
-                key: routeName,
+                key: routeName as string,
             }),
             getParam: (props, field) => {
                 let params = props.navigation.state.params;

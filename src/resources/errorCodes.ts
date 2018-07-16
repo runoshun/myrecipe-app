@@ -1,0 +1,1 @@
+export const SAVE_IMAGE_FAILED = 1;

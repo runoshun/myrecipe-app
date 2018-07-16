@@ -52,3 +52,14 @@
 }
 
 @end
+
+@implementation DevSupportEx
+
+RCT_EXPORT_MODULE();
+
+RCT_EXPORT_METHOD(setDevBuildEnabled: (BOOL)devEnabled)
+{
+  [[RCTBundleURLProvider sharedSettings] setEnableDev: devEnabled];
+}
+
+@end

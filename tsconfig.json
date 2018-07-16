@@ -3,7 +3,7 @@
     "target": "es2017",
     "module": "es2015",
     "jsx": "react-native",
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "outDir": "./dist/",
     "rootDir": "./",
 
@@ -25,7 +25,6 @@
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types"],
     "types": [
-      "expo",
       "jest",
       "prop-types",
       "react",
