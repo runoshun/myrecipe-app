@@ -1,7 +1,7 @@
 import { ImageURISource } from "react-native";
 import { Ingredient } from "@root/EntityTypes";
 
-import _image, { maybeDownloadImage } from "./image";
+import _image from "./image";
 import _web from "./web";
 import * as _units from "./common/extractUnit";
 import * as _forms from "./common/formUtils";

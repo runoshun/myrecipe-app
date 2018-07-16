@@ -8,6 +8,8 @@ import { combineReducers } from "@root/utils/redux";
 import { reducers, AppState, UndoableEntitiesState } from "@root/reducers";
 import navigators, { NavigatorsState } from "@root/navigators";
 
+import createAnalyticsMiddleware from "./analytics";
+
 export interface StoreState extends NavigatorsState {
     app: AppState,
     entities: UndoableEntitiesState,
@@ -33,10 +35,20 @@ const persistedRootReducer = persistReducer({
     blacklist: persistBlackList,
     version: 1,
     timeout: 10 * 1000,
-}, rootReducer as any);
+}, rootReducer);
 
 export const configureStore = () => {
-    let middlewares = [ thunk, ...navigators.middlewares ];
+    let middlewares = [ 
+        thunk, 
+        ...navigators.middlewares,
+        createAnalyticsMiddleware({
+            blacklist: [
+                /Navigation\/COMPLETE_TRANSITION/,
+                /persist\/.+/,
+                /@@redux-form\/.+/
+            ]
+        })
+    ];
 
     let store;
     if (__DEV__) {
