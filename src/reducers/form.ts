@@ -8,15 +8,15 @@ type IngredientFormData = {
     amount: string | undefined,
 }
 export type RecipeFormData = {
-    [P in keyof Omit<Types.RecipeEntity, EntityExluceCommon | "ingredients">]: string | undefined;
+    [P in keyof Omit<Types.RecipeEntity, EntityExluceCommon | "ingredients">]?: string;
 } & { ingredients: IngredientFormData[] | undefined } ;
 
 export type MeelPrepFormData = {
-    [P in keyof Omit<Types.MeelPrepEntity, EntityExluceCommon>]: string | undefined
+    [P in keyof Omit<Types.MeelPrepEntity, EntityExluceCommon>]?: string
 };
 
 export type ShoppingListFormData = {
-    [P in keyof Omit<Types.ShoppingListItemEntity, EntityExluceCommon | "checked" | "recipeId">]: string | undefined
+    [P in keyof Omit<Types.ShoppingListItemEntity, EntityExluceCommon | "checked" | "recipeId">]?: string
 };
 
 export type MeelPrepFormEntity = Omit<Types.MeelPrepEntity, EntityExluceCommon>;

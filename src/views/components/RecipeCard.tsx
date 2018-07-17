@@ -22,9 +22,13 @@ export default class RecipeCard extends React.Component<RecipeCardProperties, St
     }
 
     render() {
+        let photo =
+            this.props.recipe.photo ||
+            this.props.recipe.photoSecondary ||
+            res.images.noImage;
         return (
             <TouchableOpacity activeOpacity={0.8} style={this.props.style} onPress={this.onPressRecipe}>
-                <V.Card fullImage styles={cardStyles} image={{ uri: this.props.recipe.photo }}>
+                <V.Card fullImage styles={cardStyles} image={{ uri: photo }}>
                     <View style={styles.values.nameContainer}>
                         <V.Texts.Body style={styles.values.name} ellipsizeMode="tail" numberOfLines={1}>
                             {this.props.recipe.name}

@@ -95,6 +95,10 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
         let recipeId = anchor.getParam(this.props, "recipeId");
         let recipe = recipeId !== undefined ? this.props.recipes[recipeId] : undefined;
         if (recipe) {
+            let photo =
+                recipe.photo ||
+                recipe.photoSecondary ||
+                res.images.noImage;
             return (
                 <V.Screen>
                     <V.AppScreenHeader
@@ -103,7 +107,7 @@ export class RecipeDetailScreen extends React.Component<RecipesDetailProperties,
                         /*renderRight={() => <V.AppScreenHeaderButton icon="restaurant-outline" onPress={() => this.addToMeelPrep(recipe)} />} */
                     />
                     <ScrollView style={styles.values.scrollView}>
-                        <Image source={{ uri: recipe.photo }} style={styles.values.image} />
+                        <Image source={{ uri: photo }} style={styles.values.image} />
                         {
                             recipe.ingredients.length > 0 &&
                             <V.Card style={styles.values.contentCard}>

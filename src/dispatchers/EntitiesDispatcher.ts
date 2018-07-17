@@ -129,7 +129,8 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
     private recipeFormDataToEntity = (data: RecipeFormData): Omit<Types.RecipeEntity, "id"> => {
         return {
             name: data.name || "",
-            photo: data.photo || res.images.noImage,
+            photo: data.photo,
+            photoSecondary: data.photoSecondary,
             ingredients: this.filterIngredients(data.ingredients),
             url: data.url,
             _version: "1",

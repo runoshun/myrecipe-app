@@ -16,6 +16,7 @@ import api from "@root/api";
 
 export interface RecipeFormScreenProperties extends DispatcherProps {
     id?: string,
+    saveImageOnDevice: boolean,
 }
 
 interface State {
@@ -40,7 +41,14 @@ export class RecipeFormScreen extends React.Component<Props, State> {
                 <V.AppScreenHeader title={res.strings.recipeFormTitle()}
                     renderLeft={() => <V.AppScreenHeaderButton icon="close" onPress={() => this.props.router.back("RecipeForm")} />}
                     renderRight={() => <V.AppScreenHeaderButton icon="checkmark" onPress={this.props.handleSubmit(async (data) => {
-                        data.photo = await api.image.maybeDownloadImage(data.photo);
+                        if (this.props.saveImageOnDevice) {
+                            let localPhoto = await api.image.maybeDownloadImage(data.photo);
+                            if (localPhoto) {
+                                data.photoSecondary = data.photo;
+                                data.photo = localPhoto;
+                            }
+                        }
+
                         this.props.entities.submitRecipeForm(this.props.id, data);
                         this.props.router.reset("MainTab", {});
                     })} />}
@@ -63,6 +71,7 @@ export default createContainer(_RecipeFormScreen)((_state, dispatch, ownProps) =
     return {
         initialValues,
         id,
+        saveImageOnDevice: _state.app.settings.saveImageOnDevice,
         ...createDispacherProps(dispatch)
     }
 })
