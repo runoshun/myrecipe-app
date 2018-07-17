@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, TextInput, Text, Image } from "react-native";
+import { View, TextInput, Text } from "react-native";
 
 import { 
     createContainer,

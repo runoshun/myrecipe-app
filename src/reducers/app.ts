@@ -15,19 +15,16 @@ export interface ShoppingListState {
 }
 
 export type AccountType = "free" | "adRemove" | "premium";
-export interface AccountState {
-    accountType: AccountType,
-}
-
 export interface SettingsState {
     keepAwakeWhileBrowse: boolean,
+    saveImageOnDevice: boolean,
+    accountType: AccountType,
 }
 
 export interface AppState {
     recipes: RecipesState,
     meelPreps: MeelPrepsState,
     shoppingList: ShoppingListState,
-    account: AccountState,
     settings: SettingsState,
 }
 
@@ -36,8 +33,10 @@ export interface AppState {
 // ===================================================================================== //
 export const actions = {
     SET_SHOPPING_LIST_TYPE: reduxUtils.action<{ type: ShoppingListType }>("app/shoppingList/setType"),
-    SET_ACCOUNT_TYPE: reduxUtils.action<{type: AccountType}>("app/account/setAccountType"),
+
+    SET_ACCOUNT_TYPE: reduxUtils.action<{type: AccountType}>("app/settings/setAccountType"),
     SET_KEEP_AWAKE_WHILE_BROWSE: reduxUtils.action<boolean>("app/settings/setKeepAwakeWhileIdle"),
+    SET_SAVE_IMAGE_ON_DEVICE: reduxUtils.action<boolean>("app/settings/setSaveImageOnDevice"),
 }
 
 // ===================================================================================== //
@@ -64,21 +63,23 @@ export const shoppingListReducer = new reduxUtils.ReducerBuilder<ShoppingListSta
     }))
     .build();
 
-export const accountReducer = new reduxUtils.ReducerBuilder<AccountState>({
-    accountType: "free"
-})
-    .case(actions.SET_ACCOUNT_TYPE, (state, payload) => ({
-        ...state,
-        accountType: payload.type
-    }))
-    .build();
 
 export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
-    keepAwakeWhileBrowse: true
+    accountType: "free",
+    keepAwakeWhileBrowse: true,
+    saveImageOnDevice: false,
 })
     .case(actions.SET_KEEP_AWAKE_WHILE_BROWSE, (state, payload) => ({
         ...state,
         keepAwakeWhileBrowse: payload
+    }))
+    .case(actions.SET_SAVE_IMAGE_ON_DEVICE, (state, payload) => ({
+        ...state,
+        saveImageOnDevice: payload
+    }))
+    .case(actions.SET_ACCOUNT_TYPE, (state, payload) => ({
+        ...state,
+        accountType: payload.type
     }))
     .build()
 
@@ -86,7 +87,6 @@ export const reducer = reduxUtils.combineReducers<AppState>({
     recipes: recipesReducer,
     meelPreps: meelPrepsReducer,
     shoppingList: shoppingListReducer,
-    account: accountReducer,
     settings: settingsReducer,
 });
 

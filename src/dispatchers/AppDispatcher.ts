@@ -59,6 +59,10 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
     public setKeepAwakeWhileBrowse = (value: boolean) => {
         this.dispatch(app.actions.SET_KEEP_AWAKE_WHILE_BROWSE(value));
     }
+
+    public setSaveImageOnDevice = (value: boolean) => {
+        this.dispatch(app.actions.SET_SAVE_IMAGE_ON_DEVICE(value));
+    }
 }
 
 export default AppDispatcher;

@@ -98,4 +98,9 @@ export const meelPrepFormErrorInValidDate = () => "正しい日付を入力し�
 export const webBrowserUrlDialogTitle = () => "URLを入力";
 
 export const settingsTitle = () => "設定";
-export const settingsKeepAwakeWhileBrowse = () => "レシピサイト表示時に画面OFFを抑止";
+export const settingsLabelKeepAwakeWhileBrowse = () => "画面OFFを抑止";
+export const settingsDescKeepAwakeWhileBrowse = () => "レシピサイト表示時に画面OFFを抑止します";
+export const settingsLabelSaveImageOnDevice = () => "画像をデバイスに保存";
+export const settingsDescSaveImageOnDevice = () => "レシピクリップ時に取得した画像をデバイスに保存します";
+export const settingsLabelAppVersion = () => "アプリバージョン";
+export const settingsLabelAccountType = () => "アカウント情報";

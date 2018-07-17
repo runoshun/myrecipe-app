@@ -5,5 +5,5 @@ import BannerView from "../components/BannerView";
 
 export default createContainer(BannerView)((state, _, ownProps: ViewProperties) => ({
     ...ownProps,
-    hide: state.app.account.accountType !== "free",
+    hide: state.app.settings.accountType !== "free",
 }))
