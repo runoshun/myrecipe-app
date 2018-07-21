@@ -19,6 +19,7 @@ export interface SettingsState {
     keepAwakeWhileBrowse: boolean,
     saveImageOnDevice: boolean,
     accountType: AccountType,
+    parseIngredientsSuccessCount: number,
 }
 
 export interface AppState {
@@ -37,6 +38,7 @@ export const actions = {
     SET_ACCOUNT_TYPE: reduxUtils.action<{type: AccountType}>("app/settings/setAccountType"),
     SET_KEEP_AWAKE_WHILE_BROWSE: reduxUtils.action<boolean>("app/settings/setKeepAwakeWhileIdle"),
     SET_SAVE_IMAGE_ON_DEVICE: reduxUtils.action<boolean>("app/settings/setSaveImageOnDevice"),
+    INCREMENT_PARSE_INGREDIENTS_SUCCESS: reduxUtils.action<undefined>("app/settings/increment_parse_ingredients_success"),
 }
 
 // ===================================================================================== //
@@ -68,6 +70,7 @@ export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
     accountType: "free",
     keepAwakeWhileBrowse: true,
     saveImageOnDevice: false,
+    parseIngredientsSuccessCount: 0,
 })
     .case(actions.SET_KEEP_AWAKE_WHILE_BROWSE, (state, payload) => ({
         ...state,
@@ -80,6 +83,10 @@ export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
     .case(actions.SET_ACCOUNT_TYPE, (state, payload) => ({
         ...state,
         accountType: payload.type
+    }))
+    .case(actions.INCREMENT_PARSE_INGREDIENTS_SUCCESS, (state, _payload) => ({
+        ...state,
+        parseIngredientsSuccessCount: (state.parseIngredientsSuccessCount || 0) + 1
     }))
     .build()
 

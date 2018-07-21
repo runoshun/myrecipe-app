@@ -96,6 +96,9 @@ export const meelPrepFormErrorAmountIsNonNumber = () => "数字で入力して�
 export const meelPrepFormErrorInValidDate = () => "正しい日付を入力してください";
 
 export const webBrowserUrlDialogTitle = () => "URLを入力";
+export const webBrowserConfirmAddToRecipeDialogTitle = () => "確認";
+export const webBrowserConfirmAddToRecipeDialogMessage = () => "このページをレシピに追加しますか？対応サイトの場合、ページ内容から材料が自動入力されます。";
+export const webBrowserParseProgressDialogTitle = () => "取得中...";
 
 export const settingsTitle = () => "設定";
 export const settingsLabelKeepAwakeWhileBrowse = () => "画面OFFを抑止";

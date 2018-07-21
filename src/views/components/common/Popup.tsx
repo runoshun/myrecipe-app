@@ -179,6 +179,8 @@ export default class Popup extends React.Component<PopupProperties, State> {
                 .setStateBefore(this, { propsImpl: nextProps })
                 .timing(() => ({ toValue: 1 }))
                 .start();
+        } else if (this.state.propsImpl !== nextProps) {
+            this.setState({propsImpl: nextProps})
         }
     }
 

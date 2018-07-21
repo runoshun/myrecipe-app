@@ -7,6 +7,7 @@ import { StoreState } from "@root/store";
 import { DispatcherBase } from "@root/utils/redux";
 import { Router } from "@root/navigators";
 import { Ingredient } from "@root/EntityTypes";
+import firebase from "react-native-firebase";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
 
 export class AppDispatcher extends DispatcherBase<StoreState> {
@@ -33,23 +34,30 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
 
         let ingredients: Ingredient[] = [];
         try {
+            firebase.analytics().logEvent("PARSE_INGREDIENT", { url });
             ingredients = await api.web.parseIngredientsFromHtml(url, html);
         } catch(e) {
             // do nothing
             console.log(e);
         }
 
-        // avoid cyclic deps
-        const { RecipeFormScreen } = require("@root/views/screens/RecipeFormScreen");
-        this.router.navigate(RecipeFormScreen.anchor, { 
-            id: undefined, 
-            data: { 
-                name: title,
-                url: url,
-                photo: photo,
-                ingredients: ingredients.filter(i => !(i.name === "" || i.name == undefined)),
+        return () => {
+            if (ingredients.length > 0) {
+                this.dispatch(app.actions.INCREMENT_PARSE_INGREDIENTS_SUCCESS(undefined));
             }
-        });
+
+            // avoid cyclic deps
+            const { RecipeFormScreen } = require("@root/views/screens/RecipeFormScreen");
+            this.router.navigate(RecipeFormScreen.anchor, {
+                id: undefined,
+                data: {
+                    name: title,
+                    url: url,
+                    photo: photo,
+                    ingredients: ingredients.filter(i => !(i.name === "" || i.name == undefined)),
+                }
+            });
+        }
     }
 
     public debugSetToAccountType = (type: AccountType) => {

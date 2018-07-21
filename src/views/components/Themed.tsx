@@ -7,7 +7,7 @@ import { PopupMenuProperties } from "./common/PopupMenu";
 import { PopupMenu, Dialog, HBox, Popup, Stylable, Typography, Button, bindDefaultProps, ScreenHeader, ScreenHeaderButton, TextField } from "./common";
 
 import * as colors from "@root/resources/colors";
-import { Platform } from "react-native";
+import { Platform, ActivityIndicator } from "react-native";
 import { PixelRatio } from "react-native";
 import { rn } from "@root/utils";
 
@@ -245,6 +245,35 @@ export const ConfimationDialog: RegisteredPopup<ConfimationDialogProps, Confimat
     </Dialog>,
     (result) => result && result()
 );
+
+interface ProgressDialogProps {
+    title?: string,
+    message?: string,
+    content?: JSX.Element,
+    showOk?: boolean,
+    onOk?: () => void,
+    showIndicator?: boolean,
+}
+export const BannerProgressDialog: RegisteredPopup<ProgressDialogProps, () => void> = PopupRegistry.register((props) => {
+    return (
+    <Dialog
+        title={props.title}
+        message={props.message}
+        {...props.popupProps}>
+        { props.content }
+        { props.showIndicator && <ActivityIndicator style={{padding: 4}} /> }
+        { props.showOk && 
+            <HBox>
+                <TransparentAccentButton
+                    onPress={() => BannerProgressDialog.hide(props.onOk)}
+                    label={res.strings.commonOk()}
+                    style={{ flex: 1 }} />
+            </HBox>
+        }
+    </Dialog>)},
+    (result) => result && result()
+)
+
 
 export const styles = new Stylable({
     bottomBar: {

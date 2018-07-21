@@ -7,21 +7,21 @@ const defaultStyles = Popup.defaultStyles.extend({
     TUI_DialogContainer: {
         flexDirection: "column",
         minWidth: "70%",
-        maxWidth: "70%",
+        maxWidth: "85%",
         borderRadius: 4,
         backgroundColor: "#f7f7f7",
         overflow: "hidden",
     },
     TUI_DialogTitle: {
         padding: 12,
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: "bold",
         alignSelf: "center",
     },
     TUI_DialogMessage: {
         paddingHorizontal: 12,
         paddingBottom: 12,
-        fontSize: 16,
+        fontSize: 18,
     },
 });
 

@@ -15,6 +15,7 @@ export type RegisteredPopup<T = {}, U = {}> = {
     show: (arg: T) => void,
     hide: (arg?: U) => void,
     bindHide: (arg?: U) => () => void,
+    isVisible: () => boolean,
 }
 
 interface PopupDict {
@@ -64,6 +65,7 @@ export default class PopupRegistry extends React.Component<PopupRegistryProperti
             show: (arg: Props) => PopupRegistry.show(id, arg),
             hide: (arg?: Result) => PopupRegistry.hide(id, arg),
             bindHide: (arg?: Result) => () => PopupRegistry.hide(id, arg),
+            isVisible: () => PopupRegistry.isVisible(id)
         }
     }
 
@@ -77,6 +79,11 @@ export default class PopupRegistry extends React.Component<PopupRegistryProperti
         PopupRegistry.instance.setState({
             [id]: { visible: false, onDissmissArg: arg, extendProps: undefined }
         })
+    }
+
+    public static isVisible<Props, Result>(id: RegisteredPopupID<Props, Result>): boolean {
+        let state = PopupRegistry.instance.state[id];
+        return !!(state && state.visible);
     }
 
     constructor(props: any) {

@@ -12,6 +12,7 @@ target 'tsukurioki' do
   pod 'Firebase/AdMob'
   pod 'Firebase/Auth'
   pod 'Firebase/Messaging'
+  pod 'Firebase/RemoteConfig'
 
   pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
 

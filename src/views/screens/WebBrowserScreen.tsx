@@ -9,12 +9,15 @@ import { WebBrowser } from "@root/views/components/common";
 import { createContainer } from "@root/views/createContainer";
 import * as V from "@root/views/components/Themed";
 import { AppDispatcher } from "@root/dispatchers";
+import admob from "@root/admob";
 
+import Banner from "@root/views/containers/Banner";
 
 export interface WebBrowserScreenProperties {
     router: Router,
     app: AppDispatcher;
     keepAwakeWhileBrowse: boolean,
+    parseIngredientsSuccessCount: number,
 }
 
 interface State {
@@ -90,7 +93,7 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 action1Icon="open-outline"
                 action1Handler={this.openUrlDialog}
                 action2Icon="attach-outline"
-                action2Handler={this.addToRecipe}
+                action2Handler={this.openAddToRecipeDialog}
                 onMessage={this.onMessage}
                 injectedJavaScript={injectedJavascript}
                 javaScriptEnabled={true}
@@ -115,16 +118,49 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
             title: res.strings.webBrowserUrlDialogTitle(),
             content: <TextInput style={styles.values.dialogInput} onChangeText={text => { url = text }} />,
             onOk: () => this.setState({ uri: url })
-        })
+        });
+    }
+
+    private openAddToRecipeDialog = (webview?: WebView, state?: NavState) => {
+        V.ConfimationDialog.show({
+            title: res.strings.webBrowserConfirmAddToRecipeDialogTitle(),
+            message: res.strings.webBrowserConfirmAddToRecipeDialogMessage(),
+            onOk: () => this.openAddToRecipeProgress(webview, state),
+        });
+    }
+
+    private openAddToRecipeProgress = async (webview?: WebView, state?: NavState) => {
+        let banner = <Banner
+            style={styles.values.progressBanner}
+            unitId={admob.Ids.parseProgressBanner}
+            size="MEDIUM_RECTANGLE" />;
+
+        V.BannerProgressDialog.show({
+            title: res.strings.webBrowserParseProgressDialogTitle(),
+            content: banner,
+            showIndicator: true,
+        });
+
+        await new Promise((res) => setTimeout(() => res(), 5000));
+        let navigate = await this.addToRecipe(webview, state);
+
+        V.BannerProgressDialog.show({
+            title: "取得完了",
+            content: banner,
+            showIndicator: false,
+            showOk: true,
+            onOk: navigate,
+        });
     }
 
     private addToRecipe = async (webview?: WebView, state?: NavState) => {
         if (webview && state) {
+
             let reqCode = this.prepareMessage();
             webview.injectJavaScript(addToRecipeJavascriptCode(reqCode));
             try {
                 let data = await this.waitMessage(reqCode);
-                this.props.app.addRecipeFromWebPage(
+                return this.props.app.addRecipeFromWebPage(
                     state.title || "",
                     state.url || "",
                     data.photo,
@@ -134,6 +170,7 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                 console.log(e)
             }
         }
+        return () => undefined;
     }
 }
 
@@ -250,6 +287,9 @@ const styles = new V.Stylable({
         margin: 8,
         backgroundColor: res.colors.lightGray,
         padding: 8,
+    },
+    progressBanner: {
+        padding: 12,
     }
 })
 
@@ -258,5 +298,6 @@ export default createContainer(WebBrowserScreen)((state, dispatch) => {
         router: new Router(dispatch),
         app: new AppDispatcher(dispatch),
         keepAwakeWhileBrowse: state.app.settings.keepAwakeWhileBrowse,
+        parseIngredientsSuccessCount: state.app.settings.parseIngredientsSuccessCount,
     }
 })
