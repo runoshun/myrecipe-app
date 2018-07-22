@@ -125,7 +125,14 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
         V.ConfimationDialog.show({
             title: res.strings.webBrowserConfirmAddToRecipeDialogTitle(),
             message: res.strings.webBrowserConfirmAddToRecipeDialogMessage(),
-            onOk: () => this.openAddToRecipeProgress(webview, state),
+            onOk: () => {
+                let count = this.props.parseIngredientsSuccessCount;
+                if (count > 10) {
+                    this.openAddToRecipeProgress(webview, state)
+                } else {
+                    this.addToRecipe(webview, state).then(navigate => navigate());
+                }
+            },
         });
     }
 
