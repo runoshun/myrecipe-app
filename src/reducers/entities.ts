@@ -48,9 +48,12 @@ if (__DEV__) {
     }
 }
 
-const recipeEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.RecipeEntity>(actions.RECIPES, uuidv4, initialEntities.recipes).build();
-const meelPrepsEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelPrepEntity>(actions.MEEL_PREPS, uuidv4, initialEntities.meelPreps).build();
-const shoppingListEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.ShoppingListItemEntity>(actions.SHOPPING_LIST, uuidv4, initialEntities.shoppingList).build();
+const recipeEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.RecipeEntity>(
+    actions.RECIPES, uuidv4, "1" ,initialEntities.recipes).build();
+const meelPrepsEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.MeelPrepEntity>(
+    actions.MEEL_PREPS, uuidv4, "1", initialEntities.meelPreps).build();
+const shoppingListEntitiesReducer = new reduxUtils.EntityReducerBuilder<Types.ShoppingListItemEntity>(
+    actions.SHOPPING_LIST, uuidv4, "1", initialEntities.shoppingList).build();
 
 const undoableReducer = reduxUtils.undoable(
     reduxUtils.combineReducers<EntitiesState>({
@@ -59,9 +62,7 @@ const undoableReducer = reduxUtils.undoable(
         shoppingList: shoppingListEntitiesReducer,
     }),
     actions.UNDO_ENTITIES,
-    {
-        limit: 1,
-    });
+    { limit: 1 });
 
 export const reducer = reduxUtils.replacable(undoableReducer, actions.REPLACE_ENTITIES);
 
@@ -76,6 +77,11 @@ const shoppingListSelector = createSelector(entitiesSelector, entities => entiti
 const recipesArraySelector = createSelector(
     recipesSelector,
     recipes => obj.asArray(recipes)
+)
+
+const recipesLastModifiedSelector = createSelector(
+    recipesArraySelector,
+    recipes => recipes.reduce((lm, recipe) => Math.max(lm, recipe.__lastModifiedAt), 0)
 )
 
 const meelPrepsArraySelector = createSelector(
@@ -134,6 +140,7 @@ const withRecipeShoppingListSelector = createSelector(
 
 export const selectors = {
     recipesArray: recipesArraySelector,
+    recipesLastModified: recipesLastModifiedSelector,
     meelPrepsArray: meelPrepsArraySelector,
     shoppingListArray: shoppingListArraySelector,
     mergedShoppingList: mergedShoppingListSelector,

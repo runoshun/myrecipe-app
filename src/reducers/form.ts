@@ -2,7 +2,7 @@ import * as Types from "@root/EntityTypes";
 import { Omit } from "@root/utils/types";
 import { forms } from "@root/api";
 
-type EntityExluceCommon = "id" | "_version" | "_lastModified";
+type EntityExluceCommon = "id";
 type IngredientFormData = {
     name: string | undefined,
     amount: string | undefined,

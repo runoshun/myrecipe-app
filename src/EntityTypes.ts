@@ -1,14 +1,9 @@
-export interface EntityCommon<Version> {
-    _version: Version,
-    _lastModified: number,
-}
-
 export interface Ingredient {
     name: string,
     amount: string,
 }
 
-export interface RecipeEntity extends EntityCommon<"1"> {
+export interface RecipeEntity {
     id: string,
     name: string,
     photo?: string,
@@ -17,7 +12,7 @@ export interface RecipeEntity extends EntityCommon<"1"> {
     url: string | undefined,
 }
 
-export interface MeelPrepEntity extends EntityCommon<"1"> {
+export interface MeelPrepEntity {
     id: string,
     name: string,
     amount: number,
@@ -26,7 +21,7 @@ export interface MeelPrepEntity extends EntityCommon<"1"> {
     expiredAt: number | undefined,
 }
 
-export interface ShoppingListItemEntity extends EntityCommon<"1"> {
+export interface ShoppingListItemEntity {
     id: string,
     name: string,
     amount: string,

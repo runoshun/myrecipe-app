@@ -37,8 +37,6 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
             amount: amount,
             checked: false,
             recipeId: recipeId,
-            _version: "1",
-            _lastModified: Date.now()
         }
     }
 
@@ -68,8 +66,6 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
             name: data.name || "",
             amount: data.amount || "",
             recipeId: undefined,
-            _version: "1",
-            _lastModified: Date.now()
         }
     }
 
@@ -110,8 +106,6 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
             photo: data.photo || res.images.noImage,
             createdAt: data.createdAt !== undefined ? Date.parse(data.createdAt) : undefined,
             expiredAt: data.expiredAt !== undefined ? Date.parse(data.expiredAt) : undefined,
-            _version: "1",
-            _lastModified: Date.now()
         }
     }
 
@@ -133,8 +127,6 @@ export class EntitiesDispatcher extends DispatcherBase<StoreState> {
             photoSecondary: data.photoSecondary,
             ingredients: this.filterIngredients(data.ingredients),
             url: data.url,
-            _version: "1",
-            _lastModified: Date.now()
         }
     }
 

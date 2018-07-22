@@ -39,6 +39,12 @@ export interface EntityBase {
     id: string
 }
 
+export interface EntityMetadata {
+    __lastModifiedAt: number,
+    __createdAt: number,
+    __version: string,
+}
+
 export interface EntityActionCreator<Entity extends EntityBase> {
     LOAD: ActionCreator<EntityState<Entity>, never>,
     ADD: ActionCreator<Omit<Entity, "id">, never>,
@@ -51,7 +57,7 @@ export interface EntityActionCreator<Entity extends EntityBase> {
 }
 
 export interface EntityState<Entity extends EntityBase> {
-    [id: string]: Entity | undefined
+    [id: string]: (Entity & EntityMetadata) | undefined
 }
 
 export interface UndoableState<BaseState> {
@@ -231,7 +237,7 @@ export class EntityReducerBuilder<Entity extends EntityBase> {
 
     private builder: ReducerBuilder<EntityState<Entity>>;
 
-    constructor(actionCreator: EntityActionCreator<Entity>, generateId: () => string, initialState: EntityState<Entity> = {}) {
+    constructor(actionCreator: EntityActionCreator<Entity>, generateId: () => string, version: string, initialState: EntityState<Entity> = {}) {
         this.builder = new ReducerBuilder<EntityState<Entity>>(initialState);
         this.builder
             .case(actionCreator.LOAD, (state, payload) => {
@@ -239,16 +245,28 @@ export class EntityReducerBuilder<Entity extends EntityBase> {
             })
             .case(actionCreator.ADD, (state, payload) => {
                 let id = generateId();
-                let entity: Entity = Object.assign({}, payload, { id }) as any;
+                let now = Date.now();
+                let meta: EntityMetadata = {
+                    __createdAt: now,
+                    __lastModifiedAt: now,
+                    __version: version,
+                }
+                let entity: Entity & EntityMetadata = Object.assign({}, payload, { id }, meta) as any;
                 return {
                     ...state,
                     [id]: entity
                 }
             })
             .case(actionCreator.ADD_MANY, (state, payload) => {
+                let now = Date.now();
+                let meta: EntityMetadata = {
+                    __createdAt: now,
+                    __lastModifiedAt: now,
+                    __version: version,
+                }
                 return payload.reduce((state, entity) => {
                     let id = generateId();
-                    state[id] = Object.assign({}, entity, { id }) as any
+                    state[id] = (Object.assign({}, entity, { id }, meta) as Entity & EntityMetadata);
                     return state;
                 }, Object.assign({}, state));
             })
@@ -262,7 +280,9 @@ export class EntityReducerBuilder<Entity extends EntityBase> {
             })
             .case(actionCreator.UPDATE, (state, payload) => {
                 let oldValue = state[payload.id];
-                let newValue = Object.assign({}, oldValue, payload) as any;
+                let now = Date.now();
+                let meta: Partial<EntityMetadata> = { __lastModifiedAt: now };
+                let newValue = (Object.assign({}, oldValue, payload, meta) as Entity & EntityMetadata)
                 return {
                     ...state,
                     [payload.id]: newValue 
