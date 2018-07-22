@@ -20,6 +20,7 @@ export interface SettingsState {
     saveImageOnDevice: boolean,
     accountType: AccountType,
     parseIngredientsSuccessCount: number,
+    recipesLastUploaded: number,
 }
 
 export interface AppState {
@@ -39,6 +40,7 @@ export const actions = {
     SET_KEEP_AWAKE_WHILE_BROWSE: reduxUtils.action<boolean>("app/settings/setKeepAwakeWhileIdle"),
     SET_SAVE_IMAGE_ON_DEVICE: reduxUtils.action<boolean>("app/settings/setSaveImageOnDevice"),
     INCREMENT_PARSE_INGREDIENTS_SUCCESS: reduxUtils.action<undefined>("app/settings/increment_parse_ingredients_success"),
+    SET_RECIPES_LAST_UPLOADED: reduxUtils.action<number>("app/settings/set_recipes_last_uploaded"),
 }
 
 // ===================================================================================== //
@@ -71,6 +73,7 @@ export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
     keepAwakeWhileBrowse: true,
     saveImageOnDevice: false,
     parseIngredientsSuccessCount: 0,
+    recipesLastUploaded: 0,
 })
     .case(actions.SET_KEEP_AWAKE_WHILE_BROWSE, (state, payload) => ({
         ...state,
@@ -87,6 +90,10 @@ export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
     .case(actions.INCREMENT_PARSE_INGREDIENTS_SUCCESS, (state, _payload) => ({
         ...state,
         parseIngredientsSuccessCount: (state.parseIngredientsSuccessCount || 0) + 1
+    }))
+    .case(actions.SET_RECIPES_LAST_UPLOADED, (state, payload) => ({
+        ...state,
+        recipesLastUploaded: payload,
     }))
     .build()
 

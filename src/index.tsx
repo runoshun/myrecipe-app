@@ -15,6 +15,7 @@ import navigators from "@root/navigators";
 import PopupRegistry from "@root/views/components/common/PopupRegistry";
 import rn from "@root/utils/rn";
 import Banner from "@root/views/containers/Banner";
+import BackgroundTasks from "@root/views/containers/BackgroundTasks";
 import admob from "@root/admob";
 
 YellowBox.ignoreWarnings([
@@ -45,6 +46,7 @@ export default class App extends React.Component {
                 <Banner unitId={admob.Ids.mainBanner} style={styles.banner} />
               </PopupRegistry>
             </View>
+            <BackgroundTasks />
             {rn.os() === "ios" && <KeyboardSpacer />}
             {rn.os() === "ios" && <StatusBar barStyle="light-content" />}
           </View>
