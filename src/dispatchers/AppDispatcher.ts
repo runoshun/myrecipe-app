@@ -10,6 +10,7 @@ import { Router } from "@root/navigators";
 import { Ingredient } from "@root/EntityTypes";
 import firebase from "react-native-firebase";
 import { ThunkAction } from "redux-thunk";
+import * as RNFS from "react-native-fs";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
 
 export class AppDispatcher extends DispatcherBase<StoreState> {
@@ -42,7 +43,9 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
 
                 if (lastModified > lastUploaded) {
                     let recipes = JSON.stringify(state.entities.present.recipes);
-                    firebase.storage().ref(`recipes/${userId}/data.json`).putString(recipes).then(_result => {
+                    let filePath = `${RNFS.TemporaryDirectoryPath}/recipes.json`;
+                    RNFS.writeFile(filePath, recipes);
+                    firebase.storage().ref(`userdata/${userId}/recipes.json`).putFile(filePath).then(_result => {
                         dispatch(app.actions.SET_RECIPES_LAST_UPLOADED(Date.now()));
                         res();
                     },
