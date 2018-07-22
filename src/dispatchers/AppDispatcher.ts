@@ -11,6 +11,7 @@ import { Ingredient } from "@root/EntityTypes";
 import firebase from "react-native-firebase";
 import { ThunkAction } from "redux-thunk";
 import * as RNFS from "react-native-fs";
+import { PARSE_INGREDIENTS_FAILED } from "@root/resources/errorCodes";
 //import { ActionCreator, ErrorPayload } from "@root/utils/redux";
 
 export class AppDispatcher extends DispatcherBase<StoreState> {
@@ -71,7 +72,7 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
             ingredients = await api.web.parseIngredientsFromHtml(url, html);
         } catch(e) {
             // do nothing
-            console.log(e);
+            firebase.crashlytics().recordError(PARSE_INGREDIENTS_FAILED, e.message || e.toString());
         }
 
         return () => {

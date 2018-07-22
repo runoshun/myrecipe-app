@@ -10,8 +10,10 @@ import { createContainer } from "@root/views/createContainer";
 import * as V from "@root/views/components/Themed";
 import { AppDispatcher } from "@root/dispatchers";
 import admob from "@root/admob";
+import firebase from "react-native-firebase";
 
 import Banner from "@root/views/containers/Banner";
+import { ADD_RECIPES_FROM_PAGE_FAILED } from "@root/resources/errorCodes";
 
 export interface WebBrowserScreenProperties {
     router: Router,
@@ -174,7 +176,10 @@ export class WebBrowserScreen extends React.Component<WebBrowserScreenProperties
                     data.html
                 );
             } catch (e) {
-                console.log(e)
+                firebase.crashlytics().recordError(
+                    ADD_RECIPES_FROM_PAGE_FAILED,
+                    e.message || e.toString(),
+                )
             }
         }
         return () => undefined;

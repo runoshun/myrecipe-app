@@ -1,5 +1,7 @@
 import * as React from "react";
 import { createContainer, createDispacherProps, DispatcherProps } from "../createContainer";
+import firebase from "react-native-firebase";
+import { BACKGROUND_TASKS_FAILED } from "@root/resources/errorCodes";
 
 interface BackgroundTasksProperties extends DispatcherProps {
 }
@@ -9,11 +11,14 @@ class BackgroundTasks extends React.Component<BackgroundTasksProperties> {
 
     async componentDidMount() {
         try {
-        let userId = await this.props.app.signInAnonymously();
-        await this.props.app.uploadRecipesIfModified(userId);
+            let userId = await this.props.app.signInAnonymously();
+            await this.props.app.uploadRecipesIfModified(userId);
         }
         catch(e) {
-            console.error(e)
+            firebase.crashlytics().recordError(
+                BACKGROUND_TASKS_FAILED,
+                e.message || e.toString()
+            )
         }
     }
 }
