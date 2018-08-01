@@ -53,6 +53,8 @@
 		E1C7B168233E469299943F66 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B69FDAA3974E86994BDC30 /* libRNFirebase.a */; };
 		EC4E825E800047CDB77C9D63 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D95B88C244F54AA4B4832944 /* MaterialIcons.ttf */; };
 		6EAF310A99D648B9BE90530C /* launchscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F4BE39BB2A54CCBB69E0EAA /* launchscreen.png */; };
+		7BDF7F3097FC46DEA3B782EC /* launchscreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9B1AE8E47274F1088A4D3B5 /* launchscreen@2x.png */; };
+		440D88AAD2A040848586B760 /* launchscreen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69F0608C893545D69FB40607 /* launchscreen@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +383,8 @@
 		DD9B1C57C2DDC63DF1260B7D /* libPods-tsukuriokiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tsukuriokiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4542489DF7A40538D5B4CE8 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		2F4BE39BB2A54CCBB69E0EAA /* launchscreen.png */ = {isa = PBXFileReference; name = "launchscreen.png"; path = "tsukurioki/launchscreen.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C9B1AE8E47274F1088A4D3B5 /* launchscreen@2x.png */ = {isa = PBXFileReference; name = "launchscreen@2x.png"; path = "tsukurioki/launchscreen@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		69F0608C893545D69FB40607 /* launchscreen@3x.png */ = {isa = PBXFileReference; name = "launchscreen@3x.png"; path = "tsukurioki/launchscreen@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -532,6 +536,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				B297996165734798BC9668B8 /* GoogleService-Info.plist */,
 				2F4BE39BB2A54CCBB69E0EAA /* launchscreen.png */,
+				C9B1AE8E47274F1088A4D3B5 /* launchscreen@2x.png */,
+				69F0608C893545D69FB40607 /* launchscreen@3x.png */,
 			);
 			name = tsukurioki;
 			sourceTree = "<group>";
@@ -1148,6 +1154,8 @@
 				CF1A9F13DD6B4B61B3C577AD /* Zocial.ttf in Resources */,
 				3366910A9E024766B168247A /* GoogleService-Info.plist in Resources */,
 				6EAF310A99D648B9BE90530C /* launchscreen.png in Resources */,
+				7BDF7F3097FC46DEA3B782EC /* launchscreen@2x.png in Resources */,
+				440D88AAD2A040848586B760 /* launchscreen@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
