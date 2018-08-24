@@ -15,7 +15,7 @@
                     <rect key="frame" x="271" y="244" width="59" height="112"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchscreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="eWP-B9-1fW">
-                            <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
+                            <rect key="frame" x="0.0" y="0.0" width="57" height="57"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
