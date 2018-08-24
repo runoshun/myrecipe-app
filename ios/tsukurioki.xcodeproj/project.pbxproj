@@ -1337,6 +1337,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsukurioki.app/tsukurioki";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1366,6 +1367,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsukurioki.app/tsukurioki";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1396,6 +1398,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1425,6 +1428,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1461,7 +1465,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
+				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Debug;
@@ -1499,7 +1503,7 @@
 				PROVISIONING_PROFILE = "94ea495f-1d4c-4e58-908e-e2db1da6ad4a";
 				PROVISIONING_PROFILE_SPECIFIER = T2AP4UQ8P8/MyRecipeDevelopmentProfile;
 				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
+				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Release;
@@ -1538,6 +1542,7 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsukurioki-tvOS.app/tsukurioki-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1575,6 +1580,7 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsukurioki-tvOS.app/tsukurioki-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1616,6 +1622,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1651,6 +1658,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
