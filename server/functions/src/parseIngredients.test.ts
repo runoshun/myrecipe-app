@@ -1,22 +1,34 @@
-import parseIngredients, { Ingredients } from "./parseIngredients";
-import * as phantom from "phantom";
+import { handler, parse, Ingredients } from "./parseIngredients";
+import { getRenderedHtml, shouldReturnResult as shouldReturnResultRaw } from "./test_commons";
 import * as url from "url";
 
 jest.setTimeout(8 * 1000);
+
+const shouldReturnResult = (urlStr: string, ingredients: Ingredients) => {
+    return shouldReturnResultRaw(urlStr, ingredients, (url, html) => new Promise((res, rej) => {
+        handler({ url, html }, (status, body) => {
+            if (status === 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        })
+    }));
+}
 
 describe("parseIngredients works correctly", () => {
 
     it("should return empty array for unknown url", async (done) => {
         let parsedUrl = url.parse("https://www.google.com");
         let html = await getRenderedHtml(parsedUrl);
-        await expect(parseIngredients(parsedUrl, html)).resolves.toEqual([]);
+        await expect(parse(parsedUrl, html)).resolves.toEqual([]);
         done();
     })
 
     it("should return empty array for invalid url", async (done) => {
         let parsedUrl = url.parse("dummy");
         let html = "<html></html>"
-        await expect(parseIngredients(parsedUrl, html)).resolves.toEqual([]);
+        await expect(parse(parsedUrl, html)).resolves.toEqual([]);
         done();
     })
 
@@ -156,32 +168,3 @@ describe("parseIngredients works correctly", () => {
     })
 
 })
-
-const shouldReturnResult = async (urlString: string, expected: Ingredients) => {
-    let parsedUrl = url.parse(urlString);
-    let html = await getRenderedHtml(parsedUrl);
-    let result = await parseIngredients(parsedUrl, html);
-
-    let actual = expect(result);
-    actual.not.toBeUndefined();
-    actual.toHaveLength(expected.length);
-    actual.toEqual(expected);
-}
-
-const getRenderedHtml = (url: url.Url): Promise<string> => {
-    let phInstance: phantom.PhantomJS;
-    let create: (...args: any[]) => Promise<phantom.PhantomJS> = phantom.create
-    return create(['--ignore-ssl-errors=yes', '--load-images=no'], { logLevel: "error" })
-        .then(instance => { phInstance = instance; return instance.createPage() })
-        .then(page => {
-            return page.property("viewportSize", { width: 640, height: 960 })
-                .then(() => page.property("zoomFactor", 1))
-                .then(() => page.setting("userAgent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"))
-                .then(() => page.open(url.href as string))
-                .then(() => page.evaluate(function() { return document.body.innerHTML }))
-        })
-        .then(html => {
-            phInstance.exit();
-            return html;
-        })
-}

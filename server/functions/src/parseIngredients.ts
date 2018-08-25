@@ -17,7 +17,7 @@ type ParseSpec =
     | { type: "queryAndSplit", selector: string, separator: string }
     ;
 
-export default async (parsedUrl: url.Url, html: string): Promise<Ingredients> => {
+export const parse = async (parsedUrl: url.Url, html: string): Promise<Ingredients> => {
     const hostnamePath = (parsedUrl.hostname as string) + parsedUrl.path;
     const specName = Object.keys(parseSpecs).find(key => hostnamePath.startsWith(key));
     if (!specName) {
@@ -33,6 +33,39 @@ export default async (parsedUrl: url.Url, html: string): Promise<Ingredients> =>
         default:
             return Promise.reject("unknown parse spec type");
     }
+}
+
+export interface ReqBody {
+    url?: string,
+    html?: string,
+}
+
+export const handler = async (body: ReqBody, send: (status: number, body: any) => void) => {
+    try {
+        if (!body.url || !body.html) {
+            console.info("invalid body: ", body)
+            return send(400, { message: "invalid body" });
+        }
+
+        let parsedUrl;
+        try {
+            parsedUrl = url.parse(body.url)
+            if (!parsedUrl.hostname) { throw "" }
+        } catch (e) {
+            console.info("invalid url: ", body.url)
+            return send(400, { message: "invalied url parameter" });
+        }
+
+        let ingredients = await parse(parsedUrl, body.html);
+        send(200, ingredients);
+    } catch (e) {
+        send(500, e.message || e.toString());
+    }
+}
+
+export default {
+    parse,
+    handler
 }
 
 const performSimpleQuery = (html: string, namesSelector: string, amountSelector: string, opts: SimpleQueryOptions): Promise<Ingredients> => {
@@ -69,7 +102,7 @@ const performQueryAndSplit = (html: string, selector: string, separator: string)
 }
 
 const trimUnneeded = (text: string) => {
-    return text.replace(/・/g, "").replace(/　/g, "").trim()
+    return text.replace(/・/g, "").replace(/　/g, "").replace(/\s+/g, "").trim()
 }
 
 const parseSpecs: { [host: string]: ParseSpec } = {

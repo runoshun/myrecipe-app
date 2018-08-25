@@ -1,0 +1,32 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "deploy-aws": "repack-zip; aws lambda update-function-code --function-name parseIngredientsFromHtml --zip-file fileb://./functions.zip",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.11",
+    "@types/cheerio": "^0.22.9",
+    "@types/jest": "^23.3.1",
+    "@types/node": "^10.9.2",
+    "@types/node-fetch": "^2.1.2",
+    "@types/phantom": "^3.2.5",
+    "jest": "^23.5.0",
+    "node-fetch": "^2.2.0",
+    "phantom": "^6.0.3",
+    "repack-zip": "^0.2.5",
+    "typescript": "^2.8.3"
+  },
+  "dependencies": {
+    "firebase-functions": "^2.0.5",
+    "firebase-admin": "^6.0.0",
+    "cheerio": "^1.0.0-rc.2"
+  },
+  "private": true
+}
