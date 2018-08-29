@@ -21,6 +21,7 @@ export interface SettingsState {
     accountType: AccountType,
     parseIngredientsSuccessCount: number,
     recipesLastUploaded: number,
+    accountId?: string,
 }
 
 export interface AppState {
@@ -41,6 +42,7 @@ export const actions = {
     SET_SAVE_IMAGE_ON_DEVICE: reduxUtils.action<boolean>("app/settings/setSaveImageOnDevice"),
     INCREMENT_PARSE_INGREDIENTS_SUCCESS: reduxUtils.action<undefined>("app/settings/increment_parse_ingredients_success"),
     SET_RECIPES_LAST_UPLOADED: reduxUtils.action<number>("app/settings/set_recipes_last_uploaded"),
+    SET_ACCOUNT_ID: reduxUtils.action<string>("app/settings/set_account_id"),
 }
 
 // ===================================================================================== //
@@ -94,6 +96,10 @@ export const settingsReducer = new reduxUtils.ReducerBuilder<SettingsState>({
     .case(actions.SET_RECIPES_LAST_UPLOADED, (state, payload) => ({
         ...state,
         recipesLastUploaded: payload,
+    }))
+    .case(actions.SET_ACCOUNT_ID, (state, payload) => ({
+        ...state,
+        accountId: payload,
     }))
     .build()
 

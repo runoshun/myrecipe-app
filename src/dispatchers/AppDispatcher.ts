@@ -32,6 +32,7 @@ export class AppDispatcher extends DispatcherBase<StoreState> {
 
     public signInAnonymously = async () => {
         let user = await firebase.auth().signInAnonymously();
+        this.dispatch(app.actions.SET_ACCOUNT_ID(user.uid));
         return user.uid;
     }
 

@@ -101,9 +101,13 @@ export const webBrowserConfirmAddToRecipeDialogMessage = () => "このページ�
 export const webBrowserParseProgressDialogTitle = () => "取得中...";
 
 export const settingsTitle = () => "設定";
+export const settingsSectionInfo = () => "情報";
+export const settingsSectionSettings = () => "アプリ設定";
 export const settingsLabelKeepAwakeWhileBrowse = () => "画面OFFを抑止";
 export const settingsDescKeepAwakeWhileBrowse = () => "レシピサイト表示時に画面OFFを抑止します";
 export const settingsLabelSaveImageOnDevice = () => "画像をデバイスに保存";
 export const settingsDescSaveImageOnDevice = () => "レシピクリップ時に取得した画像をデバイスに保存します";
 export const settingsLabelAppVersion = () => "アプリバージョン";
+export const settingsLabelUserId = () => "ユーザーID";
 export const settingsLabelAccountType = () => "アカウント情報";
+export const settingsLabelHelp = () => "使い方・サポート";

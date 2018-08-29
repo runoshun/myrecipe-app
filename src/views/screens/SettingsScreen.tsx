@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Switch } from "react-native";
+import { Switch, Linking } from "react-native";
 
 import { 
     createContainer,
@@ -11,11 +11,13 @@ import {
 
 import { DebugScreen } from "./DebugScreen";
 import { AccountType } from "@root/reducers/app";
+import { Touchable } from "@root/views/components/common";
 
 export interface SettingsScreenProperties extends DispatcherProps {
     keepAwakeWhileBrowse: boolean,
     saveImageOnDevice: boolean,
     accountType: AccountType,
+    accountId?: string,
 }
 
 interface State {
@@ -61,17 +63,28 @@ export class AddRecipeScreen extends React.Component<SettingsScreenProperties, S
             <V.Screen>
                 <V.AppScreenHeader title={res.strings.settingsTitle()} />
                 <V.VBox style={styles.values.container}>
-                    <V.Texts.H3 style={styles.values.sectionLabel}>情報</V.Texts.H3>
+                    <V.Texts.H3 style={styles.values.sectionLabel}>{res.strings.settingsSectionInfo()}</V.Texts.H3>
                     <PreferenceItem
                         label={res.strings.settingsLabelAppVersion()}
                         rightElement={<V.Texts.Body>{require("@root/../../package.json").version}</V.Texts.Body>} />
+                    { this.props.accountId &&
+                        <PreferenceItem
+                            label={res.strings.settingsLabelUserId()}
+                            rightElement={<V.Texts.Body selectable={true}>{this.props.accountId}</V.Texts.Body>} />
+                    }
                     { false &&
                         <PreferenceItem
                             label={res.strings.settingsLabelAccountType()}
                             rightElement={<V.Texts.Body>{this.props.accountType}</V.Texts.Body>} />
                     }
+                    <Touchable onPress={this.openSupport}>
+                        <PreferenceItem
+                            label={res.strings.settingsLabelHelp()}
+                            rightElement={<V.Icon name="arrow-forward" style={styles.values.itemArrow} />}
+                        />
+                    </Touchable>
                     
-                    <V.Texts.H3 style={styles.values.sectionLabel}>アプリ設定</V.Texts.H3>
+                    <V.Texts.H3 style={styles.values.sectionLabel}>{res.strings.settingsSectionSettings()}</V.Texts.H3>
                     <SwitchPreference
                         label={res.strings.settingsLabelKeepAwakeWhileBrowse()}
                         desc={res.strings.settingsDescKeepAwakeWhileBrowse()}
@@ -97,6 +110,10 @@ export class AddRecipeScreen extends React.Component<SettingsScreenProperties, S
             </V.Screen>
         );
     }
+
+    openSupport = () => {
+        Linking.openURL("https://myrecipe.runoshun.net/")
+    }
 }
 
 export default createContainer(AddRecipeScreen)((state, dispatch) => {
@@ -104,6 +121,7 @@ export default createContainer(AddRecipeScreen)((state, dispatch) => {
         keepAwakeWhileBrowse: state.app.settings.keepAwakeWhileBrowse,
         saveImageOnDevice: state.app.settings.saveImageOnDevice,
         accountType: state.app.settings.accountType,
+        accountId: state.app.settings.accountId,
         ...createDispacherProps(dispatch),
     }
 });

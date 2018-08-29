@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextInput, TextInputProperties, View, Text } from "react-native";
+import { TextInput, TextInputProperties, View, Text, Platform } from "react-native";
 
 import Stylable from "./stylable";
 
@@ -108,6 +108,10 @@ export default class TextField extends React.Component<TextFieldProperties, Stat
             </View>
         );
     }
+
+    shouldComponentUpdate(nextProps: TextFieldProperties){
+        return Platform.OS !== 'ios' || this.props.value === nextProps.value;
+      }
 
     componentWillMount() {
         // initialize by 'value' or 'initialValue' prop
