@@ -9,5 +9,10 @@ export const parseIngredientsHandler = functions
       res.status(status).header("Content-Type", "application/json").send(JSON.stringify(body));
     };
 
-    parseIngredients.handler(req.body, send);
+    let body = req.body;
+    if (typeof body === "string") {
+      body = JSON.parse(body);
+    }
+
+    parseIngredients.handler(body, send);
   });

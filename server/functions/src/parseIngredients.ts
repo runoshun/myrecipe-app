@@ -43,7 +43,7 @@ export interface ReqBody {
 export const handler = async (body: ReqBody, send: (status: number, body: any) => void) => {
     try {
         if (!body.url || !body.html) {
-            console.info("invalid body: ", body)
+            console.info("invalid body: url = " + !!body.url + ", html = " + !!body.html + ", typeof body = " + typeof body)
             return send(400, { message: "invalid body" });
         }
 
@@ -59,6 +59,7 @@ export const handler = async (body: ReqBody, send: (status: number, body: any) =
         let ingredients = await parse(parsedUrl, body.html);
         send(200, ingredients);
     } catch (e) {
+        console.error("Unknown error", e);
         send(500, e.message || e.toString());
     }
 }
