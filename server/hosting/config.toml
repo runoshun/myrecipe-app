@@ -1,0 +1,17 @@
+baseURL = "https://myrecipe.runoshun.net/"
+languageCode = "ja-jp"
+title = "マイレシピノート"
+theme = "landing-page-hugo"
+hasCJKLanguage = true
+
+[permalinks]
+  posts = "/:year/:month/:title/"
+
+[params]
+  description = "レシピ記録・買い物メモアプリ"
+	googleAnalytics = "UA-124834346-1"
+
+[[params.social]]
+	title = "iPhone"
+	icon = "apple"
+	url = ""

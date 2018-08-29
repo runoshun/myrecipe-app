@@ -1,0 +1,26 @@
+{{ partial "head.html" . }}
+{{ partial "navbar.html" . }}
+<main id="main">
+    <section class="single-post container">
+        <div class="single-post-title">
+            <h1>{{ .Title }}</h1>
+        </div>
+        <div class="single-post-meta">
+            {{ .Date.Format "2006 / 01 / 02" }}
+        </div>
+        <article class="content">
+            {{ .Content }}
+        </article>
+    </section>
+    <aside class="container single-post-footer">
+        <div>
+            {{ with .PrevInSection }}
+                <a class="single-post-previous" href="{{.Permalink}}">← {{.Title}}</a>
+            {{ end }}
+            {{ with .NextInSection }}
+                <a class="single-post-next" href="{{.Permalink}}"> {{.Title}} →</a>
+            {{ end }}
+        </div>
+    </aside>
+</main>
+{{ partial "footer.html" . }}

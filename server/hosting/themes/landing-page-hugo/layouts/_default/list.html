@@ -1,0 +1,30 @@
+{{ partial "head.html" . }}
+{{ partial "navbar.html" . }}
+<main id="main">
+    <div class="posts">
+        <h1 class="container">お知らせ</h1>
+        {{ range .Pages.ByDate.Reverse }}
+        <article class="post">
+            <div class="container">
+                <div class="post-title">
+                    <h2>
+                        <a href='{{ .Permalink }}'> {{ .Title }}</a>
+                    </h2>
+                </div>
+                <div class="post-meta">
+                    {{ .Date.Format "2006 / 01 / 02" }}
+                </div>
+                <div class="post-summary">
+                    {{ .Summary }}
+                </div>
+                <div class="post-readmore">
+                    <a href='{{ .Permalink }}'>
+                        <nobr>Read more →</nobr>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {{ end }}
+    </div>
+</main>
+{{ partial "footer.html" . }}
