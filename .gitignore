@@ -55,6 +55,8 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+server/functions/functions.zip
 
 # envs
 src/admob-consts.tsx
+ios/tsukurioki/GoogleService-Info.plist
